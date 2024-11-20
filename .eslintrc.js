@@ -11,16 +11,12 @@ module.exports = {
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    ecmaVersion: 11, 
+    ecmaVersion: 11,
     sourceType: 'module',
     ecmaFeatures: {
       jsx: true,
     },
-    plugins: [
-      '@typescript-eslint', 
-      'prettier',
-      'react',
-    ],
+    plugins: ['@typescript-eslint', 'prettier', 'react'],
   },
   rules: {
     '@typescript-eslint/ban-ts-comment': 1,
