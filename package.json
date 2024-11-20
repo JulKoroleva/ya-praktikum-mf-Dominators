@@ -13,7 +13,16 @@
     "fix:styles": "stylelint \"packages/client/**/*.scss\" --fix",
     "format": "lerna run format",
     "preview": "lerna run preview",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.ts?(x)": [
+      "eslint --fix"
+    ],
+    "*.scss": [
+      "stylelint --fix"
+    ]
   },
   "license": "MIT",
   "workspaces": [
@@ -31,6 +40,7 @@
     "eslint-plugin-prettier": "^5.2.1",
     "husky": "^9.1.7",
     "lerna": "^5.4.3",
+    "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
     "typescript": "^5.0.0"
   },
