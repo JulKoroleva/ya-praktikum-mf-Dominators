@@ -33,6 +33,7 @@ module.exports = {
         varsIgnorePattern: '^_',
       },
     ],
+    'eol-last': ['error', 'always'],
   },
   settings: {
     react: {
