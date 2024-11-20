@@ -9,6 +9,8 @@
     "dev": "lerna run dev",
     "test": "lerna run test",
     "lint": "lerna run lint",
+    "lint:styles": "stylelint \"packages/client/**/*.scss\" --cache",
+    "fix:styles": "stylelint \"packages/client/**/*.scss\" --fix",
     "format": "lerna run format",
     "preview": "lerna run preview",
     "prepare": "husky install"
