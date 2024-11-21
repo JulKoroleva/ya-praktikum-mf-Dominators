@@ -9,9 +9,28 @@ import {
   Registration,
   Error,
   Game,
-} from './pages'
-import { ROUTES } from './constants'
+} from '@/pages'
+import { ROUTES } from '@/constants/routes'
 import './App.scss'
+
+const routes = [
+  { path: ROUTES.authorization(), element: <Authorization /> },
+  { path: ROUTES.registration(), element: <Registration /> },
+  { path: ROUTES.main(), element: <Main /> },
+  { path: ROUTES.game(), element: <Game /> },
+  { path: ROUTES.forum(), element: <Forum /> },
+  { path: ROUTES.leaderboard(), element: <Leaderboard /> },
+  { path: ROUTES.profile(), element: <Profile /> },
+  { path: ROUTES.error(404), element: <Error /> },
+  {
+    path: ROUTES.home(),
+    element: <Navigate to={ROUTES.main()} replace={true} />,
+  },
+  {
+    path: '*',
+    element: <Navigate to={ROUTES.error(404)} replace={true} />,
+  },
+]
 
 function App() {
   useEffect(() => {
@@ -28,22 +47,9 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path={ROUTES.authorization()} element={<Authorization />} />
-        <Route path={ROUTES.registration()} element={<Registration />} />
-        <Route
-          path={ROUTES.home()}
-          element={<Navigate to={ROUTES.main()} replace={true} />}
-        />
-        <Route path={ROUTES.main()} element={<Main />} />
-        <Route path={ROUTES.game()} element={<Game />} />
-        <Route path={ROUTES.forum()} element={<Forum />} />
-        <Route path={ROUTES.leaderboard()} element={<Leaderboard />} />
-        <Route path={ROUTES.profile()} element={<Profile />} />
-        <Route path={ROUTES.error(404)} element={<Error />} />
-        <Route
-          path="*"
-          element={<Navigate to={ROUTES.error(404)} replace={true} />}
-        />
+        {routes.map(({ path, element }) => (
+          <Route key={path} path={path} element={element} />
+        ))}
       </Routes>
     </BrowserRouter>
   )

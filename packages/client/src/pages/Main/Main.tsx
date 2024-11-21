@@ -1,10 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { ROUTES } from '@/constants'
+import { ROUTES } from '@/constants/routes'
 import './style.scss'
 
 export const Main = () => {
-  console.log('ROUTES', ROUTES)
   return (
     <div className="main-page">
       Main
