@@ -9,18 +9,42 @@
     "dev": "lerna run dev",
     "test": "lerna run test",
     "lint": "lerna run lint",
+    "lint:styles": "stylelint \"packages/client/**/*.scss\" --cache",
+    "fix:styles": "stylelint \"packages/client/**/*.scss\" --fix",
     "format": "lerna run format",
-    "preview": "lerna run preview"
+    "preview": "lerna run preview",
+    "prepare": "husky install",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.ts?(x)": [
+      "eslint --fix"
+    ],
+    "*.scss": [
+      "stylelint --fix"
+    ]
   },
   "license": "MIT",
   "workspaces": [
     "packages/*"
   ],
   "engines": {
-    "node": ">=15"
+    "node": ">=18"
   },
   "devDependencies": {
     "@evilmartians/lefthook": "^1.3.9",
-    "lerna": "^5.4.3"
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.50.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "husky": "^9.1.7",
+    "lerna": "^5.4.3",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.3.3",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "eslint-plugin-react": "^7.37.2"
   }
 }
