@@ -1,16 +1,12 @@
 import { StylesConfig } from 'react-select';
 import { GroupBase } from 'react-select/dist/declarations/src/types';
 
-interface OptionType {
+export interface OptionType {
   value: string | number | null;
   label: string;
 }
 
-export const formFieldSelectStyles: StylesConfig<
-  OptionType,
-  false,
-  GroupBase<OptionType>
-> = {
+export const formFieldSelectStyles: StylesConfig<unknown, false, GroupBase<OptionType>> = {
   control: (provided, state) => {
     const hasError = state.selectProps['aria-invalid'];
     const isDisabled = state.isDisabled;
@@ -50,11 +46,7 @@ export const formFieldSelectStyles: StylesConfig<
   },
   option: (provided, state) => ({
     ...provided,
-    backgroundColor: state.isSelected
-      ? '#D5EAFF'
-      : state.isFocused
-      ? '#e7f3ff'
-      : '#ffffff',
+    backgroundColor: state.isSelected ? '#D5EAFF' : state.isFocused ? '#e7f3ff' : '#ffffff',
     color: '#495057',
     '&:hover': {
       backgroundColor: state.isSelected ? 'rgba(25, 109, 60, 0.25)' : '#e7f3ff',

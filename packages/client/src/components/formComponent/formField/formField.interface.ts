@@ -38,7 +38,6 @@ export interface FieldConfigInterface<T extends FieldValues = FieldValues> {
   rows?: number;
   needMaxLength?: boolean;
   autosize?: boolean;
-  labelPlaceholderRows?: number;
 
   // используются для file
   accept?: string;

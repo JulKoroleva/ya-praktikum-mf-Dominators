@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Controller,
-  ControllerRenderProps,
-  FieldValues,
-  Path,
-} from 'react-hook-form';
+import { Controller, ControllerRenderProps, FieldValues, Path } from 'react-hook-form';
 
 import { Form } from 'react-bootstrap';
 import Select from 'react-select';
@@ -14,12 +9,9 @@ import { ReactComponent as CrossedEyeIcon } from '../../../assets/icons/crossedE
 import { ReactComponent as EyeIcon } from '../../../assets/icons/eye.svg';
 import { ReactComponent as CloseIcon } from '../../../assets/icons/close.svg';
 
-import {
-  FieldConfigInterface,
-  FormFieldInterface,
-} from './formField.interface';
+import { FieldConfigInterface, FormFieldInterface } from './formField.interface';
 
-import { formFieldSelectStyles } from './formFieldSelectStyles';
+import { formFieldSelectStyles, OptionType } from './formFieldSelectStyles';
 
 import styles from './formField.module.scss';
 
@@ -33,16 +25,13 @@ const FormField = <T extends FieldValues>({
   const { validation, isRequired } = field as FieldConfigInterface<T>;
   const validationRules = {
     ...(validation ? validation(getValues, trigger, clearErrors) : {}),
-    ...(isRequired
-      ? { required: 'Заполните обязательное поле' }
-      : { required: '' }),
+    ...(isRequired ? { required: 'Заполните обязательное поле' } : { required: '' }),
   };
 
   const [isEyeVisible, setIsEyeVisible] = useState(false);
 
   const onFieldBlur =
-    (fieldData: ControllerRenderProps<T, Path<T>>) =>
-    (e: React.FocusEvent<HTMLInputElement>) => {
+    (fieldData: ControllerRenderProps<T, Path<T>>) => (e: React.FocusEvent<HTMLInputElement>) => {
       if (e.target.value) {
         const value = e.target.value.trimEnd();
         fieldData.onChange(value);
@@ -58,17 +47,12 @@ const FormField = <T extends FieldValues>({
   };
 
   return (
-    <Form.Group
-      className={`${styles['form-field']} ${
-        field.isInLine && styles['form-field-row']
-      }`}>
+    <Form.Group className={`${styles['form-field']} ${field.isInLine && styles['form-field-row']}`}>
       {field.label && (
         <Form.Label className={styles['label']}>
           <div>
             {field.label}
-            {field.isRequired && (
-              <span className={styles['required-star']}>*</span>
-            )}
+            {field.isRequired && <span className={styles['required-star']}>*</span>}
           </div>
         </Form.Label>
       )}
@@ -79,35 +63,9 @@ const FormField = <T extends FieldValues>({
             control={control}
             rules={validationRules}
             render={({ field: fieldData, fieldState: { error } }) => {
-              let labelPlaceholderStringStyle;
-              if (field.labelPlaceholderRows) {
-                switch (field.labelPlaceholderRows) {
-                  case 1:
-                    labelPlaceholderStringStyle =
-                      styles['single-lane-placeholder'];
-                    break;
-                  case 2:
-                    labelPlaceholderStringStyle =
-                      styles['double-lane-placeholder'];
-                    break;
-                  case 3:
-                    labelPlaceholderStringStyle =
-                      styles['triple-lane-placeholder'];
-                    break;
-                  default:
-                    labelPlaceholderStringStyle =
-                      styles['single-lane-placeholder'];
-                    break;
-                }
-              }
               return (
                 <>
-                  <label
-                    className={`${styles['file-upload']} ${
-                      field.labelPlaceholderRows
-                        ? labelPlaceholderStringStyle
-                        : ''
-                    }`}>
+                  <label className={styles['file-upload']}>
                     <input
                       type="file"
                       accept={field.accept}
@@ -141,11 +99,7 @@ const FormField = <T extends FieldValues>({
                     </div>
                   )}
 
-                  {error && (
-                    <div className="invalid-feedback d-block">
-                      {error.message}
-                    </div>
-                  )}
+                  {error && <div className="invalid-feedback d-block">{error.message}</div>}
                 </>
               );
             }}
@@ -157,35 +111,10 @@ const FormField = <T extends FieldValues>({
             control={control}
             rules={validationRules}
             render={({ field: fieldData, fieldState: { error } }) => {
-              let labelPlaceholderStringStyle;
-              if (field.labelPlaceholderRows) {
-                switch (field.labelPlaceholderRows) {
-                  case 1:
-                    labelPlaceholderStringStyle =
-                      styles['single-lane-placeholder'];
-                    break;
-                  case 2:
-                    labelPlaceholderStringStyle =
-                      styles['double-lane-placeholder'];
-                    break;
-                  case 3:
-                    labelPlaceholderStringStyle =
-                      styles['triple-lane-placeholder'];
-                    break;
-                  default:
-                    labelPlaceholderStringStyle =
-                      styles['single-lane-placeholder'];
-                    break;
-                }
-              }
               return (
                 <>
                   <Form.Control
-                    className={`${styles['input']} ${
-                      field.labelPlaceholderRows
-                        ? labelPlaceholderStringStyle
-                        : ''
-                    }`}
+                    className={styles['input']}
                     placeholder={field?.placeholder ? field?.placeholder : ''}
                     type="text"
                     {...fieldData}
@@ -206,9 +135,7 @@ const FormField = <T extends FieldValues>({
                     maxLength={field.maxLength}
                     onBlur={onFieldBlur(fieldData)}
                   />
-                  <Form.Control.Feedback type="invalid">
-                    {error?.message}
-                  </Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">{error?.message}</Form.Control.Feedback>
                 </>
               );
             }}
@@ -220,42 +147,15 @@ const FormField = <T extends FieldValues>({
             control={control}
             rules={validationRules}
             render={({ field: fieldData, fieldState: { error } }) => {
-              let labelPlaceholderStringStyle;
-              if (field.labelPlaceholderRows) {
-                switch (field.labelPlaceholderRows) {
-                  case 1:
-                    labelPlaceholderStringStyle =
-                      styles['single-lane-placeholder'];
-                    break;
-                  case 2:
-                    labelPlaceholderStringStyle =
-                      styles['double-lane-placeholder'];
-                    break;
-                  case 3:
-                    labelPlaceholderStringStyle =
-                      styles['triple-lane-placeholder'];
-                    break;
-                  default:
-                    labelPlaceholderStringStyle =
-                      styles['single-lane-placeholder'];
-                    break;
-                }
-              }
               return (
                 <>
                   <Form.Control
-                    className={`${styles['input']} ${
-                      field.labelPlaceholderRows
-                        ? labelPlaceholderStringStyle
-                        : ''
-                    }`}
+                    className={styles['input']}
                     placeholder={field?.placeholder ? field?.placeholder : ''}
                     type={!isEyeVisible ? 'password' : 'text'}
                     {...fieldData}
                     value={fieldData.value?.trimStart()?.trimEnd() || ''}
-                    onChange={e =>
-                      fieldData.onChange(e.target.value.trimStart().trimEnd())
-                    }
+                    onChange={e => fieldData.onChange(e.target.value.trimStart().trimEnd())}
                     isInvalid={!!error}
                     disabled={field.disabled}
                     maxLength={field.maxLength}
@@ -263,9 +163,7 @@ const FormField = <T extends FieldValues>({
                   />
                   <button
                     className={
-                      error
-                        ? styles['invisible-button-error']
-                        : styles['invisible-button']
+                      error ? styles['invisible-button-error'] : styles['invisible-button']
                     }
                     onMouseDown={handleMouseDown}
                     onMouseUp={handleMouseUp}
@@ -276,9 +174,7 @@ const FormField = <T extends FieldValues>({
                     type="button">
                     {isEyeVisible ? <CrossedEyeIcon /> : <EyeIcon />}
                   </button>
-                  <Form.Control.Feedback type="invalid">
-                    {error?.message}
-                  </Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">{error?.message}</Form.Control.Feedback>
                 </>
               );
             }}
@@ -311,43 +207,29 @@ const FormField = <T extends FieldValues>({
 
               const selectedOption = optionsWithPlaceholder.find(option => {
                 const normalizedValue = normalizeValue(controllerField.value);
-                return (
-                  option.value === normalizedValue ||
-                  option.value === String(normalizedValue)
-                );
+                return option.value === normalizedValue || option.value === String(normalizedValue);
               });
 
               return (
                 <>
                   <Select
                     isDisabled={field.disabled}
-                    isSearchable={
-                      field.isSearchable !== undefined
-                        ? field.isSearchable
-                        : true
-                    }
+                    isSearchable={field.isSearchable !== undefined ? field.isSearchable : true}
                     placeholder={field?.placeholder ? field?.placeholder : ''}
                     {...controllerField}
                     options={optionsWithPlaceholder}
                     value={selectedOption?.value ? selectedOption : null}
                     styles={formFieldSelectStyles}
                     aria-invalid={!!error}
-                    onChange={(selectedOption: Record<string, unknown>) => {
-                      const value = selectedOption?.value;
+                    onChange={(newValue: unknown) => {
+                      const value = (newValue as OptionType)?.value;
+                      // это сделано для обработки булевых значений, потому что пакет из react-select некорректно поддерживает boolean
                       const processedValue =
-                        value === 'true'
-                          ? true
-                          : value === 'false'
-                          ? false
-                          : value;
+                        value === 'true' ? true : value === 'false' ? false : value;
                       controllerField.onChange(processedValue);
                     }}
                   />
-                  {error && (
-                    <div className="invalid-feedback d-block">
-                      {error.message}
-                    </div>
-                  )}
+                  {error && <div className="invalid-feedback d-block">{error.message}</div>}
                 </>
               );
             }}
@@ -359,27 +241,6 @@ const FormField = <T extends FieldValues>({
             control={control}
             rules={validationRules}
             render={({ field: fieldData, fieldState: { error } }) => {
-              let labelPlaceholderStringStyle;
-              if (field.labelPlaceholderRows) {
-                switch (field.labelPlaceholderRows) {
-                  case 1:
-                    labelPlaceholderStringStyle =
-                      styles['single-lane-placeholder'];
-                    break;
-                  case 2:
-                    labelPlaceholderStringStyle =
-                      styles['double-lane-placeholder'];
-                    break;
-                  case 3:
-                    labelPlaceholderStringStyle =
-                      styles['triple-lane-placeholder'];
-                    break;
-                  default:
-                    labelPlaceholderStringStyle =
-                      styles['single-lane-placeholder'];
-                    break;
-                }
-              }
               return (
                 <>
                   <Form.Control
@@ -392,15 +253,8 @@ const FormField = <T extends FieldValues>({
                       fieldData.onChange(value === '' ? null : value);
                     }}
                     isInvalid={!!error}
-                    className={`${
-                      field.labelPlaceholderRows
-                        ? labelPlaceholderStringStyle
-                        : ''
-                    }`}
                   />
-                  <Form.Control.Feedback type="invalid">
-                    {error?.message}
-                  </Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">{error?.message}</Form.Control.Feedback>
                 </>
               );
             }}
@@ -414,43 +268,14 @@ const FormField = <T extends FieldValues>({
             rules={validationRules}
             render={({ field: fieldData, fieldState: { error } }) => {
               const maxLength = field.maxLength ? field.maxLength : 1000;
-              const currentLength = fieldData.value
-                ? fieldData.value.length
-                : 0;
-              let labelPlaceholderStringStyle;
-              if (field.labelPlaceholderRows) {
-                switch (field.labelPlaceholderRows) {
-                  case 1:
-                    labelPlaceholderStringStyle =
-                      styles['single-lane-placeholder'];
-                    break;
-                  case 2:
-                    labelPlaceholderStringStyle =
-                      styles['double-lane-placeholder'];
-                    break;
-                  case 3:
-                    labelPlaceholderStringStyle =
-                      styles['triple-lane-placeholder'];
-                    break;
-                  default:
-                    labelPlaceholderStringStyle =
-                      styles['single-lane-placeholder'];
-                    break;
-                }
-              }
+              const currentLength = fieldData.value ? fieldData.value.length : 0;
               return (
                 <>
                   {field.autosize ? (
                     <TextareaAutosize
                       id={field.id}
                       minRows={field.rows || 3}
-                      className={`${styles['form-textarea']} ${
-                        error ? 'is-invalid' : ''
-                      } ${
-                        field.labelPlaceholderRows
-                          ? labelPlaceholderStringStyle
-                          : ''
-                      }`}
+                      className={`${styles['form-textarea']} ${error ? 'is-invalid' : ''}`}
                       placeholder={field.placeholder || ''}
                       value={fieldData.value?.trimStart() || ''}
                       onChange={e => {
@@ -479,9 +304,7 @@ const FormField = <T extends FieldValues>({
                       onBlur={onFieldBlur(fieldData)}
                     />
                   )}
-                  <Form.Control.Feedback type="invalid">
-                    {error?.message}
-                  </Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">{error?.message}</Form.Control.Feedback>
                   {field.needMaxLength && (
                     <div
                       style={{
