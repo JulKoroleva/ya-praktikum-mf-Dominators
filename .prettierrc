@@ -4,5 +4,8 @@
   "arrowParens": "avoid",
   "bracketSameLine": true,
   "printWidth": 100,
-  "endOfLine": "auto"
+  "endOfLine": "auto",
+  "tabWidth": 2,
+  "useTabs": false,
+  "trailingComma": "all"
 }

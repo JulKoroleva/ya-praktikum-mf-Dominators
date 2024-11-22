@@ -15,13 +15,20 @@ export const formFieldSelectStyles: StylesConfig<unknown, false, GroupBase<Optio
       ...provided,
       borderRadius: '4px',
       backgroundColor: isDisabled ? '#e9ecef' : '#ffffff',
-      borderColor: isDisabled
-        ? '#ced4da'
-        : hasError
-        ? '#dc3545'
-        : state.isFocused
-        ? 'rgba(25, 109, 60, 0.5)'
-        : '#dce0e4',
+      borderColor: (() => {
+        let borderColor;
+
+        if (isDisabled) {
+          borderColor = '#ced4da';
+        } else if (hasError) {
+          borderColor = '#dc3545';
+        } else if (state.isFocused) {
+          borderColor = 'rgba(25, 109, 60, 0.5)';
+        } else {
+          borderColor = '#dce0e4';
+        }
+        return borderColor;
+      })(),
       boxShadow: state.isFocused
         ? hasError
           ? '0 0 0 0.2rem rgba(220,53,69,.25)'
@@ -31,10 +38,10 @@ export const formFieldSelectStyles: StylesConfig<unknown, false, GroupBase<Optio
         borderColor: isDisabled
           ? '#ced4da'
           : hasError
-          ? '#dc3545'
-          : state.isFocused
-          ? '#007bff'
-          : '#dce0e4',
+            ? '#dc3545'
+            : state.isFocused
+              ? '#007bff'
+              : '#dce0e4',
       },
       opacity: isDisabled ? 0.7 : 1,
       cursor: isDisabled ? 'not-allowed' : 'default',

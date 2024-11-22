@@ -1,5 +1,5 @@
-import dotenv from 'dotenv'
-dotenv.config()
+import dotenv from 'dotenv';
+dotenv.config();
 
 export default {
   preset: 'ts-jest',
@@ -12,4 +12,4 @@ export default {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^.+\\.(css|less|scss)$': 'identity-obj-proxy',
   },
-}
+};
