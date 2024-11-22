@@ -1,4 +1,4 @@
-import { FieldConfigInterface } from '@/components/formComponent/formField/formField.interface';
+import { FieldConfigInterface } from '@/components/formComponent/components/formField/formField.interface';
 import { validateEmail } from '@/services/validationUtils';
 
 export const registrationPageFields: FieldConfigInterface[] = [

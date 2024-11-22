@@ -5,9 +5,9 @@ import { Form } from 'react-bootstrap';
 import Select from 'react-select';
 import TextareaAutosize from 'react-textarea-autosize';
 
-// import { ReactComponent as CrossedEyeIcon } from '@/assets/icons/crossedEye.svg';
-// import { ReactComponent as EyeIcon } from '../../../assets/icons/eye.svg';
-// import { ReactComponent as CloseIcon } from '../../../assets/icons/close.svg';
+// import CrossedEyeIcon from '@/assets/icons/crossed-eye.svg?react';
+// import EyeIcon from '@/assets/icons/eye.svg?react';
+// import CloseIcon from '@/assets/icons/close.svg?react';
 
 import { FieldConfigInterface, FormFieldInterface } from './formField.interface';
 
@@ -15,7 +15,7 @@ import { formFieldSelectStyles, OptionType } from './formFieldSelectStyles';
 
 import styles from './formField.module.scss';
 
-const FormField = <T extends FieldValues>({
+export const FormField = <T extends FieldValues>({
   field,
   control,
   getValues,
@@ -92,7 +92,7 @@ const FormField = <T extends FieldValues>({
                         className={styles['clear-file-icon']}
                         onClick={() => {
                           const inputElem = document.querySelector(
-                            `input[name="${field.id}"]`
+                            `input[name="${field.id}"]`,
                           ) as HTMLInputElement;
                           if (inputElem.files?.length) {
                             inputElem.value = '';
@@ -172,9 +172,7 @@ const FormField = <T extends FieldValues>({
                     }}
                   />
                   <button
-                    className={
-                      error ? styles['invisible-button-error'] : styles['invisible-button']
-                    }
+                    className={styles['invisible-button']}
                     onMouseDown={handleMouseDown}
                     onMouseUp={handleMouseUp}
                     onMouseLeave={handleMouseUp}
@@ -339,5 +337,3 @@ const FormField = <T extends FieldValues>({
     </Form.Group>
   );
 };
-
-export default FormField;

@@ -1,9 +1,9 @@
 import { DefaultValues, FieldValues, useForm } from 'react-hook-form';
 
-import FormField from './formField/formField';
+import { FormField } from './components/formField/formField';
 
 import { FormComponentInterface } from './formComponent.interface';
-import { FieldConfigInterface } from './formField/formField.interface';
+import { FieldConfigInterface } from './components/formField/formField.interface';
 
 import styles from './formComponent.module.scss';
 
@@ -17,7 +17,7 @@ const FormComponent = <T extends FieldValues>({
   });
 
   return (
-    <form className={styles['formComponent']} onSubmit={handleSubmit(onSubmit)}>
+    <form className={styles['form-component']} onSubmit={handleSubmit(onSubmit)}>
       {fields.map(field => (
         <FormField
           key={field.id}

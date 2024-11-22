@@ -1,5 +1,5 @@
 import { FieldValues, SubmitHandler } from 'react-hook-form';
-import { FieldConfigInterface } from './formField/formField.interface';
+import { FieldConfigInterface } from './components/formField/formField.interface';
 
 export interface FormComponentInterface<T extends FieldValues> {
   fields: FieldConfigInterface<T>[]; // Конфигурация полей

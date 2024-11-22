@@ -7,6 +7,8 @@ import {
   registrationPageFieldsInitialValues,
 } from './registrationPageData';
 
+import styles from './registration.module.scss';
+
 export const Registration = () => {
   const onSubmit = (data: Record<string, string>) => {
     console.log(data);
@@ -14,11 +16,13 @@ export const Registration = () => {
   return (
     <div>
       <h1>Registration page</h1>
-      <FormComponent
-        fields={registrationPageFields}
-        onSubmit={onSubmit}
-        initialValues={registrationPageFieldsInitialValues}
-      />
+      <div className={styles['form-container']}>
+        <FormComponent
+          fields={registrationPageFields}
+          onSubmit={onSubmit}
+          initialValues={registrationPageFieldsInitialValues}
+        />
+      </div>
     </div>
   );
 };
