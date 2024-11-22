@@ -11,7 +11,7 @@ export interface FormFieldInterface<T extends FieldValues> {
   field: FieldConfigInterface;
   control: Control<T>;
   getValues: UseFormGetValues<T>;
-  trigger?: UseFormTrigger<T>;
+  trigger: UseFormTrigger<T>;
   clearErrors?: UseFormClearErrors<T>;
 }
 
@@ -26,9 +26,9 @@ export interface FieldConfigInterface<T extends FieldValues = FieldValues> {
   maxLength?: number;
   isInLine?: boolean;
   validation?: (
-    getValues: UseFormGetValues<T>,
-    trigger?: UseFormTrigger<T>,
-    clearErrors?: UseFormClearErrors<T>
+    _getValues: UseFormGetValues<T>,
+    _trigger?: UseFormTrigger<T>,
+    _clearErrors?: UseFormClearErrors<T>,
   ) => ValidationRules;
 
   // используются для input
@@ -49,5 +49,5 @@ export interface FieldConfigInterface<T extends FieldValues = FieldValues> {
 
 export interface ValidationRules {
   required?: ValidationValueMessage<boolean>;
-  validate?: (value: string) => boolean | string;
+  validate?: (_value: string) => boolean | string;
 }

@@ -5,9 +5,9 @@ import { Form } from 'react-bootstrap';
 import Select from 'react-select';
 import TextareaAutosize from 'react-textarea-autosize';
 
-import { ReactComponent as CrossedEyeIcon } from '../../../assets/icons/crossedEye.svg';
-import { ReactComponent as EyeIcon } from '../../../assets/icons/eye.svg';
-import { ReactComponent as CloseIcon } from '../../../assets/icons/close.svg';
+// import { ReactComponent as CrossedEyeIcon } from '@/assets/icons/crossedEye.svg';
+// import { ReactComponent as EyeIcon } from '../../../assets/icons/eye.svg';
+// import { ReactComponent as CloseIcon } from '../../../assets/icons/close.svg';
 
 import { FieldConfigInterface, FormFieldInterface } from './formField.interface';
 
@@ -23,9 +23,12 @@ const FormField = <T extends FieldValues>({
   clearErrors,
 }: FormFieldInterface<T>) => {
   const { validation, isRequired } = field as FieldConfigInterface<T>;
+
   const validationRules = {
     ...(validation ? validation(getValues, trigger, clearErrors) : {}),
-    ...(isRequired ? { required: 'Заполните обязательное поле' } : { required: '' }),
+    ...(isRequired
+      ? { required: { value: true, message: 'This field is required' } }
+      : { required: '' }),
   };
 
   const [isEyeVisible, setIsEyeVisible] = useState(false);
@@ -85,7 +88,7 @@ const FormField = <T extends FieldValues>({
                   {fieldData.value && (
                     <div className={styles['file-name']}>
                       <span>{fieldData.value?.name}</span>
-                      <CloseIcon
+                      {/* <CloseIcon
                         className={styles['clear-file-icon']}
                         onClick={() => {
                           const inputElem = document.querySelector(
@@ -95,7 +98,8 @@ const FormField = <T extends FieldValues>({
                             inputElem.value = '';
                           }
                           fieldData.onChange(null);
-                        }}></CloseIcon>
+                        }}
+                      /> */}
                     </div>
                   )}
 
@@ -133,7 +137,10 @@ const FormField = <T extends FieldValues>({
                     isInvalid={!!error}
                     disabled={field.disabled}
                     maxLength={field.maxLength}
-                    onBlur={onFieldBlur(fieldData)}
+                    onBlur={() => {
+                      trigger(field.id as Path<T>);
+                      onFieldBlur(fieldData);
+                    }}
                   />
                   <Form.Control.Feedback type="invalid">{error?.message}</Form.Control.Feedback>
                 </>
@@ -159,7 +166,10 @@ const FormField = <T extends FieldValues>({
                     isInvalid={!!error}
                     disabled={field.disabled}
                     maxLength={field.maxLength}
-                    onBlur={onFieldBlur(fieldData)}
+                    onBlur={() => {
+                      trigger(field.id as Path<T>);
+                      onFieldBlur(fieldData);
+                    }}
                   />
                   <button
                     className={
@@ -172,7 +182,7 @@ const FormField = <T extends FieldValues>({
                     onTouchEnd={handleMouseUp}
                     onTouchCancel={handleMouseUp}
                     type="button">
-                    {isEyeVisible ? <CrossedEyeIcon /> : <EyeIcon />}
+                    {/* {isEyeVisible ? <CrossedEyeIcon /> : <EyeIcon />} */}
                   </button>
                   <Form.Control.Feedback type="invalid">{error?.message}</Form.Control.Feedback>
                 </>
@@ -301,7 +311,10 @@ const FormField = <T extends FieldValues>({
                       disabled={field.disabled}
                       style={!field.rows ? { height: '96px' } : {}}
                       maxLength={maxLength}
-                      onBlur={onFieldBlur(fieldData)}
+                      onBlur={() => {
+                        trigger(field.id as Path<T>);
+                        onFieldBlur(fieldData);
+                      }}
                     />
                   )}
                   <Form.Control.Feedback type="invalid">{error?.message}</Form.Control.Feedback>
