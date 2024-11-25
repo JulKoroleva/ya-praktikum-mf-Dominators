@@ -1,6 +1,6 @@
 import React from 'react';
 
-import FormComponent from '@/components/formComponent/formComponent';
+import FormComponent from '@/components/FormComponent/FormComponent';
 
 import {
   registrationPageFields,
@@ -21,6 +21,7 @@ export const Registration = () => {
           fields={registrationPageFields}
           onSubmit={onSubmit}
           initialValues={registrationPageFieldsInitialValues}
+          submitButtonText="Sign up"
         />
       </div>
     </div>

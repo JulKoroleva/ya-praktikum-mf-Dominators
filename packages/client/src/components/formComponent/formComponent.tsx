@@ -1,9 +1,10 @@
 import { DefaultValues, FieldValues, useForm } from 'react-hook-form';
 
-import { FormField } from './components/formField/formField';
+import { FormField } from './components/FormField/FormField';
+import { Button } from 'react-bootstrap';
 
 import { FormComponentInterface } from './formComponent.interface';
-import { FieldConfigInterface } from './components/formField/formField.interface';
+import { FieldConfigInterface } from './components/FormField/formField.interface';
 
 import styles from './formComponent.module.scss';
 
@@ -11,6 +12,7 @@ const FormComponent = <T extends FieldValues>({
   fields,
   initialValues,
   onSubmit,
+  submitButtonText,
 }: FormComponentInterface<T>) => {
   const { control, handleSubmit, getValues, trigger, clearErrors } = useForm<T>({
     defaultValues: initialValues as DefaultValues<T>,
@@ -28,7 +30,9 @@ const FormComponent = <T extends FieldValues>({
           clearErrors={clearErrors}
         />
       ))}
-      <button type="submit">Submit</button>
+      <Button className={styles['submit-button']} type="submit" variant="primary">
+        {submitButtonText}
+      </Button>
     </form>
   );
 };
