@@ -1,0 +1,11 @@
+@font-face {
+    font-family: 'Otomanopee One';
+    src:
+        local('Otomanopee One Regular'), local('OtomanopeeOne-Regular'),
+        url('@/assets/fonts/otomanopee/OtomanopeeOne-Regular.woff2?react') format('woff2'),
+        url('@/assets/fonts/otomanopee/OtomanopeeOne-Regular.woff') format('woff'),
+        url('@/assets/fonts/otomanopee/OtomanopeeOne-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }

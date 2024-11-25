@@ -1,0 +1,37 @@
+.popup {
+    max-width: 436px;
+    width: 100%;
+    background-color: $color-white;
+    box-shadow: 0 4px 4px rgb(0 0 0 / 25%);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    border-radius: 10px;
+    opacity: 0;
+    z-index: 999;
+    visibility: hidden;
+    box-sizing: border-box;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+
+        &_active {
+            opacity: 1;
+            visibility: visible;
+        }
+}
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgb(0 0 0 / 50%);
+    opacity: 0;
+    visibility: hidden;
+    z-index: 998;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+
+        &_active {
+            opacity: 1;
+            visibility: visible;
+        }
+  }
