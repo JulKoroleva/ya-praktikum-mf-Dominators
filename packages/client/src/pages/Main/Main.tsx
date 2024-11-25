@@ -1,7 +1,7 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { ROUTES } from '@/constants/routes'
-import './style.scss'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { ROUTES } from '@/constants/routes';
+import './style.scss';
 
 export const Main = () => {
   return (
@@ -15,5 +15,5 @@ export const Main = () => {
       <Link to={ROUTES.profile()}>Profile</Link>
       <Link to={ROUTES.error(404)}>Error 404</Link>
     </div>
-  )
-}
+  );
+};

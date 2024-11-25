@@ -1,5 +1,5 @@
-import { useEffect } from 'react'
-import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom'
+import { useEffect } from 'react';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import {
   Authorization,
   Forum,
@@ -9,9 +9,8 @@ import {
   Registration,
   Error,
   Game,
-} from '@/pages'
-import { ROUTES } from '@/constants/routes'
-import './App.scss'
+} from '@/pages';
+import { ROUTES } from '@/constants/routes';
 
 const routes = [
   { path: ROUTES.authorization(), element: <Authorization /> },
@@ -30,19 +29,20 @@ const routes = [
     path: '*',
     element: <Navigate to={ROUTES.error(404)} replace={true} />,
   },
-]
+];
 
 function App() {
   useEffect(() => {
     const fetchServerData = async () => {
-      const url = `http://localhost:${__SERVER_PORT__}`
-      const response = await fetch(url)
-      const data = await response.json()
-      console.log(data)
-    }
+      if (__SERVER_PORT__ === undefined) return;
+      const url = `http://localhost:${__SERVER_PORT__}`;
+      const response = await fetch(url);
+      const data = await response.json();
+      console.log(data);
+    };
 
-    fetchServerData()
-  }, [])
+    fetchServerData();
+  }, []);
 
   return (
     <BrowserRouter>
@@ -52,7 +52,7 @@ function App() {
         ))}
       </Routes>
     </BrowserRouter>
-  )
+  );
 }
 
-export default App
+export default App;

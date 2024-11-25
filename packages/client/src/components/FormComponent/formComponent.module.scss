@@ -1,0 +1,12 @@
+@use 'src/styles/buttons' as *;
+
+.form-component {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .submit-button {
+    @extend %custom-button;
+  }
+}

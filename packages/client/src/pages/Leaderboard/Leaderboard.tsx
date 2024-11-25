@@ -1,5 +1,5 @@
-import React from 'react'
+import React from 'react';
 
 export const Leaderboard = () => {
-  return <div>Leaderboard page</div>
-}
+  return <div>Leaderboard page</div>;
+};

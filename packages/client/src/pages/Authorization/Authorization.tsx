@@ -1,5 +1,5 @@
-import React from 'react'
+import React from 'react';
 
 export const Authorization = () => {
-  return <div>Authorization page</div>
-}
+  return <div>Authorization page</div>;
+};

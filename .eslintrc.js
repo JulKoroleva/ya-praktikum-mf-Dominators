@@ -25,14 +25,8 @@ module.exports = {
     'react/react-in-jsx-scope': 0,
     'react/prop-types': 0,
     '@typescript-eslint/no-explicit-any': 2,
-    'no-unused-vars': 2,
-    '@typescript-eslint/no-unused-vars': [
-      2,
-      {
-        argsIgnorePattern: '^_',
-        varsIgnorePattern: '^_',
-      },
-    ],
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': ['error'],
     'eol-last': ['error', 'always'],
   },
   settings: {
@@ -40,4 +34,4 @@ module.exports = {
       version: 'detect',
     },
   },
-}
+};

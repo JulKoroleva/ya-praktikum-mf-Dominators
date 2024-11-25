@@ -1,0 +1,34 @@
+@use 'src/styles/variables' as *;
+
+%button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  padding: 8px 16px;
+  font-weight: 700;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+%custom-button {
+  @extend %button;
+
+  background-color: $color-green-main;
+  border: none;
+  color: $color-white;
+  transition: background-color 0.15s ease-in-out;
+
+  &:hover {
+    background-color: $color-green-main-hover;
+    cursor: pointer;
+  }
+
+  &:active {
+    background-color: $color-green-main-hover !important;
+  }
+
+  &:disabled {
+    background-color: $color-medium-grey;
+  }
+}

@@ -1,8 +1,9 @@
-import { defineConfig } from 'vite'
-import { resolve } from 'path'
-import react from '@vitejs/plugin-react'
-import dotenv from 'dotenv'
-dotenv.config()
+import { defineConfig } from 'vite';
+import { resolve } from 'path';
+import react from '@vitejs/plugin-react';
+import svgr from 'vite-plugin-svgr';
+import dotenv from 'dotenv';
+dotenv.config();
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -16,20 +17,14 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         additionalData: `@use "src/styles/variables" as *;`,
+        silenceDeprecations: ['legacy-js-api'],
       },
     },
   },
-  plugins: [react()],
+  plugins: [react(), svgr()],
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
     },
   },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        silenceDeprecations: ['legacy-js-api'],
-      },
-    },
-  },
-})
+});
