@@ -1,6 +1,6 @@
 import React from 'react';
 
-import FormComponent from '@/components/FormComponent/FormComponent';
+import { FormComponent } from '@/components/FormComponent';
 
 import {
   registrationPageFields,

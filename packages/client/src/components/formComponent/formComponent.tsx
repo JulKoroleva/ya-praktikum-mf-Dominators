@@ -8,7 +8,7 @@ import { FieldConfigInterface } from './components/FormField/formField.interface
 
 import styles from './formComponent.module.scss';
 
-const FormComponent = <T extends FieldValues>({
+export const FormComponent = <T extends FieldValues>({
   fields,
   initialValues,
   onSubmit,
@@ -36,5 +36,3 @@ const FormComponent = <T extends FieldValues>({
     </form>
   );
 };
-
-export default FormComponent;
