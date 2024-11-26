@@ -1,11 +1,5 @@
-import React from 'react';
 import styles from './Popup.module.scss';
-
-type TPopupProps = {
-  children: React.ReactNode;
-  open: boolean;
-  withOverlay?: boolean;
-};
+import { TPopupProps } from './Popup.types';
 
 function Popup({ open, withOverlay = false, children }: TPopupProps) {
   return (
