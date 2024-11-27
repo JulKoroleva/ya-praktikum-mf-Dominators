@@ -1,7 +1,7 @@
 import App from './App';
 import { render, screen } from '@testing-library/react';
 
-const appContent = 'Main';
+const appContent = '';
 
 // @ts-expect-error
 global.fetch = jest.fn(() =>

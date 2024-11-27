@@ -1,4 +1,5 @@
-import EndGame from '@/components/EndGame/EndGame';
+import EndGame from './components/EndGame/EndGame';
+import { StartGame } from './components/StartGame/StartGame';
 import Popup from '@/components/Popup/Popup';
 import { useState } from 'react';
 
@@ -36,19 +37,30 @@ const matchResultsMock = [
 ];
 
 export const Game = () => {
+  const [isGameStarted, setIsGameStarted] = useState(false);
   const [isEndedGame, setIsEndedGame] = useState(false);
+
+  const handleStartGame = () => {
+    setIsGameStarted(true);
+  };
 
   return (
     <>
-      <button
-        onClick={() => {
-          setIsEndedGame(true);
-        }}>
-        End Game
-      </button>
-      <Popup open={isEndedGame} withOverlay={true}>
-        <EndGame results={matchResultsMock} />
-      </Popup>
+      {!isGameStarted ? (
+        <StartGame onComplete={handleStartGame} isGameStarted={isGameStarted} />
+      ) : (
+        <>
+          <button
+            onClick={() => {
+              setIsEndedGame(true);
+            }}>
+            End Game
+          </button>
+          <Popup open={isEndedGame} withOverlay={true}>
+            <EndGame results={matchResultsMock} />
+          </Popup>
+        </>
+      )}
     </>
   );
 };
