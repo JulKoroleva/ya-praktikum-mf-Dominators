@@ -19,5 +19,12 @@
     border-radius: 12px;
     background-color: #fdfdfd;
     box-shadow: $box-shadow-main;
+
+    h1 {
+      font-weight: 700;
+      font-size: 22px;
+      line-height: 26px;
+      margin: 0 auto 12px;
+    }
   }
 }
