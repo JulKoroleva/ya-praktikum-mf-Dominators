@@ -14,9 +14,9 @@ export const Registration = () => {
     console.log(data);
   };
   return (
-    <div>
-      <h1>Registration page</h1>
+    <div className={styles['registration-page']}>
       <div className={styles['form-container']}>
+        <h1>Create account</h1>
         <FormComponent
           fields={registrationPageFields}
           onSubmit={onSubmit}

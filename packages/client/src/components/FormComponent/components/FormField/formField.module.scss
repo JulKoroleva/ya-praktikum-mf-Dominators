@@ -16,7 +16,7 @@
     margin: 0 0 4px;
     display: flex;
     flex-basis: 50%;
-    font-weight: 600;
+    font-weight: 500;
     font-size: 13px;
     line-height: 16px;
     color: $text-color-grayish-blue;
@@ -62,14 +62,22 @@
     position: absolute;
     border: none;
     background: none;
-    right: 5px;
-    top: 30px;
+    right: 10px;
+    top: 32px;
+    cursor: pointer;
+    color: $color-black-custom;
+    width: 15px;
+    height: 15px;
+  }
 
-    svg {
-      color: $color-green-main;
-      width: 15px;
-      height: 13px;
-    }
+  .eye-icon {
+    background: url('../../../../assets/icons/eye.svg') no-repeat center center;
+    background-size: contain;
+  }
+
+  .crossed-eye-icon {
+    background: url('../../../../assets/icons/crossedEye.svg') no-repeat center center;
+    background-size: contain;
   }
 
   // .form-textarea {

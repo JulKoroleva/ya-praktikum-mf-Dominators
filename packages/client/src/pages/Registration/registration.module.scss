@@ -1,12 +1,23 @@
-.form-container {
-  width: 436px;
-  position: relative;
+@use 'src/styles/variables' as *;
+
+.registration-page {
   display: flex;
-  flex-direction: column;
-  max-width: 436px;
-  margin: 0 auto;
-  padding: 40px 48px;
-  border: 1px solid #dde6ed;
-  border-radius: 12px;
-  background-color: #fdfdfd;
+  width: 100%;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+
+  .form-container {
+    width: 436px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    max-width: 436px;
+    margin: 0 auto;
+    padding: 40px 48px;
+    border: 1px solid #dde6ed;
+    border-radius: 12px;
+    background-color: #fdfdfd;
+    box-shadow: $box-shadow-main;
+  }
 }
