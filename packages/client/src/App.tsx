@@ -11,6 +11,7 @@ import {
   Game,
 } from '@/pages';
 import { ROUTES } from '@/constants/routes';
+import { Topic } from './pages/Topic';
 
 const routes = [
   { path: ROUTES.authorization(), element: <Authorization /> },
@@ -21,6 +22,7 @@ const routes = [
   { path: ROUTES.leaderboard(), element: <Leaderboard /> },
   { path: ROUTES.profile(), element: <Profile /> },
   { path: ROUTES.error(404), element: <Error /> },
+  { path: ROUTES.topic(), element: <Topic /> },
   {
     path: ROUTES.home(),
     element: <Navigate to={ROUTES.main()} replace={true} />,

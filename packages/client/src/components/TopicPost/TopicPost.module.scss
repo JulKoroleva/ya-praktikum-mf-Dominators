@@ -1,0 +1,90 @@
+@use 'src/styles/buttons' as *;
+
+.topic-post {
+    max-width: 768px;
+    margin: 0 auto 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-inline: 20px;
+
+
+    &__button {
+        @extend %custom-button;
+
+        align-self: start;
+        width: 30px;
+        height: 30px;
+        margin-bottom: 7px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    &__title {
+        margin-block: 20px;
+        font-size: 32px;
+        font-weight: 500;
+        line-height: 38px;
+    }
+
+    &__content {
+        background-color: $color-white;
+        width: 100%;
+        padding: 20px;
+        box-shadow: 0 4px 4px rgb(0 0 0 / 25%);
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 10px;
+    }
+
+    &__info {
+        display: flex;
+        margin-bottom: 10px;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    &__topic-author {
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 22px;
+        margin-bottom: 2px;
+    }
+
+    &__topic-date {
+        font-size: 10px;
+        line-height: 13px;
+        margin-right: 10px;
+        opacity: .5;
+    }
+
+    &__topic-title {    
+        display: block;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 18px;
+        margin-bottom: 8px;
+    }
+
+    &__topic-text {
+        display: block;
+        font-size: 14px;
+        line-height: 16px;
+        opacity: .6;
+    }
+
+    &__comments {
+        background-color: $color-white;
+        width: 100%;
+        padding: 20px;
+        box-shadow: 0 4px 4px rgb(0 0 0 / 25%);
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+    }
+    
+}

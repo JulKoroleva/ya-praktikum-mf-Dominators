@@ -1,0 +1,40 @@
+.comment {
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid $color-border-green;
+
+    &:last-child {
+        border: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    &__info {
+        display: flex;
+        margin-bottom: 6px;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    &__author { 
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 16px;
+    }   
+
+    &__date {
+        font-size: 8px;
+        line-height: 12px;
+        margin-right: 10px;
+        opacity: .5;
+    }
+
+    &__text {
+        display: block;
+        font-size: 12px;
+        line-height: 14px;
+        opacity: .6;
+    }
+
+}
