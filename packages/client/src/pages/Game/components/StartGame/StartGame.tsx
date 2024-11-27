@@ -13,20 +13,20 @@ export const StartGame: React.FC<StartGameProps> = ({ onComplete, isGameStarted 
   const [showGo, setShowGo] = useState(false);
 
   useEffect(() => {
-    if (isCountdownActive) {
-      if (countdown > 0) {
-        const timer = setTimeout(() => setCountdown(prev => prev - 1), 1000);
-        return () => clearTimeout(timer);
-      }
+    if (!isCountdownActive) return;
 
-      if (countdown === 0) {
-        setShowGo(true);
-        const goTimer = setTimeout(() => {
-          setShowGo(false);
-          onComplete();
-        }, 1000);
-        return () => clearTimeout(goTimer);
-      }
+    if (countdown > 0) {
+      const timer = setTimeout(() => setCountdown(prev => prev - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+
+    if (countdown === 0) {
+      setShowGo(true);
+      const goTimer = setTimeout(() => {
+        setShowGo(false);
+        onComplete();
+      }, 1000);
+      return () => clearTimeout(goTimer);
     }
   }, [isCountdownActive, countdown, onComplete]);
 
