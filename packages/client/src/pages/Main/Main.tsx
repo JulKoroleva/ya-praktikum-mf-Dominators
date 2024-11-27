@@ -12,7 +12,6 @@ import styles from './Main.module.scss';
 export const Main = () => {
   const containerRef = useRef<Container | null>(null);
   const [init, setInit] = useState(false);
-  const [userName] = useState<string>('UserName');
 
   const description =
     'Сражайся, поглощай и становись сильнее! Уничтожай соперников в динамичной битве за выживание.';
@@ -120,7 +119,7 @@ export const Main = () => {
       )}
       <h1 className={styles['main-page__title']}>DOMinators</h1>
       <div className={styles['main-page__menu']}>
-        <h3 className={styles['main-page__menu_greetings']}>Привет, {userName}!</h3>
+        <h3 className={styles['main-page__menu_greetings']}>Привет, UserName!</h3>
         <p className={styles['main-page__menu_description']}>{description}</p>
         <div className={styles['main-page__menu_buttons']}>
           {buttons.map(({ href, text, className }, index) => (
