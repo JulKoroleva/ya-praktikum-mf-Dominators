@@ -6,7 +6,7 @@ jest.mock('tsparticles', () => ({
 jest.mock('@tsparticles/react', () => ({
   __esModule: true,
   default: jest.fn(),
-  initParticlesEngine: jest.fn(),
+  initParticlesEngine: jest.fn().mockImplementation(() => Promise.resolve()),
 }));
 
 export {};

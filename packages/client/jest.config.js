@@ -12,5 +12,8 @@ export default {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^.+\\.(css|less|scss)$': 'identity-obj-proxy',
   },
+  transform: {
+    '^.+\\.svg$': 'jest-transform-stub',
+  },
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
 };

@@ -1,13 +1,13 @@
 import React, { useRef, useState, useEffect, useCallback, useMemo } from 'react';
 import { ROUTES } from '@/constants/routes';
-import Button from 'react-bootstrap/Button';
+import { Button } from 'react-bootstrap';
 import Particles, { initParticlesEngine } from '@tsparticles/react';
 import { loadFull } from 'tsparticles';
 import { IButtonConfig } from './interfaces/Button.interface';
 import { Container } from '@tsparticles/engine';
 import { COLOR_PALETTE } from './constants/color.constant';
 import { IParticle } from './interfaces/Particle.interface';
-import './style.scss';
+import styles from './Main.module.scss';
 
 export const Main = () => {
   const containerRef = useRef<Container | null>(null);
@@ -18,20 +18,27 @@ export const Main = () => {
     'Сражайся, поглощай и становись сильнее! Уничтожай соперников в динамичной битве за выживание.';
 
   const buttons: IButtonConfig[] = [
-    { href: ROUTES.game(), text: 'Start Game!', variant: 'dark', className: 'main-button' },
-    { href: ROUTES.profile(), text: 'Profile', variant: 'dark' },
-    { href: ROUTES.leaderboard(), text: 'Leaderboard', variant: 'dark' },
-    { href: ROUTES.forum(), text: 'Forum', variant: 'dark' },
+    { href: ROUTES.game(), text: 'Start Game!', className: styles[`main-button`] },
+    { href: ROUTES.profile(), text: 'Profile' },
+    { href: ROUTES.leaderboard(), text: 'Leaderboard' },
+    { href: ROUTES.forum(), text: 'Forum' },
   ];
 
   useEffect(() => {
-    if (init) return;
+    const initializeParticles = async () => {
+      try {
+        await initParticlesEngine(async engine => {
+          await loadFull(engine);
+        });
+        setInit(true);
+      } catch (error) {
+        console.error('Error initializing particles engine:', error);
+      }
+    };
 
-    initParticlesEngine(async engine => {
-      await loadFull(engine);
-    }).then(() => {
-      setInit(true);
-    });
+    if (!init) {
+      initializeParticles();
+    }
   }, [init]);
 
   const particlesConfig = useMemo(
@@ -106,33 +113,28 @@ export const Main = () => {
     },
     [handleCollision],
   );
-
   return (
-    <div className="main-page">
+    <div className={styles['main-page']}>
       {init && (
         <Particles id="tsparticles" particlesLoaded={particlesLoaded} options={particlesConfig} />
       )}
-      <h1 className="main-page__title">DOMinators</h1>
-      <div className="main-page__menu">
-        <h3 className="main-page__menu_greeting">Привет, {userName}!</h3>
-        <p className="main-page__menu_description">{description}</p>
-        <div className="main-page__menu_buttons">
-          {buttons.map(({ href, text, variant, className }, index) => (
+      <h1 className={styles['main-page__title']}>DOMinators</h1>
+      <div className={styles['main-page__menu']}>
+        <h3 className={styles['main-page__menu_greetings']}>Привет, {userName}!</h3>
+        <p className={styles['main-page__menu_description']}>{description}</p>
+        <div className={styles['main-page__menu_buttons']}>
+          {buttons.map(({ href, text, className }, index) => (
             <Button
               key={index}
               href={href}
-              variant={variant}
               size="lg"
-              className={`menu-button ${className || ''}`.trim()}>
+              className={`${styles['menu-button']} ${className || ''}`.trim()}>
               {text}
             </Button>
           ))}
         </div>
       </div>
-      <Button
-        href={ROUTES.authorization()}
-        variant="outline-dark"
-        className="main-page__logout-button">
+      <Button href={ROUTES.authorization()} className={styles['main-page__logout-button']}>
         Logout
       </Button>
     </div>
