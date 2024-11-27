@@ -32,3 +32,16 @@
     background-color: $color-medium-grey;
   }
 }
+
+%primary-button {
+  @extend %button;
+
+  border: none;
+  background-color: transparent;
+  font-size: 30px;
+  font-weight: 400;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
