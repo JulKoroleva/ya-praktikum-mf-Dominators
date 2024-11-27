@@ -39,6 +39,10 @@ export const StartGame: React.FC<StartGameProps> = ({ onComplete, isGameStarted 
     }
   };
 
+  const handleSkip = () => {
+    setIsCountdownActive(true);
+  };
+
   const Hint = React.memo(({ text, image }: { text: string; image?: string }) => (
     <div className={styles['game-start__hint']}>
       <p>{text}</p>
@@ -78,7 +82,7 @@ export const StartGame: React.FC<StartGameProps> = ({ onComplete, isGameStarted 
                     styles['game-start__button'],
                     styles['game-start__button_skip'],
                   )}
-                  onClick={onComplete}>
+                  onClick={handleSkip}>
                   Skip
                 </Button>
                 <Button className={styles['game-start__button']} onClick={handleNext}>
