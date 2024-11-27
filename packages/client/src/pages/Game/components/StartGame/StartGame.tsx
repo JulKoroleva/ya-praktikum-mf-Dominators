@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import classNames from 'classnames';
+import styles from './StartGame.module.scss';
 import Popup from '@/components/Popup/Popup';
 import { Button } from 'react-bootstrap';
 import { StartGameProps } from './interfaces/StartGame.interface';
-import styles from './StartGame.module.scss';
 import { hints } from './utils/hints';
 
 export const StartGame: React.FC<StartGameProps> = ({ onComplete, isGameStarted }) => {
@@ -30,8 +31,9 @@ export const StartGame: React.FC<StartGameProps> = ({ onComplete, isGameStarted 
   }, [isCountdownActive, countdown, onComplete]);
 
   const handleNext = () => {
-    if (currentHintIndex < hints.length - 1) {
-      setCurrentHintIndex(currentHintIndex + 1);
+    const nextIndex = currentHintIndex + 1;
+    if (nextIndex < hints.length) {
+      setCurrentHintIndex(nextIndex);
     } else {
       setIsCountdownActive(true);
     }
@@ -66,13 +68,16 @@ export const StartGame: React.FC<StartGameProps> = ({ onComplete, isGameStarted 
         <div className={styles['game-start']}>
           <Hint text={hints[currentHintIndex].text} image={hints[currentHintIndex].image} />
           <div
-            className={`${styles['game-start__buttons']} ${
-              currentHintIndex === hints.length - 1 ? styles.centered : ''
-            }`}>
+            className={classNames(styles['game-start__buttons'], {
+              [styles.centered]: currentHintIndex === hints.length - 1,
+            })}>
             {currentHintIndex < hints.length - 1 ? (
               <>
                 <Button
-                  className={`${styles['game-start__button']} ${styles['game-start__button_skip']}`}
+                  className={classNames(
+                    styles['game-start__button'],
+                    styles['game-start__button_skip'],
+                  )}
                   onClick={onComplete}>
                   Skip
                 </Button>
