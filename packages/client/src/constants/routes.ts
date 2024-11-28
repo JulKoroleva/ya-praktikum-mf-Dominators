@@ -8,5 +8,4 @@ export const ROUTES = {
   profile: () => `/profile`,
   leaderboard: () => `/leaderboard`,
   error: (code: number) => `/error${code}`,
-  changePassword: () => `/change-password`,
 };

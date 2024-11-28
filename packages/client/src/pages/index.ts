@@ -6,4 +6,3 @@ export { Profile } from './Profile';
 export { Registration } from './Registration';
 export { Error } from './Error';
 export { Game } from './Game';
-export { ChangePassword } from './ChangePassword';
