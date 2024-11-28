@@ -1,0 +1,16 @@
+@use 'src/styles/formPage' as *;
+@use 'src/styles/buttons' as *;
+
+.profile-page {
+  @extend %page-with-form;
+
+  .form-container {
+    @extend %form-container;
+
+    .change-password-button {
+      @extend %custom-button;
+
+      margin-top: 24px;
+    }
+  }
+}

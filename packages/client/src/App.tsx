@@ -9,6 +9,7 @@ import {
   Registration,
   Error,
   Game,
+  ChangePassword,
 } from '@/pages';
 import { ROUTES } from '@/constants/routes';
 
@@ -21,6 +22,7 @@ const routes = [
   { path: ROUTES.leaderboard(), element: <Leaderboard /> },
   { path: ROUTES.profile(), element: <Profile /> },
   { path: ROUTES.error(404), element: <Error /> },
+  { path: ROUTES.changePassword(), element: <ChangePassword /> },
   {
     path: ROUTES.home(),
     element: <Navigate to={ROUTES.main()} replace={true} />,
