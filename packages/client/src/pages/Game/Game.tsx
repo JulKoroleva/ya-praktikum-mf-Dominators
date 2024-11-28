@@ -1,4 +1,4 @@
-import EndGame from '@/components/EndGame/EndGame';
+import EndGame from '@/pages/Game/components/EndGame/EndGame';
 import Popup from '@/components/Popup/Popup';
 import { useState } from 'react';
 
@@ -35,17 +35,14 @@ const matchResultsMock = [
   },
 ];
 
+import { CanvasComponent } from './components/CanvasComponent';
+
 export const Game = () => {
-  const [isEndedGame, setIsEndedGame] = useState(false);
+  const [isEndedGame] = useState(false);
 
   return (
     <>
-      <button
-        onClick={() => {
-          setIsEndedGame(true);
-        }}>
-        End Game
-      </button>
+      <CanvasComponent />
       <Popup open={isEndedGame} withOverlay={true}>
         <EndGame results={matchResultsMock} />
       </Popup>

@@ -20,6 +20,6 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }],
+  "include": ["src", "jest.setup.ts"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

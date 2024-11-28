@@ -1,7 +1,5 @@
-:root {
-  --primary-color: #3498db;
-}
-
+$default-bg-color: #fff;
+$secondary-color: #676767;
 $text-color-grayish-blue: #66686b;
 $color-medium-grey: #999fb7;
 $text-color-disabled: #6c757d;
@@ -12,4 +10,12 @@ $color-border-green: rgb(25 109 60 / 50%);
 $color-box-shadow-green: rgb(25 109 60 / 25%);
 $color-overlay-black: rgb(0 0 0 / 50%);
 $color-white: #fff;
+$color-black: #000;
+$color-black-custom: #2f3a2e;
 $background-color-disabled: #e9ecef;
+$app-cell-size: 40px;
+$app-cell-color: #ccc;
+$box-shadow: 0px 12px 28px 0px rgb(0 32 51 / 12%), 0px 8px 8px 0px rgb(0 32 51 / 4%);
+$box-shadow-modal: 0px 8px 8px rgb(0 32 51 / 4%), 0px 12px 28px rgb(0 32 51 / 12%);
+$grid-line-color: #5f5454;
+$box-shadow-main: 0px 0px 10px 0px rgb(32 36 72 / 20%);
