@@ -1,14 +1,15 @@
 import styles from './GameForum.module.scss';
 import { Button } from 'react-bootstrap';
 import add from '@/assets/icons/add.svg';
-import TopicList from './components/TopicList/TopicList';
+import TopicList from '../TopicList/TopicList';
 import { topicsMockData } from './ForumMock';
-import Pagination from './components/Pagination/Pagination';
+import Pagination from '../Pagination/Pagination';
 import { useEffect, useState } from 'react';
-import { TPaginationOptions, TTopic } from './components/TopicList/TopicList.types';
-import Popup from '../Popup/Popup';
+import { TPaginationOptions, TTopic } from '../TopicList/TopicList.types';
+import Popup from '../../../../components/Popup/Popup';
 import { createNewTopicFields, createNewTopicFieldsInitialValues } from './gameFormData';
-import { FormComponent } from '../FormComponent';
+import { FormComponent } from '../../../../components/FormComponent';
+import Navigation from '@/components/Navigation/Navigation';
 
 function GameForum() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -36,8 +37,8 @@ function GameForum() {
   };
 
   return (
-    <div className={styles['game-forum']}>
-      <h1 className={styles['game-forum__title']}>Game Forum</h1>
+    <div className={`${styles['game-forum']} ${styles['fade-in']}`}>
+      <Navigation title="Game Forum" to="/" />
       <Button
         className={styles['game-forum__button']}
         type="button"

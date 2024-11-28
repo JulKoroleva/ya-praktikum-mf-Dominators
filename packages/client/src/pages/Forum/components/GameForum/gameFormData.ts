@@ -20,7 +20,7 @@ export const createNewTopicFields: FieldConfigInterface[] = [
   {
     id: 'description',
     label: 'Description',
-    type: 'text',
+    type: 'textarea',
     placeholder: 'Enter description',
     isRequired: true,
     maxLength: 500,

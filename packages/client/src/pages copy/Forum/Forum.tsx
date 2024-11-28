@@ -1,4 +1,4 @@
-import GameForum from '@/components/Forum/GameForum';
+import GameForum from '@/pages/Forum/components/GameForum/GameForum';
 import React from 'react';
 
 export const Forum = () => {
