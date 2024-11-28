@@ -4,8 +4,6 @@ import classNames from 'classnames';
 
 import { Form } from 'react-bootstrap';
 
-// import CrossedEyeIcon from '@/assets/icons/crossed-eye.svg?react';
-// import EyeIcon from '@/assets/icons/eye.svg?react';
 // import CloseIcon from '@/assets/icons/close.svg?react';
 
 import { FieldConfigInterface, FormFieldInterface } from './formField.interface';
@@ -172,16 +170,17 @@ export const FormField = <T extends FieldValues>({
                     }}
                   />
                   <button
-                    className={styles['invisible-button']}
+                    className={classNames(styles['invisible-button'], {
+                      [styles['eye-icon']]: isEyeVisible,
+                      [styles['crossed-eye-icon']]: !isEyeVisible,
+                    })}
                     onMouseDown={handleMouseDown}
                     onMouseUp={handleMouseUp}
                     onMouseLeave={handleMouseUp}
                     onTouchStart={handleMouseDown}
                     onTouchEnd={handleMouseUp}
                     onTouchCancel={handleMouseUp}
-                    type="button">
-                    {/* {isEyeVisible ? <CrossedEyeIcon /> : <EyeIcon />} */}
-                  </button>
+                    type="button"></button>
                   <Form.Control.Feedback type="invalid" className={styles['error-message']}>
                     {error?.message}
                   </Form.Control.Feedback>
