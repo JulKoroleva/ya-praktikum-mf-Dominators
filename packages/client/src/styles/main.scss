@@ -1,10 +1,10 @@
 @use 'fonts';
 
 body {
-  background: linear-gradient(#5f5454, transparent 1px),
-    linear-gradient(90deg, #5f5454, transparent 1px);
-  background-size: 36px 36px;
-  background-position: center center;
+  background-image: 
+    linear-gradient(to right, $app-cell-color 1px, transparent 1px),
+    linear-gradient(to bottom, $app-cell-color 1px, transparent 1px);
+  background-size: $app-cell-size $app-cell-size;
 }
 
 * {

@@ -1,4 +1,4 @@
-import EndGame from '@/components/EndGame/EndGame';
+import EndGame from '@/pages/Game/components/EndGame/EndGame';
 import Popup from '@/components/Popup/Popup';
 import { useState } from 'react';
 

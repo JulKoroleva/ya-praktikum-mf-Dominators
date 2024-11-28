@@ -11,6 +11,8 @@
     "test": "jest ."
   },
   "dependencies": {
+    "@tsparticles/engine": "^3.7.1",
+    "@tsparticles/react": "^3.0.0",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.2",
@@ -18,7 +20,8 @@
     "express": "^4.18.1",
     "husky": "^9.1.7",
     "pg": "^8.8.0",
-    "prettier": "^2.7.1"
+    "prettier": "^2.7.1",
+    "tsparticles": "^3.7.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12",
@@ -30,6 +33,7 @@
     "babel-jest": "^29.0.1",
     "eslint": "^8.23.0",
     "jest": "^28",
+    "jest-transform-stub": "^2.0.0",
     "nodemon": "^2.0.19",
     "prettier": "^2.7.1",
     "ts-jest": "^28.0.8",
