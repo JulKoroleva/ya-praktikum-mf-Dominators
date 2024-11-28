@@ -8,6 +8,7 @@ import Comment from '../Comment/Comment';
 import { FormComponent } from '../../../../components/FormComponent';
 import { topicPostFormData, topicPostFormDataInitialValues } from './topicPostFormData';
 import Navigation from '@/components/Navigation/Navigation';
+import { ROUTES } from '@/constants/routes';
 
 function TopicPost({ id }: TTopicPost) {
   const [topicData, setTopicData] = useState<TTopic | null>(null);
@@ -30,7 +31,7 @@ function TopicPost({ id }: TTopicPost) {
 
   return (
     <div className={`${styles['topic-post']} ${styles['fade-in']}`}>
-      <Navigation title={`Discussion #${id}`} to="/forum" />
+      <Navigation title={`Discussion #${id}`} to={ROUTES.forum()} />
       <div className={styles['topic-post__container']}>
         <div className={styles['topic-post__info']}>
           <span className={styles['topic-post__topic-author']}>{topicData?.creator}</span>

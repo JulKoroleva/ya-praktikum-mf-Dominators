@@ -1,3 +1,4 @@
+import { ROUTES } from '@/constants/routes';
 import styles from './ListItem.module.scss';
 import { TListItemProps } from './ListItem.types';
 import { useNavigate } from 'react-router-dom';
@@ -7,7 +8,7 @@ function ListItem({ topic }: TListItemProps) {
   const navigate = useNavigate();
 
   const handleReadTopic = () => {
-    navigate(`/forum/${id}`);
+    navigate(ROUTES.topic(id));
   };
 
   return (

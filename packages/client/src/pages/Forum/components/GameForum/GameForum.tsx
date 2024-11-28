@@ -10,6 +10,7 @@ import Popup from '../../../../components/Popup/Popup';
 import { createNewTopicFields, createNewTopicFieldsInitialValues } from './gameFormData';
 import { FormComponent } from '../../../../components/FormComponent';
 import Navigation from '@/components/Navigation/Navigation';
+import { ROUTES } from '@/constants/routes';
 
 function GameForum() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -38,7 +39,7 @@ function GameForum() {
 
   return (
     <div className={`${styles['game-forum']} ${styles['fade-in']}`}>
-      <Navigation title="Game Forum" to="/" />
+      <Navigation title="Game Forum" to={ROUTES.main()} />
       <Button
         className={styles['game-forum__button']}
         type="button"
