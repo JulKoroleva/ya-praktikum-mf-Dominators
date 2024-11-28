@@ -1,0 +1,87 @@
+.failed {
+  background-color: $background-color-red-light !important;
+  color: $color-danger !important;
+  border-radius: 8px 8px 8px 8px;
+}
+
+.succeeded {
+  color: $color-green-main !important;
+  background-color: $color-light-green !important;
+  border-radius: 8px 8px 8px 8px;
+}
+
+.modal-loader {
+  padding: 0 24px 24px 24px;
+}
+
+.status-header {
+  display: flex;
+  align-items: center;
+
+  .svg {
+    margin-right: 20px;
+  }
+}
+
+.universal-modal {
+  .modal-header {
+    border-bottom: none;
+    display: flex;
+    justify-content: space-between;
+    padding-left: 24px;
+    align-items: flex-start;
+
+    %close-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: inherit;
+      border: none;
+      height: 40px;
+      width: 40px;
+      cursor: pointer;
+      color: inherit;
+
+      &:hover {
+        background-color: inherit;
+        color: inherit;
+      }
+
+      &:disabled {
+        color: inherit;
+      }
+    }
+
+    .modal-header-close {
+      @extend %close-button;
+
+      &:hover {
+        background-color: $background-color-pale-sky-blue;
+        color: $color-green-main-hover;
+      }
+
+      &:disabled {
+        color: $color-medium-grey;
+      }
+    }
+
+    &-title {
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      color: $color-black;
+      font-size: 18px;
+      line-height: 18px;
+      font-weight: 700;
+    }
+  }
+
+  .modal-body {
+    border-radius: 0 0 8px 8px;
+    margin: 0;
+    padding: 0;
+    color: $color-black;
+    font-size: 15px;
+    font-weight: 500;
+  }
+}

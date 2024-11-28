@@ -133,8 +133,8 @@ export const Main = () => {
           ))}
         </div>
       </div>
-      <Button href={ROUTES.authorization()} className={styles['main-page__logout-button']}>
-        Logout
+      <Button href={ROUTES.registration()} className={styles['main-page__logout-button']}>
+        Login
       </Button>
     </div>
   );

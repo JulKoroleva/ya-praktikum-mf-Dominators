@@ -1,0 +1,1 @@
+export { UniversalModal } from './UniversalModal';
