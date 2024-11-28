@@ -43,17 +43,6 @@ export const StartGame: React.FC<StartGameProps> = ({ onComplete, isGameStarted 
     setIsCountdownActive(true);
   };
 
-  const Hint = React.memo(({ text, image }: { text: string; image?: string }) => (
-    <div className={styles['game-start__hint']}>
-      <p>{text}</p>
-      {image && (
-        <div className={styles['game-start__tip']}>
-          <img src={image} alt="Hint tip" />
-        </div>
-      )}
-    </div>
-  ));
-
   if (isCountdownActive) {
     return (
       <div className={styles['game-start__countdown']}>
@@ -70,7 +59,14 @@ export const StartGame: React.FC<StartGameProps> = ({ onComplete, isGameStarted 
     return (
       <Popup open={!isGameStarted} withOverlay={true}>
         <div className={styles['game-start']}>
-          <Hint text={hints[currentHintIndex].text} image={hints[currentHintIndex].image} />
+          <div className={styles['game-start__hint']}>
+            <p>{hints[currentHintIndex].text}</p>
+            {hints[currentHintIndex].image && (
+              <div className={styles['game-start__tip']}>
+                <img src={hints[currentHintIndex].image} alt="Hint tip" />
+              </div>
+            )}
+          </div>
           <div
             className={classNames(styles['game-start__buttons'], {
               [styles.centered]: currentHintIndex === hints.length - 1,
