@@ -1,37 +1,33 @@
-.failed {
-  background-color: $background-color-red-light !important;
-  color: $color-danger !important;
-  border-radius: 8px 8px 8px 8px;
-}
-
-.succeeded {
-  color: $color-green-main !important;
-  background-color: $color-light-green !important;
-  border-radius: 8px 8px 8px 8px;
-}
-
-.modal-loader {
-  padding: 0 24px 24px 24px;
-}
-
-.status-header {
-  display: flex;
-  align-items: center;
-
-  .svg {
-    margin-right: 20px;
-  }
+.modal-backdrop {
+  background-color: $color-overlay-black;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1050;
 }
 
 .universal-modal {
+  position: fixed;
+  width: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: $color-white;
+  border-radius: 8px;
+  box-shadow: 0 4px 4px rgb(0 0 0 / 25%);
+  z-index: 1060;
+
   .modal-header {
     border-bottom: none;
     display: flex;
     justify-content: space-between;
-    padding-left: 24px;
+    padding: 0 16px;
     align-items: flex-start;
+    cursor: default;
 
-    %close-button {
+    .close-button {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -39,8 +35,11 @@
       border: none;
       height: 40px;
       width: 40px;
+      font-size: 40px;
+      line-height: 40px;
       cursor: pointer;
-      color: inherit;
+      color: inherit !important;
+      border-radius: 0 8px 8px 0;
 
       &:hover {
         background-color: inherit;
@@ -53,7 +52,18 @@
     }
 
     .modal-header-close {
-      @extend %close-button;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: inherit;
+      border: none;
+      height: 40px;
+      width: 40px;
+      font-size: 40px;
+      line-height: 40px;
+      cursor: pointer;
+      color: inherit !important;
+      border-radius: 0 8px 8px 0;
 
       &:hover {
         background-color: $background-color-pale-sky-blue;
@@ -70,9 +80,7 @@
       display: flex;
       align-items: center;
       color: $color-black;
-      font-size: 18px;
-      line-height: 18px;
-      font-weight: 700;
+      font-weight: 500;
     }
   }
 
@@ -80,8 +88,53 @@
     border-radius: 0 0 8px 8px;
     margin: 0;
     padding: 0;
-    color: $color-black;
+    cursor: default;
+
+    // color: $color-black;
     font-size: 15px;
     font-weight: 500;
   }
+}
+
+.failed {
+  background-color: $background-color-red-light !important;
+  color: $color-danger !important;
+  border-radius: 8px;
+}
+
+.succeeded {
+  color: $color-green-main !important;
+  background-color: $color-light-green !important;
+  border-radius: 8px;
+}
+
+.modal-loader {
+  padding: 0 24px 24px;
+}
+
+.status-header {
+  display: flex;
+  align-items: center;
+
+  .svg {
+    margin-right: 12px;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.modal-ct {
+  max-width: max-content;
+}
+
+.modal-sm {
+  max-width: 300px;
+}
+
+.modal-lg {
+  max-width: 800px;
+}
+
+.modal-xl {
+  max-width: 1140px;
 }

@@ -1,16 +1,15 @@
 @use 'fonts';
 
 body {
-  background-image: 
-    linear-gradient(to right, $app-cell-color 1px, transparent 1px),
+  background-image: linear-gradient(to right, $app-cell-color 1px, transparent 1px),
     linear-gradient(to bottom, $app-cell-color 1px, transparent 1px);
   background-size: $app-cell-size $app-cell-size;
+  color: $color-black-custom;
 }
 
 * {
   font-family: 'Otomanopee One', Arial, sans-serif;
   padding: 0;
   margin: 0;
-  color: $color-black-custom;
   box-sizing: border-box;
 }

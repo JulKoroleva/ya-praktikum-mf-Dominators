@@ -1,13 +1,13 @@
 import React from 'react';
-import { Button, Modal } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
+import classNames from 'classnames';
 
 import { Loader } from '../Loader';
 
-import CloseIcon from '@/assets/icons/close.svg';
+import { IUniversalModal } from './universalModal.interface';
+
 import Succeeded from '@/assets/icons/succeeded.svg';
 import Failed from '@/assets/icons/failed.svg';
-
-import { IUniversalModal } from './universalModal.interface';
 
 import styles from './universalModal.module.scss';
 
@@ -16,7 +16,7 @@ export const UniversalModal: React.FC<IUniversalModal> = ({
   onHide,
   title = '',
   children,
-  modalSize,
+  modalSize = 'ct',
   status,
   zIndex,
 }) => {
@@ -55,31 +55,33 @@ export const UniversalModal: React.FC<IUniversalModal> = ({
   const modalColorClass = status === 'succeeded' || status === 'failed' ? styles[status] : '';
   const closeButtonClass =
     status === 'succeeded' || status === 'failed' ? 'close-button' : 'modal-header-close';
+  const sizeClass = styles[`modal-${modalSize}`];
 
   return (
-    <Modal
-      className={styles['universal-modal']}
-      show={show}
-      onHide={onHide}
-      centered
-      size={modalSize}
-      backdrop="static"
-      style={{ zIndex: zIndex || '1050' }}>
-      <Modal.Header className={`${styles['modal-header']} ${modalColorClass}`}>
-        <Modal.Title className={`${styles['modal-header-title']} ${modalColorClass}`}>
-          {status ? statusHeaderMap[status as StatusType] : title}
-        </Modal.Title>
-        <Button
-          type="button"
-          className={`${styles[closeButtonClass]}`}
-          data-dismiss="modal"
-          onClick={onHide}>
-          <img src={CloseIcon} alt="Close" />
-        </Button>
-      </Modal.Header>
-      <Modal.Body className={`${styles['modal-body']} ${modalColorClass}`}>
-        {status ? statusBodyMap[status as StatusType] : children}
-      </Modal.Body>
-    </Modal>
+    <>
+      {show && (
+        <div className={styles['modal-backdrop']} onClick={onHide}>
+          <div
+            className={classNames(styles['universal-modal'], sizeClass)}
+            style={{ zIndex: zIndex || '1050' }}>
+            <div className={classNames(styles['modal-header'], modalColorClass)}>
+              <div className={classNames(styles['modal-header-title'], modalColorClass)}>
+                {status ? statusHeaderMap[status as StatusType] : title}
+              </div>
+              <Button
+                type="button"
+                className={`${styles[closeButtonClass]}`}
+                data-dismiss="modal"
+                onClick={onHide}>
+                &times;
+              </Button>
+            </div>
+            <div className={classNames(styles['modal-body'], modalColorClass)}>
+              {status ? statusBodyMap[status as StatusType] : children}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };

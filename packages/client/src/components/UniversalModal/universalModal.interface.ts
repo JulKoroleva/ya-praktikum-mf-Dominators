@@ -5,7 +5,7 @@ export interface IUniversalModal {
   onHide: () => void;
   title?: string;
   children?: ReactNode;
-  modalSize?: 'sm' | 'lg' | 'xl';
+  modalSize?: 'ct' | 'sm' | 'lg' | 'xl';
   status?: string;
   zIndex?: number;
 }
