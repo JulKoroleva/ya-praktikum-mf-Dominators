@@ -1,4 +1,4 @@
-import TopicPost from '@/pages/Topic/components/TopicPost/TopicPost';
+import TopicPost from '@/pages/Forum/components/TopicPost/TopicPost';
 import { useParams } from 'react-router-dom';
 
 export const Topic = () => {

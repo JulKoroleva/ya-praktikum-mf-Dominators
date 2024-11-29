@@ -2,8 +2,8 @@ import styles from './TopicPost.module.scss';
 import { TTopicPost } from './TopicPost.types';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { topicsMockData } from '../../../Forum/components/GameForum/ForumMock';
-import { TTopic } from '../../../Forum/components/TopicList/TopicList.types';
+import { topicsMockData } from '../GameForum/ForumMock';
+import { TTopic } from '../TopicList/TopicList.types';
 import Comment from '../Comment/Comment';
 import { FormComponent } from '../../../../components/FormComponent';
 import { topicPostFormData, topicPostFormDataInitialValues } from './topicPostFormData';
@@ -25,8 +25,7 @@ function TopicPost({ id }: TTopicPost) {
   }, []);
 
   const onSubmit = (data: Record<string, string>) => {
-    // eslint-disable-next-line no-console
-    console.log(data);
+    return data;
   };
 
   return (

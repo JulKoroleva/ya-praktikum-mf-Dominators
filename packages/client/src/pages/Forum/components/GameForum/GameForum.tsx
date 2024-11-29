@@ -25,16 +25,13 @@ function GameForum() {
   }, []);
 
   const fetchTopics = (paginationOptions?: TPaginationOptions) => {
-    // eslint-disable-next-line no-console
-    console.log(paginationOptions);
     const res = topicsMockData;
     setTopicList(res.topics);
     setPaginationOptions(paginationOptions || res.pagination);
   };
 
   const onSubmit = (data: Record<string, string>) => {
-    // eslint-disable-next-line no-console
-    console.log(data);
+    return data;
   };
 
   return (
