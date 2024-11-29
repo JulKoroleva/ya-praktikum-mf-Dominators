@@ -85,6 +85,7 @@
     text-decoration: none;
     border: 2px solid $color-black-custom;
     color: $color-black-custom;
+    background-color: transparent;
     padding: 5px 15px;
     border-radius: 4px;
 
@@ -92,14 +93,14 @@
       transform: scale(1.1);
       border: 2px solid $color-black-custom;
       color: $color-black-custom;
-      background: $background-color-disabled;
+      background-color: transparent;
     }
 
     &:active {
       transform: scale(1.1);
       border: 2px solid $color-black-custom !important;
       color: $color-black-custom !important;
-      background: $background-color-disabled !important;
+      background-color: transparent !important;
     }
   }
 }

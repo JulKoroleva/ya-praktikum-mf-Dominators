@@ -33,6 +33,12 @@
         "except": ["first-nested"],
         "ignore": ["between-comments", "stylelint-commands"]
       }
+    ],
+    "selector-pseudo-class-no-unknown": [
+      true,
+      {
+        "ignorePseudoClasses": ["global"]
+      }
     ]
   },
   "ignoreFiles": ["dist/*", "node_modules/**", "public/**"]
