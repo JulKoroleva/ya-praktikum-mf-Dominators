@@ -1,15 +1,20 @@
 import React, { useRef, useState, useEffect, useCallback, useMemo } from 'react';
-import { ROUTES } from '@/constants/routes';
 import { Button } from 'react-bootstrap';
-import Particles, { initParticlesEngine } from '@tsparticles/react';
+import { useNavigate } from 'react-router-dom';
 import { loadFull } from 'tsparticles';
-import { IButtonConfig } from './interfaces/Button.interface';
+import Particles, { initParticlesEngine } from '@tsparticles/react';
 import { Container } from '@tsparticles/engine';
-import { COLOR_PALETTE } from './constants/color.constant';
+
 import { IParticle } from './interfaces/Particle.interface';
+import { IButtonConfig } from './interfaces/Button.interface';
+
+import { ROUTES } from '@/constants/routes';
+import { COLOR_PALETTE } from './constants/color.constant';
+
 import styles from './Main.module.scss';
 
 export const Main = () => {
+  const navigate = useNavigate();
   const containerRef = useRef<Container | null>(null);
   const [init, setInit] = useState(false);
 
@@ -112,6 +117,7 @@ export const Main = () => {
     },
     [handleCollision],
   );
+
   return (
     <div className={styles['main-page']}>
       {init && (
@@ -133,8 +139,12 @@ export const Main = () => {
           ))}
         </div>
       </div>
-      <Button href={ROUTES.authorization()} className={styles['main-page__logout-button']}>
-        Logout
+      <Button
+        className={styles['main-page__logout-button']}
+        onClick={() => {
+          navigate(ROUTES.authorization());
+        }}>
+        Log in
       </Button>
     </div>
   );
