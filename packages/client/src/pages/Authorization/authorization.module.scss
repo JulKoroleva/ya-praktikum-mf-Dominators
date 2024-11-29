@@ -1,18 +1,20 @@
-@use 'src/styles/formPage' as *;
 @use 'src/styles/buttons' as *;
+@use 'src/styles/formPage' as *;
 
-.registration-page {
+.authorization-page {
   @extend %page-with-form;
 
   .form-container {
     @extend %form-container;
 
-    .back-button {
+    h1 {
+      margin-bottom: 24px;
+    }
+
+    .register-button {
       @extend %custom-button-outline;
 
       margin-top: 12px;
-      min-width: max-content;
-      width: 60%;
     }
   }
 }

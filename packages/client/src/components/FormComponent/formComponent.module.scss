@@ -10,5 +10,7 @@
     @extend %custom-button;
 
     margin-top: 24px;
+    min-width: max-content;
+    width: 60%;
   }
 }

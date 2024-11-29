@@ -76,14 +76,15 @@
 
 .countdown-go {
   font-size: 54px;
-  animation: shrinkAndFade 1s;
+  animation: shrink-and-fade 1s;
 }
 
-@keyframes shrinkAndFade {
+@keyframes shrink-and-fade {
   0% {
     opacity: 1;
     transform: scale(1);
   }
+
   100% {
     opacity: 0;
     transform: scale(0.5);

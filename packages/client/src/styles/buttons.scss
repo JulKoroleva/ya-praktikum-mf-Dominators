@@ -45,3 +45,31 @@
     cursor: pointer;
   }
 }
+
+%custom-button-outline {
+  @extend %button;
+
+  background-color: $color-white;
+  color: $color-green-main;
+  border: 1px solid $color-green-main;
+  padding: 7px 16px;
+
+  &:hover {
+    color: $color-green-main;
+    background-color: $color-light-green;
+    border: 1px solid $color-green-main;
+    cursor: pointer;
+  }
+
+  &:active {
+    color: $color-green-main !important;
+    background-color: $color-light-green !important;
+    border: 1px solid $color-green-main !important;
+  }
+
+  &:disabled {
+    background-color: $color-white;
+    color: $color-medium-grey;
+    border-color: $color-medium-grey;
+  }
+}
