@@ -1,4 +1,5 @@
-import EndGame from '@/pages/Game/components/EndGame/EndGame';
+import EndGame from './components/EndGame/EndGame';
+import { StartGame } from './components/StartGame/StartGame';
 import Popup from '@/components/Popup/Popup';
 import { useState } from 'react';
 
@@ -38,14 +39,25 @@ const matchResultsMock = [
 import { CanvasComponent } from './components/CanvasComponent';
 
 export const Game = () => {
+  const [isGameStarted, setIsGameStarted] = useState(false);
   const [isEndedGame] = useState(false);
+
+  const handleStartGame = () => {
+    setIsGameStarted(true);
+  };
 
   return (
     <>
-      <CanvasComponent />
-      <Popup open={isEndedGame} withOverlay={true}>
-        <EndGame results={matchResultsMock} />
-      </Popup>
+      {!isGameStarted ? (
+        <StartGame onComplete={handleStartGame} isGameStarted={isGameStarted} />
+      ) : (
+        <>
+          <CanvasComponent />
+          <Popup open={isEndedGame} withOverlay={true}>
+            <EndGame results={matchResultsMock} />
+          </Popup>
+        </>
+      )}
     </>
   );
 };

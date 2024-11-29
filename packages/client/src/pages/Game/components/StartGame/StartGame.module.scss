@@ -1,0 +1,92 @@
+.game-start {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px 20px 0;
+
+  &__hint {
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  &__tip {
+    position: absolute;
+    top: -80px;
+    right: -80px;
+    width: 120px;
+    height: 120px;
+    border: 2px solid;
+    border-radius: 50%;
+    background-color: $color-white;
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__countdown {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    font-size: 30px;
+    color: $color-black;
+  }
+
+  &__buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+
+    &.centered {
+      justify-content: center;
+      gap: 0;
+    }
+  }
+
+  &__button {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    background-color: transparent;
+    color: $color-medium-grey;
+
+    &_skip {
+      opacity: 0.5;
+    }
+
+    &:hover {
+      opacity: 0.4;
+    }
+  }
+}
+
+.countdown-go {
+  font-size: 54px;
+  animation: shrink-and-fade 1s;
+}
+
+@keyframes shrink-and-fade {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+}

@@ -1,0 +1,20 @@
+@use 'src/styles/buttons' as *;
+
+.error-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+
+    &__title {
+        margin: auto 0 50px;
+        text-align: center;
+        white-space: pre;
+    }
+
+    &__button {
+        margin: auto 0 20px;
+
+        @extend %primary-button;
+    }
+}

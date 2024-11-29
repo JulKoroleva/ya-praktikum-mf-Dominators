@@ -1,3 +1,5 @@
+@use 'src/styles/buttons' as *;
+
 .main-page {
   position: relative;
   display: flex;
@@ -23,7 +25,7 @@
       margin-top: 10px;
       max-width: 400px;
     }
-    
+
     &greetings {
       font-size: 1rem;
       margin-top: 10px;
@@ -42,7 +44,7 @@
         display: flex;
         text-decoration: none;
         min-width: 300px;
-        background: $color-black;
+        background: $color-black-custom;
         color: $color-white;
         height: 60px;
         border-radius: 4px;
@@ -61,7 +63,7 @@
         font-size: 30px;
         margin: 10px 0 20px;
         border-radius: 4px;
-        background: $color-black;
+        background: $color-black-custom;
         color: $color-white;
       }
 
@@ -77,15 +79,28 @@
   }
 
   &__logout-button {
+    @extend %custom-button-outline;
+
     margin-top: 20px;
     text-decoration: none;
-    border: 2px solid;
+    border: 2px solid $color-black-custom;
+    color: $color-black-custom;
+    background-color: transparent;
     padding: 5px 15px;
     border-radius: 4px;
 
     &:hover {
-      opacity: 0.8;
       transform: scale(1.1);
+      border: 2px solid $color-black-custom;
+      color: $color-black-custom;
+      background-color: transparent;
+    }
+
+    &:active {
+      transform: scale(1.1);
+      border: 2px solid $color-black-custom !important;
+      color: $color-black-custom !important;
+      background-color: transparent !important;
     }
   }
 }

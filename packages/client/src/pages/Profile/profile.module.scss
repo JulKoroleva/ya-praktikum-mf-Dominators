@@ -1,18 +1,16 @@
 @use 'src/styles/formPage' as *;
 @use 'src/styles/buttons' as *;
 
-.registration-page {
+.profile-page {
   @extend %page-with-form;
 
   .form-container {
     @extend %form-container;
 
-    .back-button {
-      @extend %custom-button-outline;
+    .change-password-button {
+      @extend %custom-button;
 
-      margin-top: 12px;
-      min-width: max-content;
-      width: 60%;
+      margin-top: 24px;
     }
   }
 }
