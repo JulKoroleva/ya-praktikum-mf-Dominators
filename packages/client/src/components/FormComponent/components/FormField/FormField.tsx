@@ -189,6 +189,48 @@ export const FormField = <T extends FieldValues>({
             }}
           />
         )}
+        {field.type === 'textarea' && (
+          <Controller
+            name={field.id as Path<T>}
+            control={control}
+            rules={validationRules}
+            render={({ field: fieldData, fieldState: { error } }) => {
+              return (
+                <>
+                  <Form.Control
+                    className={styles['textarea']}
+                    placeholder={field?.placeholder ? field?.placeholder : ''}
+                    type="textarea"
+                    as="textarea"
+                    {...fieldData}
+                    value={
+                      (fieldData.value !== null
+                        ? (field.upperCase
+                            ? String(fieldData.value).toUpperCase()
+                            : String(fieldData.value)
+                          )?.trimStart()
+                        : '') || ''
+                    }
+                    onChange={e => {
+                      const value = e.target.value.trimStart();
+                      fieldData.onChange(value === '' ? null : value);
+                    }}
+                    isInvalid={!!error}
+                    disabled={field.disabled}
+                    maxLength={field.maxLength}
+                    onBlur={() => {
+                      trigger(field.id as Path<T>);
+                      onFieldBlur(fieldData);
+                    }}
+                  />
+                  <Form.Control.Feedback type="invalid" className={styles['error-message']}>
+                    {error?.message}
+                  </Form.Control.Feedback>
+                </>
+              );
+            }}
+          />
+        )}
       </div>
     </Form.Group>
   );
