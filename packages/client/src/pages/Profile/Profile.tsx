@@ -18,8 +18,7 @@ export const Profile = () => {
   const navigate = useNavigate();
   const [isChangingPassword, setIsChangingPassword] = useState(false);
 
-  const onSubmit = (data: Record<string, string>) => {
-    console.log(data);
+  const onSubmit = () => {
     if (isChangingPassword) {
       setIsChangingPassword(false);
     } else {
