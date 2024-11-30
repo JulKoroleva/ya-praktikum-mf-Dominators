@@ -1,7 +1,10 @@
 import { FieldConfigInterface } from '@/components/FormComponent/components/FormField/formField.interface';
+import { IRegistrationFormSubmit } from '@/redux/slices/pagesSlices/registrationSlices/registrationSlice.interface';
 import { validateEmail } from '@/services/validationUtils';
 
-export const registrationPageFields: FieldConfigInterface[] = [
+export const registrationPageFields: FieldConfigInterface<
+  IRegistrationFormSubmit & { password_repeat: string }
+>[] = [
   {
     id: 'email',
     label: 'Email',
@@ -11,6 +14,21 @@ export const registrationPageFields: FieldConfigInterface[] = [
     validation: () => ({
       validate: value => {
         return validateEmail(value);
+      },
+    }),
+  },
+  {
+    id: 'login',
+    label: 'Login',
+    type: 'text',
+    placeholder: 'Enter your login',
+    isRequired: true,
+    validation: () => ({
+      validate: value => {
+        if (!/^(?=[a-zA-Z_-]*\d?[a-zA-Z_-])[a-zA-Z0-9_-]{3,20}$/.test(value)) {
+          return 'Enter a valid login';
+        }
+        return true;
       },
     }),
   },
@@ -93,6 +111,7 @@ export const registrationPageFields: FieldConfigInterface[] = [
 
 export const registrationPageFieldsInitialValues = {
   email: '',
+  login: '',
   first_name: '',
   second_name: '',
   phone: '',
