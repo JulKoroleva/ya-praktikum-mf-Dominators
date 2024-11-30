@@ -1,0 +1,77 @@
+$gold-color: #FFC300;
+$bronze-color: #CD7F32;
+$silver-color: #C0C0C0;
+
+.leaderboard-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 8px 10px;
+
+    &_its-me {
+        background-color: $color-box-shadow-green;
+    }
+
+
+    &__rank {
+        display: flex;
+        justify-content: center;
+        width: 40px;
+    }
+
+    &__medal {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+
+    &__name {
+        max-width: 300px;
+        text-overflow: ellipsis;
+        white-space: nowrap;        
+        overflow: hidden;
+    }
+
+    &__score {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: auto;
+        opacity: .6;
+    }
+
+    &:nth-child(1) {
+        .leaderboard-item {
+            &__medal {
+                width: 34px;
+                height: 34px;
+                background-color: $gold-color;
+                color: $color-white;
+            }
+        }
+    }
+
+    &:nth-child(2) {
+        .leaderboard-item {
+            &__medal {
+                width: 32px;
+                height: 32px;
+                background-color: $silver-color;
+                color: $color-white;
+            }
+        }
+    }
+
+    &:nth-child(3) {
+        .leaderboard-item {
+            &__medal {
+                width: 30px;
+                height: 30px;
+                background-color: $bronze-color;
+                color: $color-white;
+            }
+        }
+    }
+}

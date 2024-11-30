@@ -1,0 +1,22 @@
+import styles from './LeaderBoardItem.module.scss';
+import { TLeaderBoardItemProps } from './LeaderBoardItem.types';
+
+const MY_USER_ID = 6;
+
+function LeaderBoardItem({ item }: TLeaderBoardItemProps) {
+  const { userId, rank, userName, score } = item;
+  const itsMe = userId === MY_USER_ID;
+
+  return (
+    <div
+      className={`${styles['leaderboard-item']} ${itsMe ? styles['leaderboard-item_its-me'] : ''}`}>
+      <div className={styles['leaderboard-item__rank']}>
+        <div className={styles['leaderboard-item__medal']}>{rank}</div>
+      </div>
+      <div className={styles['leaderboard-item__name']}>{userName}</div>
+      <div className={styles['leaderboard-item__score']}>{score}</div>
+    </div>
+  );
+}
+
+export default LeaderBoardItem;
