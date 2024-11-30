@@ -8,6 +8,7 @@ import { UniversalModal } from '@/components/UniversalModal';
 
 import { TypeDispatch } from '@/redux/store/store';
 import { registrationRequest } from '@/redux/requests/pagesRequests/registrationRequests/registrationRequests';
+import { clearRegistrationState } from '@/redux/slices/pagesSlices/registrationSlices/registrationSlice';
 import {
   selectRegistrationStatus,
   selectRegistrationError,
@@ -20,6 +21,7 @@ import {
   registrationPageFields,
   registrationPageFieldsInitialValues,
 } from './registrationPageData';
+import { ROUTES } from '@/constants/routes';
 
 import styles from './registration.module.scss';
 
@@ -38,18 +40,16 @@ export const Registration = () => {
   const registrationError = useSelector(selectRegistrationError);
 
   const onSubmit = (data: IRegistrationFormSubmit & { password_repeat: string }) => {
-    // const validData: Record<string, string> = {...data};
-    // delete validData.password_repeat;
     dispatch(registrationRequest(data));
   };
 
   const handleCloseModal = () => {
-    // const status = modalConfig.status;
-    // dispatch(resetRegistrationChangePassword());
+    const status = modalConfig.status;
+    dispatch(clearRegistrationState());
     setModalConfig({ show: false, header: '', status: undefined });
-    // if (status === 'succeeded') {
-    //   navigate('/login');
-    // }
+    if (status === 'succeeded') {
+      navigate(ROUTES.main());
+    }
   };
 
   useEffect(() => {
@@ -61,12 +61,12 @@ export const Registration = () => {
     if (registrationStatus !== 'idle') {
       statusValue = registrationStatus;
       error = registrationError;
-      succeeded = 'Пароль успешно изменен';
+      succeeded = 'User successfully registered';
     }
 
     switch (statusValue) {
       case 'loading':
-        header = 'Загрузка';
+        header = 'Loading...';
         statusValue = 'loading';
         break;
       case 'succeeded':
@@ -74,7 +74,7 @@ export const Registration = () => {
         statusValue = 'succeeded';
         break;
       case 'failed':
-        header = error || 'Ошибка';
+        header = error || 'Something went wrong';
         statusValue = 'failed';
         break;
       default:

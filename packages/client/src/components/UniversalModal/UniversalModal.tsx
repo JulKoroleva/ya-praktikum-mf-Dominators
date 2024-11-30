@@ -60,7 +60,8 @@ export const UniversalModal: React.FC<IUniversalModal> = ({
   return (
     <>
       {show && (
-        <div className={styles['modal-backdrop']} onClick={onHide}>
+        <>
+          <div className={styles['modal-backdrop']} onClick={onHide}></div>
           <div
             className={classNames(styles['universal-modal'], sizeClass)}
             style={{ zIndex: zIndex || '1050' }}>
@@ -80,7 +81,7 @@ export const UniversalModal: React.FC<IUniversalModal> = ({
               {status ? statusBodyMap[status as StatusType] : children}
             </div>
           </div>
-        </div>
+        </>
       )}
     </>
   );

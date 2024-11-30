@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { IRegistrationSlice } from './registrationSlice.interface';
 import { registrationRequest } from '@/redux/requests/pagesRequests/registrationRequests/registrationRequests';
+
+import { IRegistrationSlice } from './registrationSlice.interface';
 
 const initialState: IRegistrationSlice = {
   registerStatus: 'idle',

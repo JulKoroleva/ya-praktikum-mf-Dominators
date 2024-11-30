@@ -1,6 +1,7 @@
 import { FieldConfigInterface } from '@/components/FormComponent/components/FormField/formField.interface';
+import { IAuthorizationFormSubmit } from '@/redux/slices/pagesSlices/authorizationSlices/authorizationSlice.interface';
 
-export const authorizationPageFields: FieldConfigInterface[] = [
+export const authorizationPageFields: FieldConfigInterface<IAuthorizationFormSubmit>[] = [
   {
     id: 'login',
     label: 'Login',
