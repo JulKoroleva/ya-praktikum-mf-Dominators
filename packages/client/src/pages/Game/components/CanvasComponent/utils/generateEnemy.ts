@@ -1,6 +1,6 @@
 import { ENEMY_COUNT } from '@/constants/game';
 
-import { GameFeatureModel } from '../models/GameFeature.model';
+import { EnemyStatic } from '../models';
 
 /** временный вариант. супер примитивный */
 export function GenerateEnemy({
@@ -9,15 +9,15 @@ export function GenerateEnemy({
 }: {
   width: number;
   height: number;
-}): ReadonlyArray<GameFeatureModel> {
+}): ReadonlyArray<EnemyStatic> {
   return new Array(ENEMY_COUNT).fill(null).map(
     () =>
-      new GameFeatureModel({
-        X: Math.random() * width,
-        Y: Math.random() * height,
+      new EnemyStatic({
+        X: 2100,
+        Y: 2100,
         StrokeStyle: 'green',
         ColorFill: 'green',
-        Radius: 50,
+        Radius: 5,
       }),
   );
 }

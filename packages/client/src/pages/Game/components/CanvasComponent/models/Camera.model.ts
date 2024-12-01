@@ -1,10 +1,11 @@
 import { ICoords } from '../CanvasComponent.interface';
 
-import { MapRegionModel, PlayerModel } from '.';
+import { GameFeatureModel, MapRegionModel } from '.';
 
 export class CameraModel implements ICoords {
   public X = 0;
   public Y = 0;
+  public Scale = 1;
 
   /**
    * @params initialX используем если сразу хотим сдвинуть камеру по X
@@ -18,10 +19,10 @@ export class CameraModel implements ICoords {
   focus(
     { width: canvasWidth, height: canvasHeight }: HTMLCanvasElement,
     { Width: mapWidth, Height: mapHeight }: MapRegionModel,
-    { X: playerX, Y: playerY }: PlayerModel,
+    { X: playerX, Y: playerY }: GameFeatureModel,
   ) {
-    this.X = this.clamp(playerX - canvasWidth / 2, 0, mapWidth - canvasWidth);
-    this.Y = this.clamp(playerY - canvasHeight / 2, 0, mapHeight - canvasHeight);
+    this.X = this.clamp(playerX - canvasWidth / this.Scale / 2, 0, mapWidth - canvasWidth);
+    this.Y = this.clamp(playerY - canvasHeight / this.Scale / 2, 0, mapHeight - canvasHeight);
   }
 
   clamp(coord: number, min: number, max: number) {

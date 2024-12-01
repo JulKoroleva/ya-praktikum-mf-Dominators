@@ -1,5 +1,5 @@
-import { FOOD_COUNT } from '@/constants/game';
-import { GameFeatureModel } from '../models/GameFeature.model';
+import { FOOD_COUNT, FOOD_MASS } from '@/constants/game';
+import { FoodModel } from '../models';
 
 /** временный вариант. супер примитивный */
 export function GenerateFood({
@@ -8,16 +8,16 @@ export function GenerateFood({
 }: {
   width: number;
   height: number;
-}): ReadonlyArray<GameFeatureModel> {
+}): Array<FoodModel> {
   return new Array(FOOD_COUNT).fill(null).map(() => {
     const color = `rgb(${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)})`;
 
-    return new GameFeatureModel({
+    return new FoodModel({
       X: Math.random() * width,
       Y: Math.random() * height,
       StrokeStyle: color,
       ColorFill: color,
-      Radius: 10,
+      Radius: FOOD_MASS,
     });
   });
 }

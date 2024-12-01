@@ -9,7 +9,7 @@ import { hints } from './utils/hints';
 export const StartGame: React.FC<StartGameProps> = ({ onComplete, isGameStarted }) => {
   const [currentHintIndex, setCurrentHintIndex] = useState(0);
   const [isCountdownActive, setIsCountdownActive] = useState(false);
-  const [countdown, setCountdown] = useState(3);
+  const [countdown, setCountdown] = useState(0);
   const [showGo, setShowGo] = useState(false);
 
   useEffect(() => {
