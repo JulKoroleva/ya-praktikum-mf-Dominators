@@ -1,4 +1,6 @@
-const leaderboardMockData = [
+import { TLeaderBoardItem } from './LeaderBoardItem/LeaderBoardItem.types';
+
+const leaderboardMockData: TLeaderBoardItem[] = [
   {
     id: 1,
     userId: 1,

@@ -3,7 +3,7 @@ import { TLeaderBoardItemProps } from './LeaderBoardItem.types';
 
 const MY_USER_ID = 6;
 
-function LeaderBoardItem({ item }: TLeaderBoardItemProps) {
+export function LeaderBoardItem({ item }: TLeaderBoardItemProps) {
   const { userId, rank, userName, score } = item;
   const itsMe = userId === MY_USER_ID;
 
@@ -18,5 +18,3 @@ function LeaderBoardItem({ item }: TLeaderBoardItemProps) {
     </div>
   );
 }
-
-export default LeaderBoardItem;

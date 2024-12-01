@@ -1,5 +1,4 @@
-import React from 'react';
-import LeaderBoardPage from './LeaderBoardPage/LeaderBoardPage';
+import { LeaderBoardPage } from './LeaderBoardPage';
 
 export const Leaderboard = () => {
   return <LeaderBoardPage />;

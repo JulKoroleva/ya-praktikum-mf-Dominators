@@ -1,11 +1,11 @@
 import { Button } from 'react-bootstrap';
-import LeaderBoardItem from '../LeaderBoardItem/LeaderBoardItem';
 import leaderboardMockData from '../leaderboardMockData';
 import styles from './LeaderBoardPage.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
+import { LeaderBoardItem } from '../LeaderBoardItem';
 
-function LeaderBoardPage() {
+export function LeaderBoardPage() {
   const navigate = useNavigate();
 
   return (
@@ -28,5 +28,3 @@ function LeaderBoardPage() {
     </div>
   );
 }
-
-export default LeaderBoardPage;
