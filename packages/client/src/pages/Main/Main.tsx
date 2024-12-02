@@ -1,12 +1,12 @@
 import React, { useRef, useState, useEffect, useCallback, useMemo } from 'react';
 import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { ErrorNotification } from '@/components';
 import { loadFull } from 'tsparticles';
 import Particles, { initParticlesEngine } from '@tsparticles/react';
 import { Container } from '@tsparticles/engine';
 
-import { IParticle } from './interfaces/Particle.interface';
-import { IButtonConfig } from './interfaces/Button.interface';
+import { IParticle, IButtonConfig } from './Main.interface';
 
 import { ROUTES } from '@/constants/routes';
 import { COLOR_PALETTE } from './constants/color.constant';
@@ -120,32 +120,34 @@ export const Main = () => {
 
   return (
     <div className={styles['main-page']}>
-      {init && (
-        <Particles id="tsparticles" particlesLoaded={particlesLoaded} options={particlesConfig} />
-      )}
-      <h1 className={styles['main-page__title']}>DOMinators</h1>
-      <div className={styles['main-page__menu']}>
-        <h3 className={styles['main-page__menu_greetings']}>Привет, UserName!</h3>
-        <p className={styles['main-page__menu_description']}>{description}</p>
-        <div className={styles['main-page__menu_buttons']}>
-          {buttons.map(({ href, text, className }, index) => (
-            <Button
-              key={index}
-              href={href}
-              size="lg"
-              className={`${styles['menu-button']} ${className || ''}`.trim()}>
-              {text}
-            </Button>
-          ))}
+      <ErrorNotification>
+        {init && (
+          <Particles id="tsparticles" particlesLoaded={particlesLoaded} options={particlesConfig} />
+        )}
+        <h1 className={styles['main-page__title']}>DOMinators</h1>
+        <div className={styles['main-page__menu']}>
+          <h3 className={styles['main-page__menu_greetings']}>Привет, UserName!</h3>
+          <p className={styles['main-page__menu_description']}>{description}</p>
+          <div className={styles['main-page__menu_buttons']}>
+            {buttons.map(({ href, text, className }, index) => (
+              <Button
+                key={index}
+                href={href}
+                size="lg"
+                className={`${styles['menu-button']} ${className || ''}`.trim()}>
+                {text}
+              </Button>
+            ))}
+          </div>
         </div>
-      </div>
-      <Button
-        className={styles['main-page__logout-button']}
-        onClick={() => {
-          navigate(ROUTES.authorization());
-        }}>
-        Log in
-      </Button>
+        <Button
+          className={styles['main-page__logout-button']}
+          onClick={() => {
+            navigate(ROUTES.authorization());
+          }}>
+          Log in
+        </Button>
+      </ErrorNotification>
     </div>
   );
 };

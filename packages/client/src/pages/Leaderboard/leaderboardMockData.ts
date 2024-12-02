@@ -1,6 +1,6 @@
-import { TLeaderBoardItem } from './LeaderBoardItem/LeaderBoardItem.types';
+import { TLeaderBoardItem } from './components/LeaderBoardItem/LeaderBoardItem.interface';
 
-const leaderboardMockData: TLeaderBoardItem[] = [
+export const leaderboardMockData: TLeaderBoardItem[] = [
   {
     id: 1,
     userId: 1,
@@ -44,5 +44,3 @@ const leaderboardMockData: TLeaderBoardItem[] = [
     score: 232,
   },
 ];
-
-export default leaderboardMockData;

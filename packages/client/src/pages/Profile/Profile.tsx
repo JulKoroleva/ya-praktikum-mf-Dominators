@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Button } from 'react-bootstrap';
-import { FormComponent } from '@/components/FormComponent';
+import { FormComponent, ErrorNotification } from '@/components';
 
 import {
   settingsFields,
@@ -54,7 +54,7 @@ export const Profile = () => {
   return (
     <div className={styles['profile-page']}>
       <div className={styles['form-container']}>
-        {isChangingPassword ? changePassword : settings}
+        <ErrorNotification>{isChangingPassword ? changePassword : settings}</ErrorNotification>
       </div>
     </div>
   );

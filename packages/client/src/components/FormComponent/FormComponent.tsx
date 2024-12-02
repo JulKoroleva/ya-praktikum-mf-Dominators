@@ -1,19 +1,18 @@
 import { DefaultValues, FieldValues, useForm } from 'react-hook-form';
 
-import { FormField } from './components/FormField/FormField';
+import { FormField, IFieldConfig } from './components';
 import { Button } from 'react-bootstrap';
 
-import { FormComponentInterface } from './formComponent.interface';
-import { FieldConfigInterface } from './components/FormField/formField.interface';
+import { IFormComponentProps } from './FormComponent.interface';
 
-import styles from './formComponent.module.scss';
+import styles from './FormComponent.module.scss';
 
 export const FormComponent = <T extends FieldValues>({
   fields,
   initialValues,
   onSubmit,
   submitButtonText,
-}: FormComponentInterface<T>) => {
+}: IFormComponentProps<T>) => {
   const { control, handleSubmit, getValues, trigger, clearErrors } = useForm<T>({
     defaultValues: initialValues as DefaultValues<T>,
   });
@@ -23,7 +22,7 @@ export const FormComponent = <T extends FieldValues>({
       {fields.map(field => (
         <FormField
           key={field.id}
-          field={field as FieldConfigInterface<FieldValues>}
+          field={field as IFieldConfig<FieldValues>}
           control={control}
           getValues={getValues}
           trigger={trigger}

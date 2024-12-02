@@ -1,8 +1,8 @@
-import ListItem from '../ListItem/ListItem';
+import { ListItem } from './components';
+import { ITopicListProps } from './TopicList.interface';
 import styles from './TopicList.module.scss';
-import { TTopicListProps } from './TopicList.types';
 
-function TopicList({ topicList }: TTopicListProps) {
+export function TopicList({ topicList }: ITopicListProps) {
   return (
     <div className={styles['topic-list']}>
       {topicList.map(item => (
@@ -11,5 +11,3 @@ function TopicList({ topicList }: TTopicListProps) {
     </div>
   );
 }
-
-export default TopicList;

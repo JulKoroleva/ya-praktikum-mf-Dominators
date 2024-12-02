@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { IRegistrationFormSubmit } from '@/redux/slices/pagesSlices/registrationSlices/registrationSlice.interface';
+import { IRegistrationFormSubmit } from '@/redux/slices';
 
 import { REGISTER_URL } from '@/constants/apiUrls';
 

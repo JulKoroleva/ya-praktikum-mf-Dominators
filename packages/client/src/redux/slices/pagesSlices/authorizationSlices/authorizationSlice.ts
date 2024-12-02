@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { authorizationRequest } from '@/redux/requests/pagesRequests/authorizationRequests/authorizationRequests';
+import { authorizationRequest } from '@/redux/requests';
 
 import { IAuthorizationSlice } from './authorizationSlice.interface';
 
@@ -36,4 +36,3 @@ export const authorizationSlice = createSlice({
 });
 
 export const { clearAuthorizationState } = authorizationSlice.actions;
-export default authorizationSlice.reducer;

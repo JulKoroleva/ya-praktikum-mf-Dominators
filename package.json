@@ -13,7 +13,7 @@
     "fix:styles": "stylelint \"packages/client/**/*.scss\" --fix",
     "format": "lerna run format",
     "preview": "lerna run preview",
-    "prepare": "husky install",
+    "prepare": "husky",
     "precommit": "lint-staged"
   },
   "lint-staged": {

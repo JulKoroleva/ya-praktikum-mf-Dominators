@@ -1,8 +1,8 @@
-import { FieldConfigInterface } from '@/components/FormComponent/components/FormField/formField.interface';
+import { IFieldConfig } from '@/components/FormComponent/components/FormField/FormField.interface';
 import { IRegistrationFormSubmit } from '@/redux/slices/pagesSlices/registrationSlices/registrationSlice.interface';
 import { validateEmail } from '@/services/validationUtils';
 
-export const registrationPageFields: FieldConfigInterface<
+export const registrationPageFields: IFieldConfig<
   IRegistrationFormSubmit & { password_repeat: string }
 >[] = [
   {

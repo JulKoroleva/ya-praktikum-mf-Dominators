@@ -1,0 +1,1 @@
+export { registrationRequest } from './registrationRequests';

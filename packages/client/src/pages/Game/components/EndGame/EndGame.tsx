@@ -1,8 +1,8 @@
 import { Button } from 'react-bootstrap';
-import styles from './EndGame.module.scss';
 import { useNavigate } from 'react-router-dom';
-import { TResultsProps } from './EndGame.types';
+import { IEndGameProps } from './EndGame.interface';
 import tgLogo from '@/assets/icons/tgLogo.svg';
+import styles from './EndGame.module.scss';
 
 const SHARE_URL = 'https://github.com/JulKoroleva/DOMinators';
 const SHARE_TITLE = 'Я достиг отличных результатов в игре, проверь сам! Присоединяйся!';
@@ -12,7 +12,7 @@ const handleShare = () => {
   window.open(link, '_blank');
 };
 
-function EndGame({ results }: TResultsProps) {
+export function EndGame({ results }: IEndGameProps) {
   const navigate = useNavigate();
 
   const handleContinue = () => {
@@ -43,5 +43,3 @@ function EndGame({ results }: TResultsProps) {
     </div>
   );
 }
-
-export default EndGame;

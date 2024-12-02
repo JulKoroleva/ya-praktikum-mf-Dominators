@@ -1,10 +1,10 @@
-import { Hint } from '../interfaces/Hint.interface';
+import { IHint } from '../StartGame.interface';
 import Tip1 from '@/assets/tips/tip_1.svg';
 import Tip2 from '@/assets/tips/tip_2.svg';
 import Tip3 from '@/assets/tips/tip_3.svg';
 import Tip4 from '@/assets/tips/tip_4.svg';
 
-export const hints: Hint[] = [
+export const hints: IHint[] = [
   {
     id: 1,
     text: 'Добро пожаловать в игру! Пройдите небольшое обучение, эти советы помогут вам стать лучшим из лучших',

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
-import styles from './StartGame.module.scss';
-import Popup from '@/components/Popup/Popup';
+import { Popup } from '@/components';
 import { Button } from 'react-bootstrap';
-import { StartGameProps } from './interfaces/StartGame.interface';
+import { IStartGameProps } from './StartGame.interface';
 import { hints } from './utils/hints';
+import styles from './StartGame.module.scss';
 
-export const StartGame: React.FC<StartGameProps> = ({ onComplete, isGameStarted }) => {
+export const StartGame: React.FC<IStartGameProps> = ({ onComplete, isGameStarted }) => {
   const [currentHintIndex, setCurrentHintIndex] = useState(0);
   const [isCountdownActive, setIsCountdownActive] = useState(false);
   const [countdown, setCountdown] = useState(3);

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { FadeLoader } from 'react-spinners';
 
-import styles from './loader.module.scss';
+import styles from './Loader.module.scss';
 
 export const Loader: React.FC = () => {
   return (

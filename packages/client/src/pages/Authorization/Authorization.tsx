@@ -2,28 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { FormComponent } from '@/components/FormComponent';
 import { Button } from 'react-bootstrap';
-import { UniversalModal } from '@/components/UniversalModal';
+import { FormComponent, UniversalModal, IModalConfig, ErrorNotification } from '@/components';
 
 import { TypeDispatch } from '@/redux/store/store';
-import { authorizationRequest } from '@/redux/requests/pagesRequests/authorizationRequests/authorizationRequests';
-import { clearAuthorizationState } from '@/redux/slices/pagesSlices/authorizationSlices/authorizationSlice';
-import {
-  selectAuthorizationError,
-  selectAuthorizationStatus,
-} from '@/redux/selectors/pagesSelectors/authorizationSelectors/authorizationSelectors';
-
-import { IModalConfig } from '@/components/UniversalModal/universalModal.interface';
-import { IAuthorizationFormSubmit } from '@/redux/slices/pagesSlices/authorizationSlices/authorizationSlice.interface';
+import { authorizationRequest } from '@/redux/requests';
+import { clearAuthorizationState, IAuthorizationFormSubmit } from '@/redux/slices';
+import { selectAuthorizationError, selectAuthorizationStatus } from '@/redux/selectors';
 
 import {
   authorizationPageFields,
   authorizationPageFieldsInitialValues,
-} from './authorizationPageData';
+} from './AuthorizationPageData';
 import { ROUTES } from '@/constants/routes';
 
-import styles from './authorization.module.scss';
+import styles from './Authorization.module.scss';
 
 export const Authorization = () => {
   const navigate = useNavigate();
@@ -54,7 +47,7 @@ export const Authorization = () => {
   useEffect(() => {
     let header = '';
     let statusValue = undefined;
-    let error = '';
+    let error: typeof authorizationError = '';
     let succeeded = '';
 
     if (authorizationStatus !== 'idle') {
@@ -92,20 +85,22 @@ export const Authorization = () => {
   return (
     <div className={styles['authorization-page']}>
       <div className={styles['form-container']}>
-        <h1>Authorization</h1>
-        <FormComponent
-          fields={authorizationPageFields}
-          onSubmit={onSubmit}
-          initialValues={authorizationPageFieldsInitialValues}
-          submitButtonText="Sign in"
-        />
-        <Button
-          className={styles['register-button']}
-          type="button"
-          variant="primary"
-          onClick={() => navigate('/registration')}>
-          Create account
-        </Button>
+        <ErrorNotification>
+          <h1>Authorization</h1>
+          <FormComponent
+            fields={authorizationPageFields}
+            onSubmit={onSubmit}
+            initialValues={authorizationPageFieldsInitialValues}
+            submitButtonText="Sign in"
+          />
+          <Button
+            className={styles['register-button']}
+            type="button"
+            variant="primary"
+            onClick={() => navigate('/registration')}>
+            Create account
+          </Button>
+        </ErrorNotification>
         <UniversalModal
           show={modalConfig.show}
           title={modalConfig.header}

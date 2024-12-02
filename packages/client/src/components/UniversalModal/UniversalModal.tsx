@@ -2,16 +2,16 @@ import React from 'react';
 import { Button } from 'react-bootstrap';
 import classNames from 'classnames';
 
-import { Loader } from '../Loader';
+import { Loader } from '@/components';
 
-import { IUniversalModal } from './universalModal.interface';
+import { IUniversalModalProps } from './UniversalModal.interface';
 
 import Succeeded from '@/assets/icons/succeeded.svg';
 import Failed from '@/assets/icons/failed.svg';
 
-import styles from './universalModal.module.scss';
+import styles from './UniversalModal.module.scss';
 
-export const UniversalModal: React.FC<IUniversalModal> = ({
+export const UniversalModal: React.FC<IUniversalModalProps> = ({
   show,
   onHide,
   title = '',
