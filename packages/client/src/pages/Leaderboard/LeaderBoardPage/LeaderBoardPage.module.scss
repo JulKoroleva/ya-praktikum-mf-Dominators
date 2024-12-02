@@ -1,0 +1,28 @@
+@use 'src/styles/formPage' as *;
+@use 'src/styles/buttons' as *;
+
+.leaderboard-page {
+  @extend %page-with-form;
+
+  .form-container {
+    @extend %form-container;
+
+    padding: 22px 20px 32px;
+
+    .back-button {
+      @extend %custom-button-outline;
+
+      margin-top: 28px;
+      background-color: $color-green-main;
+      color: $color-white;
+      min-width: max-content;
+      width: 100%;
+    }
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+}
