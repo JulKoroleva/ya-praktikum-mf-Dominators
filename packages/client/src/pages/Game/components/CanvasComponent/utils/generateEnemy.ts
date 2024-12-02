@@ -13,10 +13,10 @@ export function GenerateEnemy({
   return new Array(ENEMY_COUNT).fill(null).map(
     () =>
       new EnemyStatic({
-        X: 2100,
-        Y: 2100,
-        StrokeStyle: 'green',
-        ColorFill: 'green',
+        X: Math.random() * width,
+        Y: Math.random() * height,
+        StrokeStyle: 'rgb(0,135,0)',
+        ColorFill: 'rgb(0,255,0)',
         Radius: 5,
       }),
   );

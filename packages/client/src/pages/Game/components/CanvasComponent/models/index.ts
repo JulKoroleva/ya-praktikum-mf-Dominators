@@ -4,3 +4,4 @@ export { FoodModel } from './Food.model';
 export { MapRegionModel } from './MapRegion.model';
 export { PlayerModel } from './Player.model';
 export { EnemyStatic } from './EnemyStatic.model';
+export { PlayerFeatureModel } from './PlayerFeature.model';

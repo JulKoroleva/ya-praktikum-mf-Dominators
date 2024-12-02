@@ -1,27 +1,31 @@
 import { FOOD_MASS, GROW_BY_FOOD_COEFFICIENT, MAX_DIVISIONS } from '@/constants/game';
 
-import { CameraModel, FoodModel, GameFeatureModel } from '.';
+import { CameraModel, FoodModel, GameFeatureModel, PlayerFeatureModel } from '.';
 
 import { ICircle } from '../CanvasComponent.interface';
 
 export class PlayerModel {
-  public Player: GameFeatureModel;
+  public Player: PlayerFeatureModel;
   public Speed: number = 0;
   public Way: { x: number; y: number } = { x: 0, y: 0 };
   public Player2: GameFeatureModel;
   // @TODO
   // думаю что в итоге будут Divisions, а плеер будет условно камерой
   // и центр можно исходить от них
-  public Divisions: GameFeatureModel[] = [];
+  public Divisions: PlayerFeatureModel[] = [];
 
   constructor(props: ICircle) {
-    this.Player = new GameFeatureModel(props);
+    this.Player = new PlayerFeatureModel(props);
     this.Way.x = props.X;
     this.Way.y = props.Y;
     this.Player2 = new GameFeatureModel({ ...props, ColorFill: 'red' });
   }
 
-  move2(camera: CameraModel, mouseX: number, mouseY: number) {
+  public get MyScore() {
+    return this.Player.Score;
+  }
+
+  moveDivision(camera: CameraModel, mouseX: number, mouseY: number) {
     for (const division of this.Divisions) {
       const dX = mouseX / camera.Scale + camera.X - division.X;
       const dY = mouseY / camera.Scale + camera.Y - division.Y;
@@ -49,6 +53,7 @@ export class PlayerModel {
     // });
   }
 
+  /** движение по нормализованному вектору */
   move(camera: CameraModel, mouseX: number, mouseY: number) {
     const dX = mouseX / camera.Scale + camera.X - this.Player.X;
     const dY = mouseY / camera.Scale + camera.Y - this.Player.Y;
@@ -68,7 +73,7 @@ export class PlayerModel {
 
     // @TODO MAX_COUNT + MIN_SIZE
     this.Divisions.push(
-      new GameFeatureModel({
+      new PlayerFeatureModel({
         Y:
           this.Player.Y +
           ((mouseY / camera.Scale + camera.Y - this.Player.Y) * 4) / this.Player.Radius,
@@ -97,8 +102,8 @@ export class PlayerModel {
       // @TODO тут делиться на 4, пока рандомно. Надо додумать коэффициент
       Y: this.Player.Y + (((Math.sin(angle) * this.Player.Radius) / 2) * camera.Scale) / 2,
       X: this.Player.X + (((Math.cos(angle) * this.Player.Radius) / 2) * camera.Scale) / 2,
-      ToY: this.Player.Y + (((Math.sin(angle) * this.Player.Radius) / 2) * camera.Scale) * 2,
-      ToX: this.Player.X + (((Math.cos(angle) * this.Player.Radius) / 2) * camera.Scale) * 2,
+      ToY: this.Player.Y + ((Math.sin(angle) * this.Player.Radius) / 2) * camera.Scale * 2,
+      ToX: this.Player.X + ((Math.cos(angle) * this.Player.Radius) / 2) * camera.Scale * 2,
       Speed: 1,
       Radius: FOOD_MASS,
       ColorFill: 'black',
@@ -106,26 +111,20 @@ export class PlayerModel {
 
     food.push(foode);
   }
-
-  drawDivisions(ctx: CanvasRenderingContext2D) {
-    for (const division of this.Divisions) {
-      division.draw(ctx);
-    }
-  }
 }
 
-function sub(x1: number, y1: number, x2: number, y2: number): [number, number] {
-  return [x1 - x2, y1 - y2];
-}
+// function sub(x1: number, y1: number, x2: number, y2: number): [number, number] {
+//   return [x1 - x2, y1 - y2];
+// }
 
-function getLength(x: number, y: number): number {
-  return Math.sqrt(x * x + y * y);
-}
+// function getLength(x: number, y: number): number {
+//   return Math.sqrt(x * x + y * y);
+// }
 
-function getUnit(x: number, y: number): [number, number] {
-  return mul(x, y, 1 / getLength(x, y));
-}
+// // function getUnit(x: number, y: number): [number, number] {
+// //   return mul(x, y, 1 / getLength(x, y));
+// // }
 
-function mul(x: number, y: number, s: number): [number, number] {
-  return [x * s, y * s];
-}
+// function mul(x: number, y: number, s: number): [number, number] {
+//   return [x * s, y * s];
+// }

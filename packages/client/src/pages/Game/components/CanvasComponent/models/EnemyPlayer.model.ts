@@ -1,10 +1,10 @@
 import { MAP_SIZE } from '@/constants/game';
 
-import { GameFeatureModel } from '.';
+import { PlayerFeatureModel } from '.';
 
 import { ICircle } from '../CanvasComponent.interface';
 
-export class EnemyPlayerModel extends GameFeatureModel {
+export class EnemyPlayerModel extends PlayerFeatureModel {
   protected directionX: DIRECTION = DIRECTION.LEFT;
   protected directionY: DIRECTION = DIRECTION.LEFT;
   protected intervalId?: NodeJS.Timeout;

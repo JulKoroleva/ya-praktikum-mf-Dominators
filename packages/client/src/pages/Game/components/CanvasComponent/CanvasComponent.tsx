@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 
 import { useMousePosition } from '@/utils/useMousePosition';
 import { useCanvasResize } from '@/utils/useCanvasResize';
@@ -6,16 +6,27 @@ import { useCanvasResize } from '@/utils/useCanvasResize';
 import { CanvasController } from './CanvasComponent.controller';
 
 import styles from './CanvasComponent.module.scss';
+import { STATUS } from './CanvasComponent.interface';
 
-export function CanvasComponent() {
+export function CanvasComponent({
+  endGameCallback,
+}: {
+  endGameCallback: Dispatch<SetStateAction<boolean>>;
+}) {
   const controller = new CanvasController();
   const refCanvas = useRef<HTMLCanvasElement>(null);
   const mouseCoodrs = useMousePosition();
+  const [score, setScore] = useState(0);
 
   useCanvasResize();
 
   const animate = () => {
     if (refCanvas?.current) {
+      if (controller.Player.Player.Status === STATUS.DEAD) {
+        endGameCallback(true);
+        return;
+      }
+      setScore(controller.Player.MyScore);
       const canvas = document.querySelector('canvas')!;
       const ctx = refCanvas.current.getContext('2d')!;
 
@@ -24,6 +35,7 @@ export function CanvasComponent() {
       ctx.setTransform(controller.Camera.Scale, 0, 0, controller.Camera.Scale, 0, 0);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       controller.MovePlayer(mouseCoodrs.current.X, mouseCoodrs.current.Y);
+      controller.MoveStatics();
       controller.EnemyPlayersMove();
 
       controller.Camera.focus(canvas, controller.Map, controller.Player.Player);
@@ -32,16 +44,7 @@ export function CanvasComponent() {
       controller.CollisionFoodDetection();
       controller.CollisionEnemyDetection();
       controller.CollisionDetection();
-
-      for (const enemys of controller.EnemyPlayers) {
-        enemys.draw(ctx);
-      }
-      controller.Player.Player.draw(ctx);
-      controller.Player.drawDivisions(ctx);
-      controller.MoveStatics();
-
-      controller.DrawFood(ctx);
-      controller.DrawEnemy(ctx);
+      controller.DrawAll(ctx);
     }
     requestAnimationFrame(animate);
   };
@@ -64,14 +67,23 @@ export function CanvasComponent() {
 
   useEffect(() => {
     const cb = (event: KeyboardEvent) => {
-      if (event.code !== 'Space') {
+      if (event.code === 'Space') {
+        controller.Player.cellDivision(
+          controller.Camera,
+          mouseCoodrs.current.X,
+          mouseCoodrs.current.Y,
+        );
         return;
       }
-      controller.Player.cellDivision(
-        controller.Camera,
-        mouseCoodrs.current.X,
-        mouseCoodrs.current.Y,
-      );
+      if (event.code === 'KeyW') {
+        controller.Player.throwFood(
+          controller.Camera,
+          controller.FoodFields,
+          mouseCoodrs.current.X,
+          mouseCoodrs.current.Y,
+        );
+        return;
+      }
     };
     document.addEventListener('keydown', cb);
     return () => {
@@ -79,23 +91,13 @@ export function CanvasComponent() {
     };
   }, []);
 
-  useEffect(() => {
-    const cb = (event: KeyboardEvent) => {
-      if (event.code !== 'KeyW') {
-        return;
-      }
-      controller.Player.throwFood(
-        controller.Camera,
-        controller.FoodFields,
-        mouseCoodrs.current.X,
-        mouseCoodrs.current.Y,
-      );
-    };
-    document.addEventListener('keydown', cb);
-    return () => {
-      document.removeEventListener('keydown', cb);
-    };
-  }, []);
-
-  return <canvas className={styles['canvas']} ref={refCanvas} />;
+  return (
+    <div className={styles['canvas-page']}>
+      <div className={styles['canvas-page__score-block']}>
+        <div className={styles['canvas-page__score-block__name']}>Игрок: </div>
+        <div className={styles['canvas-page__score-block__points']}>{score}</div>
+      </div>
+      <canvas className={styles['canvas']} ref={refCanvas} />
+    </div>
+  );
 }

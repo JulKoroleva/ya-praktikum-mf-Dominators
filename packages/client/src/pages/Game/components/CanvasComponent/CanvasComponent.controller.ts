@@ -1,6 +1,12 @@
 import { GROW_BY_FOOD_COEFFICIENT, MAP_SIZE } from '@/constants/game';
 
-import { CameraModel, EnemyStatic, FoodModel, MapRegionModel, PlayerModel } from './models';
+import {
+  CameraModel,
+  EnemyStatic,
+  MapRegionModel,
+  PlayerFeatureModel,
+  PlayerModel,
+} from './models';
 
 import { STATUS } from './CanvasComponent.interface';
 
@@ -12,9 +18,11 @@ export class CanvasController {
   public Camera = new CameraModel();
   public Player = new PlayerModel({ X: 2000, Y: 2000, Radius: 2 });
   public EnemyPlayers = [
-    new EnemyPlayerModel({ X: 2050, Y: 2050, Radius: 3, ColorFill: 'red' }),
-    new EnemyPlayerModel({ X: 1950, Y: 1950, Radius: 3, ColorFill: 'blue' }),
-    new EnemyPlayerModel({ X: 222, Y: 222, Radius: 3, ColorFill: 'yellow' }),
+    new EnemyPlayerModel({ X: 3000, Y: 3000, Radius: 10, ColorFill: 'red' }),
+    new EnemyPlayerModel({ X: 1000, Y: 1000, Radius: 10, ColorFill: 'blue' }),
+    new EnemyPlayerModel({ X: 3000, Y: 1000, Radius: 10, ColorFill: 'yellow' }),
+    new EnemyPlayerModel({ X: 1000, Y: 3000, Radius: 10, ColorFill: 'yellow' }),
+    new EnemyPlayerModel({ X: 2050, Y: 2050, Radius: 10, ColorFill: 'yellow' }),
   ];
   public FoodFields = GenerateFood({
     width: MAP_SIZE,
@@ -24,7 +32,7 @@ export class CanvasController {
 
   public MovePlayer(mouseX: number, mouseY: number) {
     this.Player.move(this.Camera, mouseX, mouseY);
-    this.Player.move2(this.Camera, mouseX, mouseY);
+    this.Player.moveDivision(this.Camera, mouseX, mouseY);
   }
 
   public MoveStatics() {
@@ -46,11 +54,11 @@ export class CanvasController {
       for (const element of this.EnemyPlayers) {
         if (IsCollided(element, this.Player.Player)) {
           if (this.Player.Player.Radius <= element.Radius) {
-            console.log('LOSE');
-            /** @TODO game over */
+            this.Player.Player.Status = STATUS.DEAD;
             return;
           }
           this.Player.Player.Radius += element.Radius / 2;
+          this.Player.Player.Score += 10;
           element.Destroy();
           element.Status = STATUS.DEAD;
           return;
@@ -70,7 +78,6 @@ export class CanvasController {
           ...this.EnemyFields,
           /** поедание ботами */
           ...this.EnemyPlayers,
-          /** поедание игроком */
           this.Player.Player,
         ]) {
           if (IsCollided(element, target)) {
@@ -78,6 +85,9 @@ export class CanvasController {
             element.Status = STATUS.DEAD;
             if (target instanceof EnemyStatic) {
               target.prepareMove(element.X, element.Y);
+            }
+            if (target instanceof PlayerFeatureModel) {
+              target.Score++;
             }
           }
         }
@@ -96,18 +106,16 @@ export class CanvasController {
     }
   }
 
-  public DrawFood(ctx: CanvasRenderingContext2D) {
-    for (const element of this.FoodFields) {
-      if (element.Status === STATUS.ALIVE) {
-        element.draw(ctx);
-      }
-    }
-  }
-
-  public DrawEnemy(ctx: CanvasRenderingContext2D) {
-    for (const element of this.EnemyFields) {
-      if (element.Status === STATUS.ALIVE) {
-        element.draw(ctx);
+  public DrawAll(ctx: CanvasRenderingContext2D) {
+    for (const item of [
+      ...this.EnemyPlayers,
+      ...this.EnemyFields,
+      ...this.Player.Divisions,
+      ...this.FoodFields,
+      this.Player.Player,
+    ].sort((a, b) => a.Radius - b.Radius)) {
+      if (item.Status === STATUS.ALIVE) {
+        item.draw(ctx);
       }
     }
   }
