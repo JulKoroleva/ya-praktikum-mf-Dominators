@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useMousePosition } from '@/utils/useMousePosition';
 import { useCanvasResize } from '@/utils/useCanvasResize';
@@ -13,39 +13,45 @@ export function CanvasComponent({
 }: {
   endGameCallback: Dispatch<SetStateAction<boolean>>;
 }) {
-  const controller = new CanvasController();
+  const controller = useMemo(() => new CanvasController(), []);
   const refCanvas = useRef<HTMLCanvasElement>(null);
   const mouseCoodrs = useMousePosition();
   const [score, setScore] = useState(0);
 
   useCanvasResize();
 
+  const renderCanvas = (ctx: CanvasRenderingContext2D) => {
+    const canvas = document.querySelector('canvas')!;
+
+    controller.Camera.Scale = Math.max(10 - controller.Player.Player.Radius / 10, 1);
+
+    ctx.setTransform(controller.Camera.Scale, 0, 0, controller.Camera.Scale, 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    controller.MovePlayer(mouseCoodrs.current.X, mouseCoodrs.current.Y);
+    controller.MoveStatics();
+    controller.EnemyPlayersMove();
+
+    controller.Camera.focus(canvas, controller.Map, controller.Player.Player);
+    ctx.translate(-controller.Camera.X, -controller.Camera.Y);
+
+    controller.CollisionFoodDetection();
+    controller.CollisionEnemyDetection();
+    controller.CollisionDetection();
+    controller.DrawAll(ctx);
+  };
+
   const animate = () => {
-    if (refCanvas?.current) {
-      if (controller.Player.Player.Status === STATUS.DEAD) {
-        endGameCallback(true);
-        return;
-      }
-      setScore(controller.Player.MyScore);
-      const canvas = document.querySelector('canvas')!;
-      const ctx = refCanvas.current.getContext('2d')!;
-
-      controller.Camera.Scale = Math.max(10 - controller.Player.Player.Radius / 10, 1);
-
-      ctx.setTransform(controller.Camera.Scale, 0, 0, controller.Camera.Scale, 0, 0);
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      controller.MovePlayer(mouseCoodrs.current.X, mouseCoodrs.current.Y);
-      controller.MoveStatics();
-      controller.EnemyPlayersMove();
-
-      controller.Camera.focus(canvas, controller.Map, controller.Player.Player);
-      ctx.translate(-controller.Camera.X, -controller.Camera.Y);
-
-      controller.CollisionFoodDetection();
-      controller.CollisionEnemyDetection();
-      controller.CollisionDetection();
-      controller.DrawAll(ctx);
+    if (!refCanvas.current) {
+      return;
     }
+    if (controller.Player.Player.Status === STATUS.DEAD) {
+      endGameCallback(true);
+      return;
+    }
+    setScore(controller.Player.MyScore);
+
+    renderCanvas(refCanvas.current!.getContext('2d')!);
+
     requestAnimationFrame(animate);
   };
 

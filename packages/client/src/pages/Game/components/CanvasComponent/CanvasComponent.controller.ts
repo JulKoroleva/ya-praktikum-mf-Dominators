@@ -52,17 +52,17 @@ export class CanvasController {
   public CollisionDetection() {
     (() => {
       for (const element of this.EnemyPlayers) {
-        if (IsCollided(element, this.Player.Player)) {
-          if (this.Player.Player.Radius <= element.Radius) {
-            this.Player.Player.Status = STATUS.DEAD;
-            return;
-          }
-          this.Player.Player.Radius += element.Radius / 2;
-          this.Player.Player.Score += 10;
-          element.Destroy();
-          element.Status = STATUS.DEAD;
+        if (!IsCollided(element, this.Player.Player)) {
+          continue;
+        }
+        if (this.Player.Player.Radius <= element.Radius) {
+          this.Player.Player.Status = STATUS.DEAD;
           return;
         }
+        this.Player.Player.Radius += element.Radius / 2;
+        this.Player.Player.Score += 10;
+        element.Destroy();
+        element.Status = STATUS.DEAD;
       }
     })();
 
@@ -71,25 +71,27 @@ export class CanvasController {
 
   public CollisionFoodDetection() {
     for (const element of this.FoodFields) {
-      if (element.Status === STATUS.ALIVE) {
-        for (const target of [
-          ...this.Player.Divisions,
-          /** поедание подкормки статической бактерией врагом */
-          ...this.EnemyFields,
-          /** поедание ботами */
-          ...this.EnemyPlayers,
-          this.Player.Player,
-        ]) {
-          if (IsCollided(element, target)) {
-            target.Radius = target.Radius + element.Radius * GROW_BY_FOOD_COEFFICIENT;
-            element.Status = STATUS.DEAD;
-            if (target instanceof EnemyStatic) {
-              target.prepareMove(element.X, element.Y);
-            }
-            if (target instanceof PlayerFeatureModel) {
-              target.Score++;
-            }
-          }
+      if (element.Status !== STATUS.ALIVE) {
+        continue;
+      }
+      for (const target of [
+        ...this.Player.Divisions,
+        /** поедание подкормки статической бактерией врагом */
+        ...this.EnemyFields,
+        /** поедание ботами */
+        ...this.EnemyPlayers,
+        this.Player.Player,
+      ]) {
+        if (!IsCollided(element, target)) {
+          continue;
+        }
+        target.Radius = target.Radius + element.Radius * GROW_BY_FOOD_COEFFICIENT;
+        element.Status = STATUS.DEAD;
+        if (target instanceof EnemyStatic) {
+          target.prepareMove(element.X, element.Y);
+        }
+        if (target instanceof PlayerFeatureModel) {
+          target.Score++;
         }
       }
     }
@@ -107,15 +109,23 @@ export class CanvasController {
   }
 
   public DrawAll(ctx: CanvasRenderingContext2D) {
+    this.DrawFood(ctx);
     for (const item of [
       ...this.EnemyPlayers,
       ...this.EnemyFields,
       ...this.Player.Divisions,
-      ...this.FoodFields,
       this.Player.Player,
     ].sort((a, b) => a.Radius - b.Radius)) {
       if (item.Status === STATUS.ALIVE) {
         item.draw(ctx);
+      }
+    }
+  }
+
+  public DrawFood(ctx: CanvasRenderingContext2D) {
+    for (const food of this.FoodFields) {
+      if (food.Status === STATUS.ALIVE) {
+        food.draw(ctx);
       }
     }
   }
