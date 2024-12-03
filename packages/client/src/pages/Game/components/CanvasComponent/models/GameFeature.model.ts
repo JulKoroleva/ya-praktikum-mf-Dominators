@@ -32,6 +32,10 @@ export class GameFeatureModel implements ICircle {
     this.LineWidth = LineWidth || 2;
   }
 
+  getAreaOfCircle() {
+    return Math.PI * Math.pow(this.Radius, 2);
+  }
+
   move() {
     if (!this.Movable || this.Status !== STATUS.ALIVE) {
       return;
