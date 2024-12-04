@@ -1,1 +1,0 @@
-export { LeaderBoardPage } from './LeaderBoardPage';

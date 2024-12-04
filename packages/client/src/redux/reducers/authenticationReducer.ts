@@ -1,9 +1,9 @@
 import { combineReducers } from '@reduxjs/toolkit';
 
-import authorizationSlice from '../slices/pagesSlices/authorizationSlices/authorizationSlice';
-import registrationSlice from '../slices/pagesSlices/registrationSlices/registrationSlice';
+import { authorizationSlice, registrationSlice } from '@/redux/slices';
+import { IAuthenticationReducer } from './authenticationReducer.interface';
 
-export const authenticationReducer = combineReducers({
+export const authenticationReducer: IAuthenticationReducer = combineReducers({
   authorization: authorizationSlice,
   registration: registrationSlice,
 });

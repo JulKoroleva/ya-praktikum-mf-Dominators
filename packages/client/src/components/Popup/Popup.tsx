@@ -1,8 +1,8 @@
-import styles from './Popup.module.scss';
-import { TPopupProps } from './Popup.types';
+import { IPopupProps } from './Popup.interface';
 import closeIcon from '@/assets/icons/close.svg';
+import styles from './Popup.module.scss';
 
-function Popup({ open, withOverlay = false, children, onClose }: TPopupProps) {
+export function Popup({ open, withOverlay = false, children, onClose }: IPopupProps) {
   return (
     <>
       {withOverlay && (
@@ -22,5 +22,3 @@ function Popup({ open, withOverlay = false, children, onClose }: TPopupProps) {
     </>
   );
 }
-
-export default Popup;

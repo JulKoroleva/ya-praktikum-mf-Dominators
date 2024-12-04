@@ -1,8 +1,8 @@
 import { Button } from 'react-bootstrap';
+import { IPaginationProps } from './Pagination.interface';
 import styles from './Pagination.module.scss';
-import { TPaginationProps } from './Pagination.types';
 
-function Pagination({ options, onChange }: TPaginationProps) {
+export function Pagination({ options, onChange }: IPaginationProps) {
   const isFirstPage = options.page === 1;
   const isLastPage = options.page === options.total;
 
@@ -37,5 +37,3 @@ function Pagination({ options, onChange }: TPaginationProps) {
     </div>
   );
 }
-
-export default Pagination;

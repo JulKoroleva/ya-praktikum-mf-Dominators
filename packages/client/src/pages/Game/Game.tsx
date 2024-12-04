@@ -1,7 +1,6 @@
-import EndGame from './components/EndGame/EndGame';
-import { StartGame } from './components/StartGame/StartGame';
-import Popup from '@/components/Popup/Popup';
 import { useState } from 'react';
+import { Popup } from '@/components';
+import { EndGame, StartGame, CanvasComponent } from './components';
 
 const matchResultsMock = [
   {
@@ -35,8 +34,6 @@ const matchResultsMock = [
     value: '08:30',
   },
 ];
-
-import { CanvasComponent } from './components/CanvasComponent';
 
 export const Game = () => {
   const [isGameStarted, setIsGameStarted] = useState(false);

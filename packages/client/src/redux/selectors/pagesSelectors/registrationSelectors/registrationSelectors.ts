@@ -1,7 +1,7 @@
-import { RootState } from '@/redux/store/store';
+import { RootState } from '@/redux/store';
 
 export const selectRegistrationStatus = (state: RootState) =>
-  state.authentication.registration.registerStatus;
+  state.authentication.registration?.registerStatus;
 
 export const selectRegistrationError = (state: RootState) =>
-  state.authentication.registration.registerError;
+  state.authentication.registration?.registerError;

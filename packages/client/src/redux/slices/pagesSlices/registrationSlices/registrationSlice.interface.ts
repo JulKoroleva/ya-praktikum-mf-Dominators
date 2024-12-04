@@ -7,6 +7,6 @@ export interface IRegistrationFormSubmit {
 }
 
 export interface IRegistrationSlice {
-  registerStatus: 'loading' | 'succeeded' | 'failed' | 'idle';
-  registerError: string;
+  registerStatus?: 'loading' | 'succeeded' | 'failed' | 'idle';
+  registerError?: string;
 }

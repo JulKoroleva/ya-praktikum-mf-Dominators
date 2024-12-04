@@ -3,19 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { Button } from 'react-bootstrap';
-import { FormComponent } from '@/components/FormComponent';
-import { UniversalModal } from '@/components/UniversalModal';
+import { FormComponent, UniversalModal, IModalConfig, ErrorNotification } from '@/components';
 
-import { TypeDispatch } from '@/redux/store/store';
-import { registrationRequest } from '@/redux/requests/pagesRequests/registrationRequests/registrationRequests';
-import { clearRegistrationState } from '@/redux/slices/pagesSlices/registrationSlices/registrationSlice';
-import {
-  selectRegistrationStatus,
-  selectRegistrationError,
-} from '@/redux/selectors/pagesSelectors/registrationSelectors/registrationSelectors';
-
-import { IRegistrationFormSubmit } from '@/redux/slices/pagesSlices/registrationSlices/registrationSlice.interface';
-import { IModalConfig } from '@/components/UniversalModal/universalModal.interface';
+import { TypeDispatch } from '@/redux/store';
+import { registrationRequest } from '@/redux/requests';
+import { clearRegistrationState, IRegistrationFormSubmit } from '@/redux/slices';
+import { selectRegistrationStatus, selectRegistrationError } from '@/redux/selectors';
 
 import {
   registrationPageFields,
@@ -55,7 +48,7 @@ export const Registration = () => {
   useEffect(() => {
     let header = '';
     let statusValue = undefined;
-    let error = '';
+    let error: typeof registrationError = '';
     let succeeded = '';
 
     if (registrationStatus !== 'idle') {
@@ -93,20 +86,22 @@ export const Registration = () => {
   return (
     <div className={styles['registration-page']}>
       <div className={styles['form-container']}>
-        <h1>Create account</h1>
-        <FormComponent
-          fields={registrationPageFields}
-          onSubmit={onSubmit}
-          initialValues={registrationPageFieldsInitialValues}
-          submitButtonText="Sign up"
-        />
-        <Button
-          className={styles['back-button']}
-          type="button"
-          variant="primary"
-          onClick={() => navigate(-1)}>
-          Back
-        </Button>
+        <ErrorNotification>
+          <h1>Create account</h1>
+          <FormComponent
+            fields={registrationPageFields}
+            onSubmit={onSubmit}
+            initialValues={registrationPageFieldsInitialValues}
+            submitButtonText="Sign up"
+          />
+          <Button
+            className={styles['back-button']}
+            type="button"
+            variant="primary"
+            onClick={() => navigate(-1)}>
+            Back
+          </Button>
+        </ErrorNotification>
         <UniversalModal
           show={modalConfig.show}
           title={modalConfig.header}

@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { registrationRequest } from '@/redux/requests/pagesRequests/registrationRequests/registrationRequests';
+import { registrationRequest } from '@/redux/requests';
 
 import { IRegistrationSlice } from './registrationSlice.interface';
 
@@ -35,4 +35,3 @@ export const registrationSlice = createSlice({
 });
 
 export const { clearRegistrationState } = registrationSlice.actions;
-export default registrationSlice.reducer;

@@ -6,9 +6,9 @@ import { Form } from 'react-bootstrap';
 
 // import CloseIcon from '@/assets/icons/close.svg?react';
 
-import { FieldConfigInterface, FormFieldInterface } from './formField.interface';
+import { IFieldConfig, IFormFieldProps } from './FormField.interface';
 
-import styles from './formField.module.scss';
+import styles from './FormField.module.scss';
 
 export const FormField = <T extends FieldValues>({
   field,
@@ -16,8 +16,8 @@ export const FormField = <T extends FieldValues>({
   getValues,
   trigger,
   clearErrors,
-}: FormFieldInterface<T>) => {
-  const { validation, isRequired } = field as FieldConfigInterface<T>;
+}: IFormFieldProps<T>) => {
+  const { validation, isRequired } = field as IFieldConfig<T>;
 
   const validationRules = {
     ...(validation ? validation(getValues, trigger, clearErrors) : {}),

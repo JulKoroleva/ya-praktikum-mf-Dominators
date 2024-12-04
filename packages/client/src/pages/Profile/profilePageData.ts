@@ -1,7 +1,7 @@
-import { FieldConfigInterface } from '@/components/FormComponent/components/FormField/formField.interface';
+import { IFieldConfig } from '@/components/FormComponent/components/FormField/FormField.interface';
 import { validateEmail } from '@/services/validationUtils';
 
-export const settingsFields: FieldConfigInterface[] = [
+export const settingsFields: IFieldConfig[] = [
   {
     id: 'email',
     label: 'Email',
@@ -68,7 +68,7 @@ export const settingsFieldsInitialValues = {
   phone: '1234567890',
 };
 
-export const changePasswordFields: FieldConfigInterface[] = [
+export const changePasswordFields: IFieldConfig[] = [
   {
     id: 'old_password',
     label: 'Old password',

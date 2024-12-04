@@ -1,6 +1,6 @@
 export interface IAuthorizationSlice {
-  loginStatus: 'loading' | 'succeeded' | 'failed' | 'idle';
-  loginError: string;
+  loginStatus?: 'loading' | 'succeeded' | 'failed' | 'idle';
+  loginError?: string;
 }
 
 export interface IAuthorizationFormSubmit {

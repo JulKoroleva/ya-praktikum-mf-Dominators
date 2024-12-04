@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { IAuthorizationFormSubmit } from '@/redux/slices/pagesSlices/authorizationSlices/authorizationSlice.interface';
+import { IAuthorizationFormSubmit } from '@/redux/slices';
 
 import { LOGIN_URL } from '@/constants/apiUrls';
 
