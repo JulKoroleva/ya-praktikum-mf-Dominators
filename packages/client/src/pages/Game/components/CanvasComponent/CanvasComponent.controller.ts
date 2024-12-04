@@ -12,6 +12,7 @@ import { STATUS } from './CanvasComponent.interface';
 
 import { GenerateEnemy, GenerateFood, IsCollided } from './utils';
 import { EnemyPlayerModel } from './models/EnemyPlayer.model';
+import { isCollidedBySquare } from './utils/isCollidedBySquare';
 
 export class CanvasController {
   public Map = new MapRegionModel();
@@ -50,17 +51,18 @@ export class CanvasController {
   }
 
   public CollisionDetection() {
+    const { Player } = this.Player;
     (() => {
       for (const element of this.EnemyPlayers) {
-        if (!IsCollided(element, this.Player.Player)) {
+        if (isCollidedBySquare(element, Player) < Player.getAreaOfCircle() / 3) {
           continue;
         }
-        if (this.Player.Player.Radius <= element.Radius) {
-          this.Player.Player.Status = STATUS.DEAD;
+        if (Player.Radius <= element.Radius) {
+          Player.Status = STATUS.DEAD;
           return;
         }
-        this.Player.Player.Radius += element.Radius / 2;
-        this.Player.Player.Score += 10;
+        Player.Radius += element.Radius / 2;
+        Player.Score += 10;
         element.Destroy();
         element.Status = STATUS.DEAD;
       }
