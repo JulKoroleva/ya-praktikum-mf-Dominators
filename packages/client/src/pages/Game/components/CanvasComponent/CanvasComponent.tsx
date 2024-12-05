@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState, MutableRefObject } from 'react';
 
 import { useMousePosition } from '@/utils/useMousePosition';
 import { useCanvasResize } from '@/utils/useCanvasResize';
@@ -13,7 +13,11 @@ export function CanvasComponent({
 }: {
   endGameCallback: Dispatch<SetStateAction<boolean>>;
 }) {
-  const controller = useMemo(() => new CanvasController(), []);
+  const controllerRef: MutableRefObject<CanvasController | null> = useRef(null);
+  if (controllerRef.current === null) {
+    controllerRef.current = new CanvasController();
+  }
+  const controller = controllerRef.current!;
   const refCanvas = useRef<HTMLCanvasElement>(null);
   const mouseCoodrs = useMousePosition();
   const [score, setScore] = useState(0);
