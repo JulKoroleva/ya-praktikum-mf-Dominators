@@ -37,7 +37,7 @@ const matchResultsMock = [
 
 export const Game = () => {
   const [isGameStarted, setIsGameStarted] = useState(false);
-  const [isEndedGame] = useState(false);
+  const [isEndedGame, setEndedGame] = useState(false);
 
   const handleStartGame = () => {
     setIsGameStarted(true);
@@ -49,7 +49,7 @@ export const Game = () => {
         <StartGame onComplete={handleStartGame} isGameStarted={isGameStarted} />
       ) : (
         <>
-          <CanvasComponent />
+          <CanvasComponent endGameCallback={setEndedGame} />
           <Popup open={isEndedGame} withOverlay={true}>
             <EndGame results={matchResultsMock} />
           </Popup>
