@@ -31,6 +31,9 @@ export function CanvasComponent({
 
     ctx.setTransform(controller.Camera.Scale, 0, 0, controller.Camera.Scale, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    controller.DrawGrid(ctx);
+
     controller.MovePlayer(mouseCoodrs.current.X, mouseCoodrs.current.Y);
     controller.MoveStatics();
     controller.EnemyPlayersMove();
@@ -61,6 +64,23 @@ export function CanvasComponent({
 
   useEffect(() => {
     animate();
+  }, []);
+
+  useEffect(() => {
+    const canvas = refCanvas.current;
+    if (canvas) {
+      const setCanvasSize = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      };
+
+      setCanvasSize();
+      window.addEventListener('resize', setCanvasSize);
+
+      return () => {
+        window.removeEventListener('resize', setCanvasSize);
+      };
+    }
   }, []);
 
   useEffect(() => {

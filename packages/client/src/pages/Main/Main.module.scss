@@ -44,7 +44,7 @@
         display: flex;
         text-decoration: none;
         min-width: 300px;
-        background: $color-black-custom;
+        background: $color-black;
         color: $color-white;
         height: 60px;
         border-radius: 4px;
@@ -63,7 +63,7 @@
         font-size: 30px;
         margin: 10px 0 20px;
         border-radius: 4px;
-        background: $color-black-custom;
+        background: $color-black;
         color: $color-white;
       }
 
@@ -83,23 +83,23 @@
 
     margin-top: 20px;
     text-decoration: none;
-    border: 2px solid $color-black-custom;
-    color: $color-black-custom;
+    border: 2px solid $color-black;
+    color: $color-black;
     background-color: transparent;
     padding: 5px 15px;
     border-radius: 4px;
 
     &:hover {
       transform: scale(1.1);
-      border: 2px solid $color-black-custom;
-      color: $color-black-custom;
+      border: 2px solid $color-black;
+      color: $color-black;
       background-color: transparent;
     }
 
     &:active {
       transform: scale(1.1);
-      border: 2px solid $color-black-custom !important;
-      color: $color-black-custom !important;
+      border: 2px solid $color-black !important;
+      color: $color-black !important;
       background-color: transparent !important;
     }
   }

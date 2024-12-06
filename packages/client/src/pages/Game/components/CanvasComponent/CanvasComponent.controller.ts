@@ -131,4 +131,38 @@ export class CanvasController {
       }
     }
   }
+
+  public DrawGrid(ctx: CanvasRenderingContext2D) {
+    const gridSize = 5;
+    const cameraX = this.Camera.X;
+    const cameraY = this.Camera.Y;
+
+    const canvasWidth = ctx.canvas.width / this.Camera.Scale;
+    const canvasHeight = ctx.canvas.height / this.Camera.Scale;
+
+    const offsetX = -(cameraX % gridSize);
+    const offsetY = -(cameraY % gridSize);
+
+    ctx.save();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+    ctx.strokeStyle = '$app-cell-color';
+    ctx.lineWidth = 0.1;
+
+    for (let x = offsetX; x < canvasWidth; x += gridSize) {
+      ctx.beginPath();
+      ctx.moveTo(x * this.Camera.Scale, 0);
+      ctx.lineTo(x * this.Camera.Scale, canvasHeight * this.Camera.Scale);
+      ctx.stroke();
+    }
+
+    for (let y = offsetY; y < canvasHeight; y += gridSize) {
+      ctx.beginPath();
+      ctx.moveTo(0, y * this.Camera.Scale);
+      ctx.lineTo(canvasWidth * this.Camera.Scale, y * this.Camera.Scale);
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  }
 }
