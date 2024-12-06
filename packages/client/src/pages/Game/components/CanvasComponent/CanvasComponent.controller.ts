@@ -18,7 +18,7 @@ export class CanvasController {
   public Map = new MapRegionModel();
   public Camera = new CameraModel();
   public Player = new PlayerModel({ X: 2000, Y: 2000, Radius: 2 });
-  public EnemyPlayers = [
+  public EnemyPlayers: EnemyPlayerModel[] = [
     new EnemyPlayerModel({ X: 3000, Y: 3000, Radius: 10, ColorFill: 'red' }),
     new EnemyPlayerModel({ X: 1000, Y: 1000, Radius: 10, ColorFill: 'blue' }),
     new EnemyPlayerModel({ X: 3000, Y: 1000, Radius: 10, ColorFill: 'yellow' }),
@@ -29,7 +29,7 @@ export class CanvasController {
     width: MAP_SIZE,
     height: MAP_SIZE,
   });
-  public EnemyFields = GenerateEnemy({ width: MAP_SIZE, height: MAP_SIZE });
+  public EnemyFields: EnemyStatic[] = [...GenerateEnemy({ width: MAP_SIZE, height: MAP_SIZE })];
 
   public MovePlayer(mouseX: number, mouseY: number) {
     this.Player.move(this.Camera, mouseX, mouseY);
@@ -52,23 +52,50 @@ export class CanvasController {
 
   public CollisionDetection() {
     const { Player } = this.Player;
-    (() => {
-      for (const element of this.EnemyPlayers) {
-        if (isCollidedBySquare(element, Player) < Player.getAreaOfCircle() / 3) {
-          continue;
-        }
-        if (Player.Radius <= element.Radius) {
-          Player.Status = STATUS.DEAD;
-          return;
-        }
-        Player.Radius += element.Radius / 2;
-        Player.Score += 10;
-        element.Destroy();
-        element.Status = STATUS.DEAD;
-      }
-    })();
 
-    this.EnemyPlayers = this.EnemyPlayers.filter(el => el.Status != STATUS.DEAD);
+    for (const element of this.EnemyPlayers) {
+      if (element instanceof EnemyStatic) {
+        continue;
+      }
+
+      if (isCollidedBySquare(element, Player) < Player.getAreaOfCircle() / 3) {
+        continue;
+      }
+
+      if (Player.Radius <= element.Radius) {
+        Player.Status = STATUS.DEAD;
+        return;
+      }
+
+      // Если столкновение началось
+      if (IsCollided(element, Player) && !element.isColliding) {
+        element.isColliding = true;
+        element.collisionTime = 0;
+
+        const collisionAngle = Math.atan2(element.Y - Player.Y, element.X - Player.X);
+        const deformationAmount = Math.min(element.Radius, Player.Radius) * 0.3;
+
+        Player.DeformationX -= Math.cos(collisionAngle) * deformationAmount;
+        Player.DeformationY -= Math.sin(collisionAngle) * deformationAmount;
+
+        element.DeformationX += Math.cos(collisionAngle) * deformationAmount;
+        element.DeformationY += Math.sin(collisionAngle) * deformationAmount;
+      }
+
+      if (element.isColliding) {
+        element.collisionTime++;
+
+        if (element.collisionTime > 30) {
+          Player.Radius += element.Radius / 2;
+          Player.Score += 10;
+          element.Destroy();
+          element.Status = STATUS.DEAD;
+          element.isColliding = false;
+        }
+      }
+    }
+
+    this.EnemyPlayers = this.EnemyPlayers.filter(el => el.Status !== STATUS.DEAD);
   }
 
   public CollisionFoodDetection() {
@@ -87,6 +114,20 @@ export class CanvasController {
         if (!IsCollided(element, target)) {
           continue;
         }
+        if (IsCollided(element, this.Player.Player)) {
+          const collisionAngle = Math.atan2(
+            element.Y - this.Player.Player.Y,
+            element.X - this.Player.Player.X,
+          );
+          const deformationAmount = Math.min(element.Radius, this.Player.Player.Radius) * 0.3;
+
+          // Применяем деформацию
+          this.Player.Player.DeformationX -= Math.cos(collisionAngle) * deformationAmount;
+          this.Player.Player.DeformationY -= Math.sin(collisionAngle) * deformationAmount;
+
+          element.DeformationX += Math.cos(collisionAngle) * deformationAmount;
+          element.DeformationY += Math.sin(collisionAngle) * deformationAmount;
+        }
         target.Radius = target.Radius + element.Radius * GROW_BY_FOOD_COEFFICIENT;
         element.Status = STATUS.DEAD;
         if (target instanceof EnemyStatic) {
@@ -101,10 +142,25 @@ export class CanvasController {
 
   public CollisionEnemyDetection() {
     for (const element of this.EnemyFields) {
-      if (IsCollided(element, this.Player.Player)) {
-        if (this.Player.Player.Radius <= element.Radius) {
-          /** @TODO там как-то разлетается он вроде */
-          return;
+      if (element instanceof EnemyPlayerModel) {
+        if (IsCollided(element, this.Player.Player)) {
+          if (this.Player.Player.Radius <= element.Radius) {
+            /** @TODO там как-то разлетается он вроде */
+            this.Player.Player.Status = STATUS.DEAD;
+            return;
+          }
+
+          const collisionAngle = Math.atan2(
+            element.Y - this.Player.Player.Y,
+            element.X - this.Player.Player.X,
+          );
+          const deformationAmount = Math.min(element.Radius, this.Player.Player.Radius) * 0.3;
+
+          this.Player.Player.DeformationX -= Math.cos(collisionAngle) * deformationAmount;
+          this.Player.Player.DeformationY -= Math.sin(collisionAngle) * deformationAmount;
+
+          element.DeformationX += Math.cos(collisionAngle) * deformationAmount;
+          element.DeformationY += Math.sin(collisionAngle) * deformationAmount;
         }
       }
     }

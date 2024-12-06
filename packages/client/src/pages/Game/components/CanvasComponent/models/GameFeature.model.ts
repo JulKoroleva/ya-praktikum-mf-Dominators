@@ -21,6 +21,8 @@ export class GameFeatureModel implements ICircle {
   public Speed = 1;
   public Movable = false;
   public Angle = 0;
+  public DeformationX = 0;
+  public DeformationY = 0;
   //#endregion
 
   constructor({ X, Y, Radius, StrokeStyle, ColorFill, LineWidth }: ICircle) {
@@ -55,8 +57,26 @@ export class GameFeatureModel implements ICircle {
 
   draw(ctx: CanvasRenderingContext2D) {
     DrawCircle(ctx, {
-      ...this,
-      lineWidth: 2,
+      Radius: this.Radius,
+      X: this.X,
+      Y: this.Y,
+      StrokeStyle: this.StrokeStyle,
+      ColorFill: this.ColorFill,
+      DeformationX: this.DeformationX,
+      DeformationY: this.DeformationY,
     });
+
+    const recoveryRate = 0.1;
+    if (Math.abs(this.DeformationX) > 0.1) {
+      this.DeformationX *= 1 - recoveryRate;
+    } else {
+      this.DeformationX = 0;
+    }
+
+    if (Math.abs(this.DeformationY) > 0.1) {
+      this.DeformationY *= 1 - recoveryRate;
+    } else {
+      this.DeformationY = 0;
+    }
   }
 }
