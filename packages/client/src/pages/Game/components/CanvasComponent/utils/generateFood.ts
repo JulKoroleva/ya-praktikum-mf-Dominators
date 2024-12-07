@@ -10,7 +10,9 @@ export function GenerateFood({
   height: number;
 }): Array<FoodModel> {
   return new Array(FOOD_COUNT).fill(null).map(() => {
-    const color = `rgb(${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)})`;
+    const color = `rgb(${Math.round(Math.random() * 255)}, ${Math.round(
+      Math.random() * 255,
+    )}, ${Math.round(Math.random() * 255)})`;
 
     return new FoodModel({
       X: Math.random() * width,

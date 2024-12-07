@@ -1,4 +1,4 @@
-export interface ICircle extends ICoords {
+export interface ICircle extends ICoords, IDeformationCoords {
   StrokeStyle?: string;
   ColorFill?: string;
   LineWidth?: number;
@@ -9,7 +9,10 @@ export interface ICoords {
   X: number;
   Y: number;
 }
-
+export interface IDeformationCoords {
+  DeformationX?: number;
+  DeformationY?: number;
+}
 export enum STATUS {
   ALIVE = 'ALIVE',
   DEAD = 'DEAD',

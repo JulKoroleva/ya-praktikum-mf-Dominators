@@ -1,45 +1,34 @@
 import { ICircle } from '../CanvasComponent.interface';
 
-export const DrawCircle = (
-  ctx: CanvasRenderingContext2D,
-  circleDims: ICircle & {
-    DeformationX?: number;
-    DeformationY?: number;
-    IsJelly?: boolean;
-  },
-) => {
+export const DrawCircle = (ctx: CanvasRenderingContext2D, circleDims: ICircle) => {
   const {
     Radius: radius,
     X: startX,
     Y: startY,
     LineWidth = 2,
-    StrokeStyle: strokeStyle,
     ColorFill: colorFill = 'black',
     DeformationX = 0,
     DeformationY = 0,
   } = circleDims;
 
   const jellyDamping = 0.98;
-
   const numPoints = 36;
   const angleStep = (Math.PI * 2) / numPoints;
   const time = Date.now() / 100;
-  const jellyFrequency = 5;
-
-  const baseRadius = radius;
-  const shakeAmplitude =
-    Math.abs(DeformationX) > 0.5 || Math.abs(DeformationY) > 0.5 ? baseRadius * 0.01 : 0;
-  const radiusShake = baseRadius + shakeAmplitude * Math.sin(time * jellyFrequency);
 
   const points = [];
   for (let i = 0; i < numPoints; i++) {
     const angle = i * angleStep;
-    const waveEffect =
-      Math.sin(time + i * 0.5) * (Math.abs(DeformationX) > 0.5 ? baseRadius * 0.05 : 0);
-    const noise = Math.sin(time * 0.3 + i) * (DeformationX + DeformationY) * 0.2;
-    const pointRadius = radiusShake + waveEffect + noise;
-    const x = startX + Math.cos(angle) * pointRadius;
-    const y = startY + Math.sin(angle) * pointRadius;
+
+    const deformation = -(Math.cos(angle) * DeformationX + Math.sin(angle) * DeformationY);
+    const waveEffect = Math.sin(time + angle * 2) * deformation * 0.3;
+    const spreadEffect = Math.sin(angle) * deformation * 0.2;
+    const pointRadius = radius + deformation + waveEffect + spreadEffect;
+    const limitedRadius = Math.max(radius * 0.8, Math.min(radius * 1.3, pointRadius));
+
+    const x = startX + Math.cos(angle) * limitedRadius;
+    const y = startY + Math.sin(angle) * limitedRadius;
+
     points.push({ x, y });
   }
 
@@ -54,15 +43,43 @@ export const DrawCircle = (
   }
   ctx.closePath();
 
-  ctx.fillStyle = colorFill || 'rgba(0, 128, 255, 0.6)';
+  ctx.fillStyle = colorFill;
   ctx.fill();
 
-  if (strokeStyle) {
-    ctx.strokeStyle = strokeStyle || 'rgba(0, 128, 255, 1)';
-    ctx.lineWidth = LineWidth;
-    ctx.stroke();
-  }
+  const darkerStrokeStyle = strokeColor(colorFill, 20);
+  ctx.strokeStyle = darkerStrokeStyle;
+  ctx.lineWidth = LineWidth;
+  ctx.stroke();
 
   circleDims.DeformationX = DeformationX * jellyDamping;
   circleDims.DeformationY = DeformationY * jellyDamping;
 };
+
+function strokeColor(color: string, amount: number = 20): string {
+  const parseColor = (color: string): [number, number, number] | null => {
+    if (color.startsWith('#')) {
+      let hex = color.slice(1);
+      if (hex.length === 3) {
+        hex = hex
+          .split('')
+          .map(char => char + char)
+          .join('');
+      }
+      const bigint = parseInt(hex, 16);
+      return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
+    } else if (color.startsWith('rgb')) {
+      const rgb = color.match(/\d+/g)?.map(Number);
+      if (rgb && rgb.length >= 3) {
+        return [rgb[0], rgb[1], rgb[2]];
+      }
+    }
+    return null;
+  };
+
+  const rgb = parseColor(color);
+  if (!rgb) return color;
+
+  const [r, g, b] = rgb.map(channel => Math.max(0, Math.min(255, channel - amount)));
+
+  return `rgb(${r}, ${g}, ${b})`;
+}

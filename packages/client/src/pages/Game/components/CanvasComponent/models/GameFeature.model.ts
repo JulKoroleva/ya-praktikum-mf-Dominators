@@ -2,7 +2,7 @@ import { ICircle, STATUS } from '../CanvasComponent.interface';
 
 import { DrawCircle } from '../utils';
 
-const BASE_COLOR = 'black';
+const BASE_COLOR = 'rgb(163, 54, 131)';
 
 export class GameFeatureModel implements ICircle {
   //#region static & dinamic
@@ -62,7 +62,7 @@ export class GameFeatureModel implements ICircle {
       Y: this.Y,
       StrokeStyle: this.StrokeStyle,
       ColorFill: this.ColorFill,
-      LineWidth: this.LineWidth,
+      LineWidth: this.Radius / 5,
       DeformationX: this.DeformationX,
       DeformationY: this.DeformationY,
     });
