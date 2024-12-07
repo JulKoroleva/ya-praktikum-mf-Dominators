@@ -62,6 +62,7 @@ export class GameFeatureModel implements ICircle {
       Y: this.Y,
       StrokeStyle: this.StrokeStyle,
       ColorFill: this.ColorFill,
+      LineWidth: this.LineWidth,
       DeformationX: this.DeformationX,
       DeformationY: this.DeformationY,
     });

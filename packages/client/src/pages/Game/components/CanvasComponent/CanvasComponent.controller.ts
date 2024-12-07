@@ -17,7 +17,7 @@ import { isCollidedBySquare } from './utils/isCollidedBySquare';
 export class CanvasController {
   public Map = new MapRegionModel();
   public Camera = new CameraModel();
-  public Player = new PlayerModel({ X: 2000, Y: 2000, Radius: 2 });
+  public Player = new PlayerModel({ X: 2000, Y: 2000, Radius: 13 });
   public EnemyPlayers: EnemyPlayerModel[] = [
     new EnemyPlayerModel({ X: 3000, Y: 3000, Radius: 10, ColorFill: 'red' }),
     new EnemyPlayerModel({ X: 1000, Y: 1000, Radius: 10, ColorFill: 'blue' }),
@@ -68,29 +68,58 @@ export class CanvasController {
       }
 
       // Если столкновение началось
-      if (IsCollided(element, Player) && !element.isColliding) {
-        element.isColliding = true;
-        element.collisionTime = 0;
+      if (IsCollided(element, Player)) {
+        const dx = element.X - Player.X;
+        const dy = element.Y - Player.Y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
 
-        const collisionAngle = Math.atan2(element.Y - Player.Y, element.X - Player.X);
-        const deformationAmount = Math.min(element.Radius, Player.Radius) * 0.3;
+        const overlap = element.Radius + Player.Radius - distance;
 
-        Player.DeformationX -= Math.cos(collisionAngle) * deformationAmount;
-        Player.DeformationY -= Math.sin(collisionAngle) * deformationAmount;
+        if (overlap > 0) {
+          const angle = Math.atan2(dy, dx);
+          const deformationAmount = Math.min(element.Radius, Player.Radius) * 0.1;
 
-        element.DeformationX += Math.cos(collisionAngle) * deformationAmount;
-        element.DeformationY += Math.sin(collisionAngle) * deformationAmount;
+          Player.DeformationX += Math.cos(angle) * deformationAmount;
+          Player.DeformationY += Math.sin(angle) * deformationAmount;
+
+          element.DeformationX -= Math.cos(angle) * deformationAmount;
+          element.DeformationY -= Math.sin(angle) * deformationAmount;
+
+          const shakeAmplitude = deformationAmount * 5;
+          Player.Radius += Math.sin(Date.now() / 50) * shakeAmplitude;
+
+          const resistance = overlap > Player.Radius * 0.3 ? 0 : 0.1;
+          Player.X -= Math.cos(angle) * overlap * resistance;
+          Player.Y -= Math.sin(angle) * overlap * resistance;
+
+          element.X += Math.cos(angle) * overlap * resistance;
+          element.Y += Math.sin(angle) * overlap * resistance;
+        }
+
+        if (overlap >= element.Radius * 0.8) {
+          const absorptionRate = 0.5;
+          const absorbedRadius = element.Radius * absorptionRate;
+
+          Player.Radius += absorbedRadius;
+          element.Radius -= absorbedRadius;
+
+          if (element.Radius <= 0.5) {
+            element.Status = STATUS.DEAD;
+            element.Radius = 0;
+          }
+        }
       }
-
       if (element.isColliding) {
         element.collisionTime++;
-
         if (element.collisionTime > 30) {
-          Player.Radius += element.Radius / 2;
-          Player.Score += 10;
-          element.Destroy();
-          element.Status = STATUS.DEAD;
-          element.isColliding = false;
+          if (Player.Radius > element.Radius) {
+            Player.Radius += element.Radius * 0.5;
+            Player.Score += 10;
+            element.Radius = 0;
+            element.Destroy();
+            element.Status = STATUS.DEAD;
+            element.isColliding = false;
+          }
         }
       }
     }
@@ -174,7 +203,7 @@ export class CanvasController {
       ...this.Player.Divisions,
       this.Player.Player,
     ].sort((a, b) => a.Radius - b.Radius)) {
-      if (item.Status === STATUS.ALIVE) {
+      if (item.Status === STATUS.ALIVE && item.Radius > 0) {
         item.draw(ctx);
       }
     }
