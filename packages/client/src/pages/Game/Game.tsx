@@ -1,46 +1,25 @@
 import { useState } from 'react';
 import { Popup } from '@/components';
 import { EndGame, StartGame, CanvasComponent } from './components';
-
-const matchResultsMock = [
-  {
-    id: 1,
-    title: 'Time alive',
-    value: '08:30',
-  },
-  {
-    id: 2,
-    title: 'Food eating',
-    value: '1350',
-  },
-  {
-    id: 3,
-    title: 'Highest mass',
-    value: '2634',
-  },
-  {
-    id: 4,
-    title: 'Cells eating',
-    value: '2',
-  },
-  {
-    id: 5,
-    title: 'Top position',
-    value: '1',
-  },
-  {
-    id: 6,
-    title: 'Leaderboard time ',
-    value: '08:30',
-  },
-];
+import { TResult } from './components/EndGame/EndGame.interface';
 
 export const Game = () => {
   const [isGameStarted, setIsGameStarted] = useState(false);
+  const [result, setResult] = useState<Array<Array<TResult>>>([]);
   const [isEndedGame, setEndedGame] = useState(false);
 
   const handleStartGame = () => {
     setIsGameStarted(true);
+  };
+
+  const handleEndGame = (result: Array<TResult> = []) => {
+    setResult(prev => [result, ...prev]);
+    setEndedGame(true);
+  };
+
+  const handleRepeat = () => {
+    setEndedGame(false);
+    setIsGameStarted(false);
   };
 
   return (
@@ -49,9 +28,9 @@ export const Game = () => {
         <StartGame onComplete={handleStartGame} isGameStarted={isGameStarted} />
       ) : (
         <>
-          <CanvasComponent endGameCallback={setEndedGame} />
+          <CanvasComponent endGameCallback={handleEndGame} />
           <Popup open={isEndedGame} withOverlay={true}>
-            <EndGame results={matchResultsMock} />
+            <EndGame results={result[0]} handleRepeat={handleRepeat} />
           </Popup>
         </>
       )}

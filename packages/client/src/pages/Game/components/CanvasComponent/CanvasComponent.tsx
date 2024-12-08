@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useRef, useState, MutableRefObject } from 'react';
+import { useEffect, useRef, useState, MutableRefObject } from 'react';
 
 import { useMousePosition } from '@/utils/useMousePosition';
 import { useCanvasResize } from '@/utils/useCanvasResize';
@@ -7,11 +7,12 @@ import { CanvasController } from './CanvasComponent.controller';
 
 import styles from './CanvasComponent.module.scss';
 import { STATUS } from './CanvasComponent.interface';
+import { TResult } from '../EndGame/EndGame.interface';
 
 export function CanvasComponent({
   endGameCallback,
 }: {
-  endGameCallback: Dispatch<SetStateAction<boolean>>;
+  endGameCallback: (result: Array<TResult>) => void;
 }) {
   const controllerRef: MutableRefObject<CanvasController | null> = useRef(null);
   if (controllerRef.current === null) {
@@ -49,7 +50,7 @@ export function CanvasComponent({
       return;
     }
     if (controller.Player.Player.Status === STATUS.DEAD) {
-      endGameCallback(true);
+      endGameCallback(controller.Result);
       return;
     }
     setScore(controller.Player.MyScore);

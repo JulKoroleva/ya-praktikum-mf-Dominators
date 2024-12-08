@@ -1,4 +1,4 @@
-import { GROW_BY_FOOD_COEFFICIENT, MAP_SIZE } from '@/constants/game';
+import { FOOD_COUNT, GROW_BY_FOOD_COEFFICIENT, MAP_SIZE } from '@/constants/game';
 
 import {
   CameraModel,
@@ -13,6 +13,7 @@ import { STATUS } from './CanvasComponent.interface';
 import { GenerateEnemy, GenerateFood, IsCollided } from './utils';
 import { EnemyPlayerModel } from './models/EnemyPlayer.model';
 import { isCollidedBySquare } from './utils/isCollidedBySquare';
+import { TResult } from '../EndGame/EndGame.interface';
 
 export class CanvasController {
   public Map = new MapRegionModel();
@@ -130,5 +131,35 @@ export class CanvasController {
         food.draw(ctx);
       }
     }
+  }
+
+  public get Result(): Array<TResult> {
+    const field = [this.Player.Player, ...this.EnemyPlayers].sort((a, b) => b.Radius - a.Radius);
+    const topPosition = field.findIndex(player => !(player instanceof EnemyPlayerModel)) + 1;
+
+    return [
+      {
+        id: 1,
+        title: 'Food eating',
+        value: FOOD_COUNT - this.FoodFields.length,
+      },
+      {
+        id: 2,
+        title: 'Score Points',
+        value: this.Player.MyScore,
+      },
+      {
+        id: 3,
+        title: 'Cells eating',
+        value:
+          this.EnemyFields.length -
+          this.EnemyFields.filter(({ Status }) => Status === STATUS.ALIVE).length,
+      },
+      {
+        id: 4,
+        title: 'Top position',
+        value: topPosition,
+      },
+    ];
   }
 }
