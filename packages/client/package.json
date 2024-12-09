@@ -10,7 +10,8 @@
     "lint:styles": "stylelint \"packages/client/**/*.scss\" --cache",
     "fix:styles": "stylelint \"packages/client/**/*.scss\" --fix",
     "format": "prettier --write .",
-    "test": "jest ./"
+    "test": "jest ./",
+    "start": "tsc && vite build && node server.cjs"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.3.0",
