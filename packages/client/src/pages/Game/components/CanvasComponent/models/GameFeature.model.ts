@@ -5,17 +5,17 @@ import { DrawCircle } from '../utils';
 const BASE_COLOR = 'rgb(163, 54, 131)';
 
 export class GameFeatureModel implements ICircle {
-  //#region static & dinamic
+  //#region static & dynamic
   public X = 0;
   public Y = 0;
   public Radius = 10;
   public Status = STATUS.ALIVE;
-  public StrokeStyle = BASE_COLOR;
   public ColorFill = BASE_COLOR;
+  public StrokeStyle = '';
   public LineWidth: number;
   //#endregion
 
-  //#region dinamic
+  //#region dynamic
   public ToX = 0;
   public ToY = 0;
   public Speed = 1;
@@ -25,13 +25,21 @@ export class GameFeatureModel implements ICircle {
   public DeformationY = 0;
   //#endregion
 
-  constructor({ X, Y, Radius, StrokeStyle, ColorFill, LineWidth }: ICircle) {
+  constructor({ X, Y, Radius, ColorFill, LineWidth }: ICircle) {
     this.X = X;
     this.Y = Y;
     this.Radius = Radius;
-    this.StrokeStyle = StrokeStyle || BASE_COLOR;
-    this.ColorFill = ColorFill || BASE_COLOR;
-    this.LineWidth = LineWidth || 2;
+    this.ColorFill = ColorFill || 'rgb(163, 54, 131)';
+    this.StrokeStyle = this.calculateDarkerColor(this.ColorFill, 0.8);
+    this.LineWidth = LineWidth || 0;
+  }
+
+  private calculateDarkerColor(rgb: string, factor: number): string {
+    const match = rgb.match(/\d+/g);
+    if (!match || match.length < 3) return rgb;
+
+    const [r, g, b] = match.map(Number);
+    return `rgb(${Math.floor(r * factor)}, ${Math.floor(g * factor)}, ${Math.floor(b * factor)})`;
   }
 
   getAreaOfCircle() {

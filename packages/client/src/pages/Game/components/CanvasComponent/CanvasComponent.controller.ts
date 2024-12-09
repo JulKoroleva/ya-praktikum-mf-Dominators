@@ -18,7 +18,7 @@ import { animateAbsorption } from './utils/animateAbsorption';
 export class CanvasController {
   public Map = new MapRegionModel();
   public Camera = new CameraModel();
-  public Player = new PlayerModel({ X: 2000, Y: 2000, Radius: 13 });
+  public Player = new PlayerModel({ X: 2000, Y: 2000, Radius: 3 });
   public EnemyPlayers: EnemyPlayerModel[] = [
     new EnemyPlayerModel({ X: 3000, Y: 3000, Radius: 7, ColorFill: 'rgba(255, 0, 0)' }),
     new EnemyPlayerModel({ X: 1000, Y: 1000, Radius: 10, ColorFill: 'rgba(0, 98, 255)' }),
@@ -52,75 +52,100 @@ export class CanvasController {
   }
 
   public CollisionDetection() {
-    const { Player } = this.Player;
+    const Player = this.Player.Player;
+    const playerArea = Player.getAreaOfCircle();
+    const playerRadius = Player.Radius;
+    const playerX = Player.X;
+    const playerY = Player.Y;
+
+    this.EnemyPlayers = this.EnemyPlayers.filter(el => el.Status !== STATUS.DEAD);
 
     for (const element of this.EnemyPlayers) {
       if (element instanceof EnemyStatic) {
         continue;
       }
 
-      if (isCollidedBySquare(element, Player) < Player.getAreaOfCircle() / 3) {
+      const dx = element.X - playerX;
+      const dy = element.Y - playerY;
+      const distSq = dx * dx + dy * dy;
+      const sumRadius = element.Radius + playerRadius;
+      const sumRadiusSq = sumRadius * sumRadius;
+
+      if (distSq > sumRadiusSq) {
         continue;
       }
 
-      if (IsCollided(element, Player)) {
-        const dx = element.X - Player.X;
-        const dy = element.Y - Player.Y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
+      if (isCollidedBySquare(element, Player) < playerArea / 3) {
+        continue;
+      }
 
-        const overlap = element.Radius + Player.Radius - distance;
+      if (!IsCollided(element, Player)) {
+        continue;
+      }
 
-        if (Math.abs(Player.Radius - element.Radius) < 0.01) {
-          continue;
-        }
+      const distance = Math.sqrt(distSq);
+      const overlap = sumRadius - distance;
 
-        if (distance < element.Radius + Player.Radius) {
-          const angle = Math.atan2(dy, dx);
-          const deformationAmount = (element.Radius + Player.Radius - distance) * 0.5; // Сила деформации
+      if (Math.abs(playerRadius - element.Radius) < 0.01) {
+        continue;
+      }
 
-          Player.DeformationX -= Math.cos(angle) * deformationAmount;
-          Player.DeformationY -= Math.sin(angle) * deformationAmount;
+      if (distance < sumRadius) {
+        const angle = Math.atan2(dy, dx);
+        const deformationAmount = (sumRadius - distance) * 0.5; // Сила деформации
 
-          const waveSpread = Math.sin(angle * 3) * deformationAmount * 0.4;
-          Player.DeformationX += Math.cos(angle + Math.PI / 4) * waveSpread;
-          Player.DeformationY += Math.sin(angle + Math.PI / 4) * waveSpread;
+        const cosA = Math.cos(angle);
+        const sinA = Math.sin(angle);
 
-          element.DeformationX += Math.cos(angle) * deformationAmount * 0.5;
-          element.DeformationY += Math.sin(angle) * deformationAmount * 0.5;
-        }
-        if (overlap > 0) {
-          const angle = Math.atan2(dy, dx);
-          const deformationAmount = overlap * 0.3;
+        Player.DeformationX -= cosA * deformationAmount;
+        Player.DeformationY -= sinA * deformationAmount;
 
-          Player.DeformationX += Math.cos(angle) * deformationAmount;
-          Player.DeformationY += Math.sin(angle) * deformationAmount;
+        const waveSpread = Math.sin(angle * 3) * deformationAmount * 0.4;
+        const angleOffset = angle + Math.PI / 4;
+        const cosAO = Math.cos(angleOffset);
+        const sinAO = Math.sin(angleOffset);
 
-          element.DeformationX -= Math.cos(angle) * deformationAmount * 0.5;
-          element.DeformationY -= Math.sin(angle) * deformationAmount * 0.5;
-        }
+        Player.DeformationX += cosAO * waveSpread;
+        Player.DeformationY += sinAO * waveSpread;
 
-        if (overlap >= element.Radius * 0.8) {
-          const absorptionRate = 0.5;
-          const absorbedRadius = element.Radius * absorptionRate;
+        element.DeformationX += cosA * deformationAmount * 0.5;
+        element.DeformationY += sinA * deformationAmount * 0.5;
+      }
 
-          if (Player.Radius > element.Radius) {
-            Player.Radius += absorbedRadius;
-            element.Radius -= absorbedRadius;
+      if (overlap > 0) {
+        const angle = Math.atan2(dy, dx);
+        const cosA = Math.cos(angle);
+        const sinA = Math.sin(angle);
+        const deformationAmount = overlap * 0.3;
 
-            if (element.Radius <= 0.5) {
-              element.Status = STATUS.DEAD;
-              element.Radius = 0;
-            }
-          } else {
-            element.Radius += Player.Radius * absorptionRate;
-            Player.Radius -= Player.Radius * absorptionRate;
+        Player.DeformationX += cosA * deformationAmount;
+        Player.DeformationY += sinA * deformationAmount;
 
-            if (Player.Radius <= 0.5) {
-              animateAbsorption(element, Player);
-              element.Destroy();
-              Player.Status = STATUS.DEAD;
-              element.isColliding = false;
-            }
+        element.DeformationX -= cosA * deformationAmount * 0.5;
+        element.DeformationY -= sinA * deformationAmount * 0.5;
+      }
+
+      if (overlap >= element.Radius * 0.8) {
+        const absorptionRate = 0.5;
+        const absorbedRadius = element.Radius * absorptionRate;
+
+        if (playerRadius > element.Radius) {
+          Player.Radius += absorbedRadius;
+          element.Radius -= absorbedRadius;
+
+          if (element.Radius <= 0.5) {
+            element.Status = STATUS.DEAD;
+            element.Radius = 0;
+          }
+        } else {
+          element.Radius += playerRadius * absorptionRate;
+          Player.Radius -= playerRadius * absorptionRate;
+
+          if (Player.Radius <= 0.5) {
+            animateAbsorption(element, Player);
+            element.Destroy();
+            Player.Status = STATUS.DEAD;
+            element.isColliding = false;
           }
         }
       }
