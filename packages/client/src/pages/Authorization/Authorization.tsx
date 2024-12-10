@@ -6,7 +6,7 @@ import { Button } from 'react-bootstrap';
 import { FormComponent, UniversalModal, IModalConfig, ErrorNotification } from '@/components';
 
 import { TypeDispatch } from '@/redux/store/store';
-import { authorizationRequest } from '@/redux/requests';
+import { authorizationRequest, getUserInfoRequest } from '@/redux/requests';
 import { clearAuthorizationState, IAuthorizationFormSubmit } from '@/redux/slices';
 import { selectAuthorizationError, selectAuthorizationStatus } from '@/redux/selectors';
 
@@ -64,6 +64,7 @@ export const Authorization = () => {
       case 'succeeded':
         header = succeeded;
         statusValue = 'succeeded';
+        dispatch(getUserInfoRequest());
         break;
       case 'failed':
         header = error || 'Something went wrong';

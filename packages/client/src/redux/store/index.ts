@@ -1,2 +1,2 @@
 export { store } from './store';
-export { RootState, TypeDispatch } from './store';
+export type { RootState, TypeDispatch } from './store';
