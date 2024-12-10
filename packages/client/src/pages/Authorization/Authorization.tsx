@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'react-bootstrap';
 import { FormComponent, UniversalModal, IModalConfig, ErrorNotification } from '@/components';
 
-import { TypeDispatch } from '@/redux/store/store';
 import { authorizationRequest } from '@/redux/requests';
 import { clearAuthorizationState, IAuthorizationFormSubmit } from '@/redux/slices';
 import { selectAuthorizationError, selectAuthorizationStatus } from '@/redux/selectors';
@@ -17,6 +16,7 @@ import {
 import { ROUTES } from '@/constants/routes';
 
 import styles from './Authorization.module.scss';
+import { TypeDispatch } from '@/redux/store';
 
 export const Authorization = () => {
   const navigate = useNavigate();

@@ -3,6 +3,10 @@ import { validateEmail } from '@/services/validationUtils';
 
 export const settingsFields: IFieldConfig[] = [
   {
+    id: 'profileCircle',
+    type: 'circlepicker',
+  },
+  {
     id: 'email',
     label: 'Email',
     type: 'text',

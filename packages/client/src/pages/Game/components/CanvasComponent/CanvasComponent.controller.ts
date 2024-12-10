@@ -18,7 +18,7 @@ import { animateAbsorption } from './utils/animateAbsorption';
 export class CanvasController {
   public Map = new MapRegionModel();
   public Camera = new CameraModel();
-  public Player = new PlayerModel({ X: 2000, Y: 2000, Radius: 13 });
+  public Player;
   public EnemyPlayers: EnemyPlayerModel[] = [
     new EnemyPlayerModel({ X: 3000, Y: 3000, Radius: 7, ColorFill: 'rgba(255, 0, 0)' }),
     new EnemyPlayerModel({ X: 1000, Y: 1000, Radius: 10, ColorFill: 'rgba(0, 98, 255)' }),
@@ -31,6 +31,16 @@ export class CanvasController {
     height: MAP_SIZE,
   });
   public EnemyFields: EnemyStatic[] = [...GenerateEnemy({ width: MAP_SIZE, height: MAP_SIZE })];
+
+  constructor(baseColor: string, imageFill?: HTMLImageElement) {
+    this.Player = new PlayerModel({
+      X: 2000,
+      Y: 2000,
+      Radius: 3,
+      ColorFill: baseColor,
+      ImageFill: imageFill,
+    });
+  }
 
   public MovePlayer(mouseX: number, mouseY: number) {
     this.Player.move(this.Camera, mouseX, mouseY);

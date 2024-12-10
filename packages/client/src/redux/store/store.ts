@@ -1,13 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
+import { circlePickerReducer } from '../slices/componentsSlices/circlePickerSlice';
+import { authenticationReducer } from '../reducers/authenticationReducer';
 
-import { authenticationReducer } from '../reducers';
-import { IStore } from './store.interface';
-
-export const store: IStore = configureStore({
+export const store = configureStore({
   reducer: {
     authentication: authenticationReducer,
+    circlePicker: circlePickerReducer,
   },
 });
 
-export type RootState = IStore;
-export type TypeDispatch = typeof store.dispatch;
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

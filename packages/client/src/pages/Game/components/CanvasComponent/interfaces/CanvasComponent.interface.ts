@@ -1,6 +1,7 @@
 export interface ICircle extends ICoords, IDeformationCoords {
   StrokeStyle?: string;
   ColorFill?: string;
+  ImageFill?: HTMLImageElement;
   LineWidth?: number;
   Radius: number;
 }

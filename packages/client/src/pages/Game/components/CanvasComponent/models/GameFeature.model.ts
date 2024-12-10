@@ -2,17 +2,16 @@ import { ICircle, STATUS } from '../interfaces/CanvasComponent.interface';
 
 import { DrawCircle } from '../utils';
 
-const BASE_COLOR = 'rgb(163, 54, 131)';
-
 export class GameFeatureModel implements ICircle {
   //#region static & dynamic
   public X = 0;
   public Y = 0;
   public Radius = 10;
   public Status = STATUS.ALIVE;
-  public ColorFill = BASE_COLOR;
+  public ColorFill = '';
+  public ImageFill;
   public StrokeStyle = '';
-  public LineWidth: number;
+  public LineWidth;
   //#endregion
 
   //#region dynamic
@@ -25,11 +24,12 @@ export class GameFeatureModel implements ICircle {
   public DeformationY = 0;
   //#endregion
 
-  constructor({ X, Y, Radius, ColorFill, LineWidth }: ICircle) {
+  constructor({ X, Y, Radius, ColorFill, LineWidth, ImageFill }: ICircle) {
     this.X = X;
     this.Y = Y;
     this.Radius = Radius;
-    this.ColorFill = ColorFill || 'rgb(163, 54, 131)';
+    this.ColorFill = ColorFill || 'rgb(0, 0, 0)';
+    this.ImageFill = ImageFill;
     this.StrokeStyle = this.calculateDarkerColor(this.ColorFill, 0.8);
     this.LineWidth = LineWidth || 0;
   }
@@ -70,11 +70,11 @@ export class GameFeatureModel implements ICircle {
       Y: this.Y,
       StrokeStyle: this.StrokeStyle,
       ColorFill: this.ColorFill,
+      ImageFill: this.ImageFill,
       LineWidth: this.Radius / 5,
       DeformationX: this.DeformationX,
       DeformationY: this.DeformationY,
     });
-
     const recoveryRate = 0.1;
     if (Math.abs(this.DeformationX) > 0.1) {
       this.DeformationX *= 1 - recoveryRate;

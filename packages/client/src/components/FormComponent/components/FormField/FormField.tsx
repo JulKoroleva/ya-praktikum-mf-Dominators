@@ -9,6 +9,7 @@ import { Form } from 'react-bootstrap';
 import { IFieldConfig, IFormFieldProps } from './FormField.interface';
 
 import styles from './FormField.module.scss';
+import { CirclePickerField } from '../CirclePickerField/CirclePickerField';
 
 export const FormField = <T extends FieldValues>({
   field,
@@ -230,6 +231,9 @@ export const FormField = <T extends FieldValues>({
               );
             }}
           />
+        )}
+        {field.type === 'circlepicker' && (
+          <CirclePickerField name={field.id as Path<T>} control={control} />
         )}
       </div>
     </Form.Group>
