@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { registrationRequest } from '@/redux/requests';
+import { getUserInfoRequest } from '@/redux/requests';
 
 import { IUserSlice } from './userSlice.interface';
 
@@ -17,17 +17,20 @@ export const userSlice = createSlice({
     clearUserState: state => {
       state.getUserStatus = 'idle';
       state.getUserError = '';
+      state.userInfo = null;
     },
   },
   extraReducers: builder => {
     builder
-      .addCase(registrationRequest.pending, state => {
+      .addCase(getUserInfoRequest.pending, state => {
         state.getUserStatus = 'loading';
       })
-      .addCase(registrationRequest.fulfilled, state => {
+      .addCase(getUserInfoRequest.fulfilled, (state, action) => {
         state.getUserStatus = 'succeeded';
+        state.getUserError = '';
+        state.userInfo = action.payload;
       })
-      .addCase(registrationRequest.rejected, (state, action) => {
+      .addCase(getUserInfoRequest.rejected, (state, action) => {
         state.getUserStatus = 'failed';
         state.getUserError = action.payload as string;
       });

@@ -4,4 +4,4 @@ export { Loader } from './Loader';
 export { Navigation } from './Navigation';
 export { Popup } from './Popup';
 export { UniversalModal } from './UniversalModal';
-export type { IModalConfig } from './UniversalModal';
+export type { IModalConfig, IUniversalModalProps, TModalStatus } from './UniversalModal';

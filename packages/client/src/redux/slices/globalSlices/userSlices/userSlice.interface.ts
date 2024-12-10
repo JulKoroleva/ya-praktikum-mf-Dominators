@@ -1,13 +1,16 @@
-export interface IRegistrationFormSubmit {
-  email: string;
+export interface IUserInfo {
+  id: number;
   first_name: string;
   second_name: string;
+  display_name?: string;
+  login: string;
+  avatar?: string;
+  email: string;
   phone: string;
-  password: string;
 }
 
 export interface IUserSlice {
   getUserStatus?: 'loading' | 'succeeded' | 'failed' | 'idle';
   getUserError?: string;
-  userInfo: Record<string, string> | null;
+  userInfo: IUserInfo | null;
 }

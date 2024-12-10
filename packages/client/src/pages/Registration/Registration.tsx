@@ -3,7 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { Button } from 'react-bootstrap';
-import { FormComponent, UniversalModal, IModalConfig, ErrorNotification } from '@/components';
+import {
+  FormComponent,
+  UniversalModal,
+  IModalConfig,
+  ErrorNotification,
+  TModalStatus,
+} from '@/components';
 
 import { TypeDispatch } from '@/redux/store';
 import { registrationRequest } from '@/redux/requests';
@@ -47,7 +53,7 @@ export const Registration = () => {
 
   useEffect(() => {
     let header = '';
-    let statusValue = undefined;
+    let statusValue: TModalStatus = 'idle';
     let error: typeof registrationError = '';
     let succeeded = '';
 

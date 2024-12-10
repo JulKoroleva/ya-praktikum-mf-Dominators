@@ -3,7 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Button } from 'react-bootstrap';
-import { FormComponent, UniversalModal, IModalConfig, ErrorNotification } from '@/components';
+import {
+  FormComponent,
+  UniversalModal,
+  IModalConfig,
+  ErrorNotification,
+  TModalStatus,
+} from '@/components';
 
 import { TypeDispatch } from '@/redux/store/store';
 import { authorizationRequest, getUserInfoRequest } from '@/redux/requests';
@@ -15,6 +21,8 @@ import {
   authorizationPageFieldsInitialValues,
 } from './AuthorizationPageData';
 import { ROUTES } from '@/constants/routes';
+
+import { setCustomCookieWithMaxAge } from '@/services/cookiesHandler';
 
 import styles from './Authorization.module.scss';
 
@@ -46,7 +54,7 @@ export const Authorization = () => {
 
   useEffect(() => {
     let header = '';
-    let statusValue = undefined;
+    let statusValue: TModalStatus = 'idle';
     let error: typeof authorizationError = '';
     let succeeded = '';
 
@@ -65,6 +73,7 @@ export const Authorization = () => {
         header = succeeded;
         statusValue = 'succeeded';
         dispatch(getUserInfoRequest());
+        setCustomCookieWithMaxAge('auth', true, 2678400);
         break;
       case 'failed':
         header = error || 'Something went wrong';
@@ -82,6 +91,12 @@ export const Authorization = () => {
       });
     }
   }, [authorizationStatus, authorizationError]);
+
+  useEffect(() => {
+    return () => {
+      handleCloseModal();
+    };
+  }, []);
 
   return (
     <div className={styles['authorization-page']}>

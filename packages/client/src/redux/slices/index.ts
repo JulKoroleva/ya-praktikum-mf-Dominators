@@ -11,4 +11,4 @@ export type {
   IRegistrationSlice,
 } from './pagesSlices';
 export { userSlice, clearUserState } from './globalSlices';
-export type { IUserSlice } from './globalSlices';
+export type { IUserSlice, IUserInfo } from './globalSlices';

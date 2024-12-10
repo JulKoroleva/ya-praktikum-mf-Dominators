@@ -1,1 +1,1 @@
-export { authorizationRequest } from './authorizationRequests';
+export { authorizationRequest, logoutRequest } from './authorizationRequests';
