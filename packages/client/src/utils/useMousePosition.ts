@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { ICoords } from '../pages/Game/components/CanvasComponent/CanvasComponent.interface';
+import { ICoords } from '../pages/Game/components/CanvasComponent/interfaces/CanvasComponent.interface';
 
 const INITIAL_MOUSE_STATE = {
   X: 0,

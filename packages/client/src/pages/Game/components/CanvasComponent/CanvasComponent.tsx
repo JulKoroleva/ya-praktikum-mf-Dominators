@@ -6,7 +6,10 @@ import { useCanvasResize } from '@/utils/useCanvasResize';
 import { CanvasController } from './CanvasComponent.controller';
 
 import styles from './CanvasComponent.module.scss';
-import { STATUS } from './CanvasComponent.interface';
+import { STATUS } from './interfaces/CanvasComponent.interface';
+import { Button } from 'react-bootstrap';
+import { ROUTES } from '@/constants/routes';
+import { Navigation } from '@/components';
 
 export function CanvasComponent({
   endGameCallback,
@@ -123,9 +126,18 @@ export function CanvasComponent({
 
   return (
     <div className={styles['canvas-page']}>
-      <div className={styles['canvas-page__score-block']}>
-        <div className={styles['canvas-page__score-block__name']}>Игрок: </div>
-        <div className={styles['canvas-page__score-block__points']}>{score}</div>
+      <div className={styles['canvas-page__menu']}>
+        <div className={styles['canvas-page__score-block']}>
+          <div className={styles['canvas-page__score-block__name']}>Score: </div>
+          <div className={styles['canvas-page__score-block__points']}>{score}</div>
+        </div>
+        <div className={styles['canvas-page__button_container']}>
+          <Navigation title="" to={ROUTES.main()} />
+          <Button
+            className={styles['back-button']}
+            type="button"
+            onClick={() => ROUTES.main()}></Button>
+        </div>
       </div>
       <canvas className={styles['canvas']} ref={refCanvas} />
     </div>

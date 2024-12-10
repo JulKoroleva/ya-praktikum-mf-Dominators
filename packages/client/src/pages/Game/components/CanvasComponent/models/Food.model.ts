@@ -1,4 +1,4 @@
-import { ICircle } from '../CanvasComponent.interface';
+import { ICircle } from '../interfaces/CanvasComponent.interface';
 
 import { GameFeatureModel } from './GameFeature.model';
 

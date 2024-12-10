@@ -1,4 +1,4 @@
-import { ICircle, STATUS } from '../CanvasComponent.interface';
+import { ICircle, STATUS } from '../interfaces/CanvasComponent.interface';
 
 import { DrawCircle } from '../utils';
 

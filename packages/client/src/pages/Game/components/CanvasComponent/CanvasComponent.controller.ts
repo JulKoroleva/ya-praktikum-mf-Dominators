@@ -8,7 +8,7 @@ import {
   PlayerModel,
 } from './models';
 
-import { STATUS } from './CanvasComponent.interface';
+import { STATUS } from './interfaces/CanvasComponent.interface';
 
 import { GenerateEnemy, GenerateFood, IsCollided } from './utils';
 import { EnemyPlayerModel } from './models/EnemyPlayer.model';
@@ -18,7 +18,7 @@ import { animateAbsorption } from './utils/animateAbsorption';
 export class CanvasController {
   public Map = new MapRegionModel();
   public Camera = new CameraModel();
-  public Player = new PlayerModel({ X: 2000, Y: 2000, Radius: 3 });
+  public Player = new PlayerModel({ X: 2000, Y: 2000, Radius: 13 });
   public EnemyPlayers: EnemyPlayerModel[] = [
     new EnemyPlayerModel({ X: 3000, Y: 3000, Radius: 7, ColorFill: 'rgba(255, 0, 0)' }),
     new EnemyPlayerModel({ X: 1000, Y: 1000, Radius: 10, ColorFill: 'rgba(0, 98, 255)' }),
@@ -133,7 +133,7 @@ export class CanvasController {
           Player.Radius += absorbedRadius;
           element.Radius -= absorbedRadius;
 
-          if (element.Radius <= 0.5) {
+          if (element.Radius <= Player.Radius && element.Radius <= 0.5) {
             element.Status = STATUS.DEAD;
             element.Radius = 0;
           }
@@ -141,7 +141,7 @@ export class CanvasController {
           element.Radius += playerRadius * absorptionRate;
           Player.Radius -= playerRadius * absorptionRate;
 
-          if (Player.Radius <= 0.5) {
+          if (Player.Radius <= element.Radius) {
             animateAbsorption(element, Player);
             element.Destroy();
             Player.Status = STATUS.DEAD;

@@ -2,7 +2,7 @@ import { MAP_SIZE } from '@/constants/game';
 
 import { PlayerFeatureModel } from '.';
 
-import { ICircle } from '../CanvasComponent.interface';
+import { ICircle } from '../interfaces/CanvasComponent.interface';
 
 export class EnemyPlayerModel extends PlayerFeatureModel {
   protected directionX: DIRECTION = DIRECTION.LEFT;
