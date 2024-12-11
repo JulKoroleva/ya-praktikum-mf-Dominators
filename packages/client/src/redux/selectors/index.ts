@@ -4,3 +4,5 @@ export {
   selectRegistrationStatus,
   selectRegistrationError,
 } from './pagesSelectors';
+
+export { selectUser } from './globalSelectors';

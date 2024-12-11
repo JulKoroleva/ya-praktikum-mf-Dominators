@@ -1,17 +1,18 @@
 import { ReactNode } from 'react';
 
+export type TModalStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
 export interface IUniversalModalProps {
   show: boolean;
   onHide: () => void;
   title?: string;
   children?: ReactNode;
   modalSize?: 'ct' | 'sm' | 'lg' | 'xl';
-  status?: string;
+  status?: TModalStatus;
   zIndex?: number;
 }
 
 export interface IModalConfig {
   show: boolean;
   header: string;
-  status: undefined | string;
+  status?: TModalStatus;
 }

@@ -10,3 +10,5 @@ export type {
   IRegistrationFormSubmit,
   IRegistrationSlice,
 } from './pagesSlices';
+export { userSlice, clearUserState } from './globalSlices';
+export type { IUserSlice, IUserInfo } from './globalSlices';

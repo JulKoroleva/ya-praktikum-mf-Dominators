@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { IAuthorizationFormSubmit } from '@/redux/slices';
 
-import { LOGIN_URL } from '@/constants/apiUrls';
+import { LOGIN_URL, LOGOUT_URL } from '@/constants/apiUrls';
 
 export const authorizationRequest = createAsyncThunk<
   boolean,
@@ -15,6 +15,7 @@ export const authorizationRequest = createAsyncThunk<
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
+    credentials: 'include',
   });
 
   if (!request.ok) {
@@ -25,3 +26,21 @@ export const authorizationRequest = createAsyncThunk<
 
   return true;
 });
+
+export const logoutRequest = createAsyncThunk<void, void, { rejectValue: string }>(
+  'authorization/logoutRequest',
+  async (_, { rejectWithValue }) => {
+    const request = await fetch(LOGOUT_URL, {
+      method: 'POST',
+      credentials: 'include',
+    });
+
+    if (!request.ok) {
+      const response = await request.json();
+      const rejectReason = response.reason ? response.reason : 'Unknown error';
+      return rejectWithValue(rejectReason);
+    }
+
+    return request.json();
+  },
+);
