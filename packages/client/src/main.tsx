@@ -11,7 +11,6 @@ import './styles/main.scss';
 startServiceWorker();
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  //@ts-expect-error
   <Provider store={store}>
     <App />
   </Provider>,

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cache-v1';
+const CACHE_NAME = `cache-v-1.0.0`;
 const ASSETS_MANIFEST = '/manifest.json';
 
 self.addEventListener('install', event => {
@@ -10,6 +10,9 @@ self.addEventListener('install', event => {
         return caches.open(CACHE_NAME).then(cache => {
           return cache.addAll(assetsToCache);
         });
+      })
+      .catch(() => {
+        throw new Error('No assets manifest found');
       }),
   );
 });
@@ -24,24 +27,37 @@ self.addEventListener('activate', event => {
   );
 });
 
+// Only network fallback
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request).then(response => {
-      if (response) {
-        return response;
-      }
-
-      const fetchRequest = event.request.clone();
-      return fetch(fetchRequest).then(response => {
-        if (!response || response.status !== 200 || response.type !== 'basic') {
+    fetch(event.request)
+      .then(response => {
+        if (
+          response.status < 200 ||
+          response.status > 300 ||
+          response.type !== 'basic' ||
+          !response
+        ) {
           return response;
         }
         const responseToCache = response.clone();
-        caches.open(CACHE_NAME).then(cache => {
+        return caches.open(CACHE_NAME).then(cache => {
           cache.put(event.request, responseToCache);
+          return response;
         });
-        return response;
-      });
-    }),
+      })
+      .catch(() => {
+        return caches.open(CACHE_NAME).then(cache => {
+          return cache.match(event.request).then(response => {
+            if (response) {
+              return response;
+            }
+            return new Response('Нет доступных данных для оффлайн режима', {
+              status: 503,
+              statusText: 'Service Unavailable',
+            });
+          });
+        });
+      }),
   );
 });

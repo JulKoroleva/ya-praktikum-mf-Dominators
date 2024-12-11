@@ -7,12 +7,10 @@ import { IStore } from './store.interface';
 
 export const store = configureStore({
   reducer: {
-    //@ts-expect-error
     authentication: authenticationReducer,
     global: globalReducer,
   },
 });
 
 export type RootState = IStore;
-//@ts-expect-error
 export type TypeDispatch = typeof store.dispatch;
