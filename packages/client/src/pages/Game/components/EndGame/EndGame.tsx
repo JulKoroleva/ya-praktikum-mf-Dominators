@@ -12,10 +12,10 @@ const handleShare = () => {
   window.open(link, '_blank');
 };
 
-export function EndGame({ results }: IEndGameProps) {
+export function EndGame({ results, handleRepeat }: IEndGameProps) {
   const navigate = useNavigate();
 
-  const handleContinue = () => {
+  const handleGoToMain = () => {
     navigate('/main');
   };
 
@@ -23,7 +23,7 @@ export function EndGame({ results }: IEndGameProps) {
     <div className={styles['end-game']}>
       <h2 className={styles['end-game__title']}>Match results</h2>
       <div className={styles['end-game__results']}>
-        {results.map(({ id, title, value }) => (
+        {results?.map(({ id, title, value }) => (
           <article key={id} className={styles.result}>
             <h3 className={styles.result__mark}>{title}</h3>
             <p className={styles.result__value}>{value}</p>
@@ -37,8 +37,11 @@ export function EndGame({ results }: IEndGameProps) {
         <img src={tgLogo} alt="telegram logo" className={styles['end-game__buttonIcon']} />
         Share to Telegram
       </Button>
-      <Button className={styles['end-game__button']} type="button" onClick={handleContinue}>
-        Continue
+      <Button className={styles['end-game__button']} type="button" onClick={handleRepeat}>
+        Повторить
+      </Button>
+      <Button className={styles['end-game__button']} type="button" onClick={handleGoToMain}>
+        Главное меню
       </Button>
     </div>
   );

@@ -1,9 +1,6 @@
-export type TResult = {
-  id: number;
-  title: string;
-  value: string;
-};
+import { TResult } from '../../Game.interface';
 
 export interface IEndGameProps {
   results: TResult[];
+  handleRepeat: () => void;
 }
