@@ -57,7 +57,7 @@ export const DrawCircle = (ctx: CanvasRenderingContext2D, circleDims: ICircle) =
     Y: startY,
     LineWidth = 2,
     ColorFill: colorFill = 'rgb(0, 0, 0)',
-    ImageFill,
+    ImageFill = undefined,
     StrokeStyle: strokeStyle = 'rgb(0, 0, 0)',
     DeformationX = 0,
     DeformationY = 0,

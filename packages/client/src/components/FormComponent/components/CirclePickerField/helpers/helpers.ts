@@ -1,20 +1,14 @@
 export const getBackgroundStyles = ({
   localImage,
-  selectedImage,
-  selectedColor,
+  avatar,
   fieldValue,
 }: {
   localImage: string | null;
-  selectedImage: string | null;
-  selectedColor: string;
+  avatar: string | null;
   fieldValue: string;
 }) => ({
-  backgroundColor: localImage || selectedImage ? 'white' : fieldValue || selectedColor,
-  backgroundImage: localImage
-    ? `url(${localImage})`
-    : selectedImage
-      ? `url(${selectedImage})`
-      : 'none',
+  backgroundColor: localImage ? 'white' : fieldValue || avatar,
+  backgroundImage: localImage ? `url(${localImage})` : 'none',
   backgroundSize: 'cover',
   backgroundPosition: 'center',
 });

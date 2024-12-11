@@ -1,18 +1,23 @@
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setColor, setImage } from '@/redux/slices/componentsSlices/circlePickerSlice';
+import { setAvatar } from '@/redux/slices/componentsSlices/circlePickerSlice';
 import { RootState } from '@/redux/store';
 import { Color } from 'react-slider-color-picker/dist/interfaces';
 import { hslToRgb } from '../utils/hslToRgb';
-
 export const useCirclePicker = () => {
   const [isPickerVisible, setPickerVisible] = useState(false);
   const [localImage, setLocalImage] = useState<string | null>(null);
   const [color, setLocalColor] = useState<Color>({ h: 180, s: 100, l: 50, a: 1 });
   const pickerRef = useRef<HTMLDivElement | null>(null);
 
-  const currentState = useSelector((state: RootState) => state.circlePicker);
+  const avatar = useSelector((state: RootState) => state.circlePicker.avatar);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (avatar && avatar.startsWith('data:image')) {
+      setLocalImage(avatar);
+    }
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -36,12 +41,8 @@ export const useCirclePicker = () => {
     setLocalColor(newColor);
     const colorString = hslToRgb(newColor.h, newColor.s, newColor.l);
 
-    if (localImage) {
-      setLocalImage(null);
-      dispatch(setImage(null));
-    }
-
-    dispatch(setColor(colorString));
+    setLocalImage(null);
+    dispatch(setAvatar(colorString));
     onChange(colorString);
   };
 
@@ -50,14 +51,14 @@ export const useCirclePicker = () => {
     reader.onload = () => {
       const result = reader.result as string;
       setLocalImage(result);
-      dispatch(setImage(result));
+      dispatch(setAvatar(result));
       onChange(result);
     };
     reader.readAsDataURL(file);
   };
 
   return {
-    currentState,
+    avatar,
     isPickerVisible,
     setPickerVisible,
     localImage,

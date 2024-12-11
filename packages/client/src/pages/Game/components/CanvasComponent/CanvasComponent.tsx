@@ -20,34 +20,31 @@ export function CanvasComponent({
   endGameCallback: (result: Array<TResult>) => void;
 }) {
   const controllerRef = useRef<CanvasController | null>(null);
-  const baseColor = useSelector(
-    (state: RootState) => state.circlePicker.selectedColor || 'rgb(0, 0, 0)',
-  );
-  const baseImage = useSelector((state: RootState) => state.circlePicker.selectedImage);
+  const baseAvatar = useSelector((state: RootState) => state.circlePicker.avatar || 'rgb(0, 0, 0)');
 
   const [imageElement, setImageElement] = useState<HTMLImageElement | null>(null);
 
   useEffect(() => {
-    if (baseImage) {
+    if (baseAvatar?.startsWith('data:image')) {
       const img = new Image();
-      img.src = baseImage;
+      img.src = baseAvatar;
       img.onload = () => {
         setImageElement(img);
       };
     } else {
       if (!controllerRef.current) {
-        controllerRef.current = new CanvasController(baseColor, undefined);
+        controllerRef.current = new CanvasController(baseAvatar || 'rgb(0, 0, 0)', undefined);
         animate();
       }
     }
-  }, [baseImage]);
+  }, [baseAvatar]);
 
   useEffect(() => {
-    if (!controllerRef.current && (imageElement || (!baseImage && !imageElement))) {
-      controllerRef.current = new CanvasController(baseColor, imageElement || undefined);
+    if (!controllerRef.current && (imageElement || (!baseAvatar && !imageElement))) {
+      controllerRef.current = new CanvasController(baseAvatar, imageElement || undefined);
       animate();
     }
-  }, [imageElement, baseImage, baseColor]);
+  }, [imageElement, baseAvatar]);
 
   const refCanvas = useRef<HTMLCanvasElement>(null);
   const mouseCoodrs = useMousePosition();

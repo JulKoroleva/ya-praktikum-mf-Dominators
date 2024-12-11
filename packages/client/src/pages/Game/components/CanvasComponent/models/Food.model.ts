@@ -21,4 +21,12 @@ export class FoodModel extends GameFeatureModel {
 
     this.Angle = Math.atan2(dY, dX);
   }
+
+  draw(ctx: CanvasRenderingContext2D): void {
+    ctx.beginPath();
+    ctx.arc(this.X, this.Y, this.Radius, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.fillStyle = this.ColorFill;
+    ctx.fill();
+  }
 }

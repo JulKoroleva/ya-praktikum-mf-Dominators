@@ -2,25 +2,23 @@ import { calculateBorderColor } from '../utils/calculateBorderColor';
 import { getBackgroundStyles } from '../helpers/helpers';
 import styles from '../../CirclePickerField/CirclePickerField.module.scss';
 import { Color } from 'react-slider-color-picker/dist/interfaces';
-import { ICirclePickerState } from '@/redux/slices/componentsSlices/circlePickerSlice.interface';
 
 export const CirclePicker = ({
   onClick,
   localImage = null,
-  currentState,
+  avatar,
   color,
   fieldValue = '',
 }: {
   onClick: () => void;
   localImage?: string | null;
-  currentState: ICirclePickerState;
+  avatar: string | null;
   color: Color;
   fieldValue?: string;
 }) => {
   const backgroundStyles = getBackgroundStyles({
-    localImage,
-    selectedImage: currentState.selectedImage,
-    selectedColor: currentState.selectedColor || '',
+    localImage: localImage || null,
+    avatar: !localImage ? avatar : null,
     fieldValue,
   });
 
@@ -29,11 +27,8 @@ export const CirclePicker = ({
       className={styles['circle']}
       style={{
         ...backgroundStyles,
-        border: `8px solid ${calculateBorderColor(
-          color,
-          !!(localImage || currentState.selectedImage),
-          fieldValue || currentState.selectedColor,
-        )}`,
+        backgroundColor: backgroundStyles.backgroundColor || 'transparent',
+        border: `8px solid ${calculateBorderColor(color, !!localImage, fieldValue || avatar)}`,
       }}
       onClick={onClick}
     />
