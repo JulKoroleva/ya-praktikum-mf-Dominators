@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Popup } from '@/components';
 import { EndGame, StartGame, CanvasComponent } from './components';
-import { TResult } from './components/EndGame/EndGame.interface';
+import { TResult } from './Game.interface';
 
 export const Game = () => {
   const [isGameStarted, setIsGameStarted] = useState(false);

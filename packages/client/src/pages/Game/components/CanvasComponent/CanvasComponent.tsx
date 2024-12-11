@@ -7,7 +7,7 @@ import { CanvasController } from './CanvasComponent.controller';
 
 import styles from './CanvasComponent.module.scss';
 import { STATUS } from './CanvasComponent.interface';
-import { TResult } from '../EndGame/EndGame.interface';
+import { TResult } from '../../Game.interface';
 
 export function CanvasComponent({
   endGameCallback,

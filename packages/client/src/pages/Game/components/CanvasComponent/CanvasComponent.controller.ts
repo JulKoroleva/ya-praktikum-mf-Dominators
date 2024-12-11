@@ -13,7 +13,7 @@ import { STATUS } from './CanvasComponent.interface';
 import { GenerateEnemy, GenerateFood, IsCollided } from './utils';
 import { EnemyPlayerModel } from './models/EnemyPlayer.model';
 import { isCollidedBySquare } from './utils/isCollidedBySquare';
-import { TResult } from '../EndGame/EndGame.interface';
+import { TResult } from '../../Game.interface';
 
 export class CanvasController {
   public Map = new MapRegionModel();
