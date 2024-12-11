@@ -28,7 +28,6 @@ export const registrationSlice = createSlice({
       })
       .addCase(registrationRequest.rejected, (state, action) => {
         state.registerStatus = 'failed';
-        console.log(action.payload);
         state.registerError = action.payload as string;
       });
   },

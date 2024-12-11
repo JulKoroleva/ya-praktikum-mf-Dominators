@@ -1,5 +1,7 @@
-import { IAuthenticationReducer } from '@/redux/reducers';
+import { AuthenticationState } from '../reducers/pageReducers/authenticationReducer/authenticationReducer';
+import { GlobalState } from '../reducers/globalReducers/globalReducer';
 
 export interface IStore {
-  authentication: IAuthenticationReducer;
+  authentication: AuthenticationState;
+  global: GlobalState;
 }

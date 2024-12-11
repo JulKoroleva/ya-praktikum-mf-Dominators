@@ -1,5 +1,7 @@
-import App from './App';
 import { render, screen } from '@testing-library/react';
+import { Provider } from 'react-redux';
+import App from './App';
+import { store } from './redux/store/store';
 
 const appContent = 'DOMinators';
 
@@ -9,7 +11,13 @@ global.fetch = jest.fn(() =>
     json: () => Promise.resolve('hey'),
   }),
 );
+
 test('Example test', async () => {
-  render(<App />);
+  render(
+    <Provider store={store}>
+      <App />
+    </Provider>,
+  );
+
   expect(screen.getByText(appContent)).toBeDefined();
 });

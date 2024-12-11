@@ -232,7 +232,7 @@ export const FormField = <T extends FieldValues>({
             }}
           />
         )}
-        {field.type === 'circlepicker' && (
+        {field.type === 'avatar' && (
           <CirclePickerField name={field.id as Path<T>} control={control} />
         )}
       </div>

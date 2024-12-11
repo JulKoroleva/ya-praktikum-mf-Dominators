@@ -20,7 +20,9 @@ export function CanvasComponent({
   endGameCallback: (result: Array<TResult>) => void;
 }) {
   const controllerRef = useRef<CanvasController | null>(null);
-  const baseAvatar = useSelector((state: RootState) => state.circlePicker.avatar || 'rgb(0, 0, 0)');
+  const baseAvatar = useSelector(
+    (state: RootState) => state.global.user.userInfo?.avatar || 'rgb(0, 0, 0)',
+  );
 
   const [imageElement, setImageElement] = useState<HTMLImageElement | null>(null);
 

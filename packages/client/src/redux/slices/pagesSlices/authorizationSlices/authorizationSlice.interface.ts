@@ -1,6 +1,10 @@
+import { TModalStatus } from '@/components';
+
 export interface IAuthorizationSlice {
-  loginStatus?: 'loading' | 'succeeded' | 'failed' | 'idle';
-  loginError?: string;
+  loginStatus: TModalStatus;
+  loginError: string;
+  logoutStatus: TModalStatus;
+  logoutError: string;
 }
 
 export interface IAuthorizationFormSubmit {
