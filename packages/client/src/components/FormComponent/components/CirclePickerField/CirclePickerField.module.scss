@@ -1,4 +1,4 @@
-.color-picker {
+.circle-picker {
   position: absolute;
   top: -170px;
   right: -120px;
@@ -27,11 +27,11 @@
     box-shadow: $box-shadow;
     z-index: 10;
 
-    .color-options {
+    .circle-options {
       display: flex;
       gap: 10px;
 
-      .color-option {
+      .circle-option {
         width: 30px;
         height: 30px;
         border-radius: 50%;

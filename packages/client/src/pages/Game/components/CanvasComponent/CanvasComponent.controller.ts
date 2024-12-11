@@ -1,4 +1,9 @@
-import { FOOD_COUNT, GROW_BY_FOOD_COEFFICIENT, MAP_SIZE } from '@/constants/game';
+import {
+  FOOD_COUNT,
+  GROW_BY_FOOD_COEFFICIENT,
+  MAP_SIZE,
+  START_PLAYER_RADIUS,
+} from '@/constants/game';
 
 import {
   CameraModel,
@@ -37,7 +42,7 @@ export class CanvasController {
     this.Player = new PlayerModel({
       X: 2000,
       Y: 2000,
-      Radius: 3,
+      Radius: START_PLAYER_RADIUS,
       ColorFill: baseColor,
       ImageFill: imageFill,
     });
@@ -103,7 +108,7 @@ export class CanvasController {
 
       if (distance < sumRadius) {
         const angle = Math.atan2(dy, dx);
-        const deformationAmount = (sumRadius - distance) * 0.5; // Сила деформации
+        const deformationAmount = (sumRadius - distance) * 0.5;
 
         const cosA = Math.cos(angle);
         const sinA = Math.sin(angle);
@@ -188,7 +193,6 @@ export class CanvasController {
           );
           const deformationAmount = Math.min(element.Radius, this.Player.Player.Radius) * 0.3;
 
-          // Применяем деформацию
           this.Player.Player.DeformationX -= Math.cos(collisionAngle) * deformationAmount;
           this.Player.Player.DeformationY -= Math.sin(collisionAngle) * deformationAmount;
 
@@ -241,7 +245,7 @@ export class CanvasController {
       ...this.Player.Divisions,
       this.Player.Player,
     ].sort((a, b) => a.Radius - b.Radius)) {
-      if (item.Status === STATUS.ALIVE && item.Radius > 0) {
+      if (item.Status === STATUS.ALIVE) {
         item.draw(ctx);
       }
     }

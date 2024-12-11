@@ -53,6 +53,7 @@ export const useCirclePicker = () => {
       setLocalImage(result);
       dispatch(setUserAvatar(result));
       onChange(result);
+      setPickerVisible(false);
     };
     reader.readAsDataURL(file);
   };

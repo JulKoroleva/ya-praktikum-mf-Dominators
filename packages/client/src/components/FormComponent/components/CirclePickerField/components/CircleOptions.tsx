@@ -13,7 +13,7 @@ export const CircleOptions = ({
   color: Color;
 }) => (
   <div className={styles['options']}>
-    <div className={styles['color-slider']}>
+    <div className={styles['circle-slider']}>
       <HueSlider handleChangeColor={handleChangeColor} color={color} />
     </div>
     <div className={styles['upload-option']}>

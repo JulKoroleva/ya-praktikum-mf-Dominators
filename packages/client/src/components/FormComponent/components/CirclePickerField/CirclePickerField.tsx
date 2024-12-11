@@ -26,7 +26,7 @@ export const CirclePickerField = <T extends FieldValues>({
       name={name}
       control={control}
       render={({ field }) => (
-        <div ref={pickerRef} className={styles['color-picker']}>
+        <div ref={pickerRef} className={styles['circle-picker']}>
           <CirclePicker
             onClick={() => setPickerVisible(!isPickerVisible)}
             localImage={localImage}
