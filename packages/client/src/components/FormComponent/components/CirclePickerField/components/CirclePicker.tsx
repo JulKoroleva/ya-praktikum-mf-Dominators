@@ -6,16 +6,16 @@ import { ICirclePickerState } from '@/redux/slices/componentsSlices/circlePicker
 
 export const CirclePicker = ({
   onClick,
-  localImage,
+  localImage = null,
   currentState,
   color,
-  fieldValue,
+  fieldValue = '',
 }: {
   onClick: () => void;
-  localImage: string | null;
+  localImage?: string | null;
   currentState: ICirclePickerState;
   color: Color;
-  fieldValue: string;
+  fieldValue?: string;
 }) => {
   const backgroundStyles = getBackgroundStyles({
     localImage,

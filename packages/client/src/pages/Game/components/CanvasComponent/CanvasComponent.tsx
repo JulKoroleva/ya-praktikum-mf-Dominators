@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useMousePosition } from '@/utils/useMousePosition';
 import { useCanvasResize } from '@/utils/useCanvasResize';
@@ -12,11 +12,12 @@ import { ROUTES } from '@/constants/routes';
 import { Navigation } from '@/components';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import { TResult } from '../../Game.interface';
 
 export function CanvasComponent({
   endGameCallback,
 }: {
-  endGameCallback: Dispatch<SetStateAction<boolean>>;
+  endGameCallback: (result: Array<TResult>) => void;
 }) {
   const controllerRef = useRef<CanvasController | null>(null);
   const baseColor = useSelector(
@@ -86,7 +87,7 @@ export function CanvasComponent({
     if (!controller || !refCanvas.current) return;
 
     if (controller.Player.Player.Status === STATUS.DEAD) {
-      endGameCallback(true);
+      endGameCallback(controller.Result);
       return;
     }
     setScore(controller.Player.MyScore);
