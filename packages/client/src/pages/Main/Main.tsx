@@ -1,22 +1,36 @@
-import React, { useRef, useState, useEffect, useCallback, useMemo } from 'react';
-import { Button } from 'react-bootstrap';
+import { useRef, useState, useEffect, useCallback, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { ErrorNotification } from '@/components';
 import { loadFull } from 'tsparticles';
 import Particles, { initParticlesEngine } from '@tsparticles/react';
 import { Container } from '@tsparticles/engine';
+
+import { ErrorNotification } from '@/components';
+import { Button } from 'react-bootstrap';
+
+import { TypeDispatch } from '@/redux/store';
+import { logoutRequest } from '@/redux/requests';
+import { selectUser } from '@/redux/selectors';
+import { clearUserState } from '@/redux/slices';
 
 import { IParticle, IButtonConfig } from './Main.interface';
 
 import { ROUTES } from '@/constants/routes';
 import { COLOR_PALETTE } from './constants/color.constant';
 
+import { deleteCookie, getCookie } from '@/services/cookiesHandler';
+
 import styles from './Main.module.scss';
 
 export const Main = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch<TypeDispatch>();
+
   const containerRef = useRef<Container | null>(null);
+
   const [init, setInit] = useState(false);
+
+  const userInfo = useSelector(selectUser);
 
   const description =
     'Сражайся, поглощай и становись сильнее! Уничтожай соперников в динамичной битве за выживание.';
@@ -27,6 +41,8 @@ export const Main = () => {
     { href: ROUTES.leaderboard(), text: 'Leaderboard' },
     { href: ROUTES.forum(), text: 'Forum' },
   ];
+  const authCookie = getCookie('auth');
+  const isAuth: boolean = authCookie === 'true';
 
   useEffect(() => {
     const initializeParticles = async () => {
@@ -126,7 +142,9 @@ export const Main = () => {
         )}
         <h1 className={styles['main-page__title']}>DOMinators</h1>
         <div className={styles['main-page__menu']}>
-          <h3 className={styles['main-page__menu_greetings']}>Привет, UserName!</h3>
+          <h3 className={styles['main-page__menu_greetings']}>
+            Привет, {userInfo?.login || 'Guest'}!
+          </h3>
           <p className={styles['main-page__menu_description']}>{description}</p>
           <div className={styles['main-page__menu_buttons']}>
             {buttons.map(({ href, text, className }, index) => (
@@ -143,9 +161,15 @@ export const Main = () => {
         <Button
           className={styles['main-page__logout-button']}
           onClick={() => {
+            if (isAuth) {
+              dispatch(logoutRequest());
+              dispatch(clearUserState());
+              deleteCookie('auth');
+              return;
+            }
             navigate(ROUTES.authorization());
           }}>
-          Log in
+          {userInfo?.login ? 'Log out' : 'Log in'}
         </Button>
       </ErrorNotification>
     </div>

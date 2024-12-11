@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import { Loader } from '@/components';
 
-import { IUniversalModalProps } from './UniversalModal.interface';
+import { IUniversalModalProps, TModalStatus } from './UniversalModal.interface';
 
 import Succeeded from '@/assets/icons/succeeded.svg';
 import Failed from '@/assets/icons/failed.svg';
@@ -20,9 +20,7 @@ export const UniversalModal: React.FC<IUniversalModalProps> = ({
   status,
   zIndex,
 }) => {
-  type StatusType = 'loading' | 'succeeded' | 'failed';
-
-  const statusHeaderMap: Record<StatusType, React.ReactNode> = {
+  const statusHeaderMap: Record<Exclude<TModalStatus, 'idle'>, React.ReactNode> = {
     loading: title,
     succeeded: (
       <div className={styles['status-header']}>
@@ -42,7 +40,7 @@ export const UniversalModal: React.FC<IUniversalModalProps> = ({
     ),
   };
 
-  const statusBodyMap: Record<StatusType, React.ReactNode> = {
+  const statusBodyMap: Record<Exclude<TModalStatus, 'idle'>, React.ReactNode> = {
     loading: (
       <div className={styles['modal-loader']}>
         <Loader />
@@ -67,7 +65,7 @@ export const UniversalModal: React.FC<IUniversalModalProps> = ({
             style={{ zIndex: zIndex || '1050' }}>
             <div className={classNames(styles['modal-header'], modalColorClass)}>
               <div className={classNames(styles['modal-header-title'], modalColorClass)}>
-                {status ? statusHeaderMap[status as StatusType] : title}
+                {status ? statusHeaderMap[status as Exclude<TModalStatus, 'idle'>] : title}
               </div>
               <Button
                 type="button"
@@ -78,7 +76,7 @@ export const UniversalModal: React.FC<IUniversalModalProps> = ({
               </Button>
             </div>
             <div className={classNames(styles['modal-body'], modalColorClass)}>
-              {status ? statusBodyMap[status as StatusType] : children}
+              {status ? statusBodyMap[status as Exclude<TModalStatus, 'idle'>] : children}
             </div>
           </div>
         </>

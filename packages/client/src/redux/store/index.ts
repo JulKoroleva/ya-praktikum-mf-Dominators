@@ -1,3 +1,2 @@
 export { store } from './store';
-//@ts-expect-error
-export { RootState, TypeDispatch } from './store';
+export type { RootState, TypeDispatch } from './store';

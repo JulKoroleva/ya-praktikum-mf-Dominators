@@ -1,13 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import { authenticationReducer } from '../reducers';
+import { authenticationReducer } from '../reducers/pageReducers/authenticationReducer';
+import { globalReducer } from '../reducers/globalReducers';
+
 import { IStore } from './store.interface';
 
-//@ts-expect-error
-export const store: IStore = configureStore({
+export const store = configureStore({
   reducer: {
     //@ts-expect-error
     authentication: authenticationReducer,
+    global: globalReducer,
   },
 });
 

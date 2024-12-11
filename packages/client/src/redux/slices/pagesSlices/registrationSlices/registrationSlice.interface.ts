@@ -1,3 +1,5 @@
+import { TModalStatus } from '@/components';
+
 export interface IRegistrationFormSubmit {
   email: string;
   first_name: string;
@@ -7,6 +9,6 @@ export interface IRegistrationFormSubmit {
 }
 
 export interface IRegistrationSlice {
-  registerStatus?: 'loading' | 'succeeded' | 'failed' | 'idle';
-  registerError?: string;
+  registerStatus: TModalStatus;
+  registerError: string;
 }
