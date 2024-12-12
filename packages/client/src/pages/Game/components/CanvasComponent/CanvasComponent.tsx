@@ -108,7 +108,7 @@ export function CanvasComponent({
         <div className={styles['canvas-page__score-block__name']}>Игрок: </div>
         <div className={styles['canvas-page__score-block__points']}>{score}</div>
       </div>
-      <canvas className={styles['canvas']} ref={refCanvas} />
+      <canvas data-testid="canvas" className={styles['canvas']} ref={refCanvas} />
     </div>
   );
 }

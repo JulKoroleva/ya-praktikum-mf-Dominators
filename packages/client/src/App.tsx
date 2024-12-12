@@ -36,7 +36,7 @@ const routes = [
 function App() {
   useEffect(() => {
     const fetchServerData = async () => {
-      if (__SERVER_PORT__ === undefined) return;
+      if (typeof __SERVER_PORT__ === 'undefined') return;
       const url = `http://localhost:${__SERVER_PORT__}`;
       const response = await fetch(url);
       const data = await response.json();

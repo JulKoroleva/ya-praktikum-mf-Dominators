@@ -16,4 +16,5 @@ export default {
     '^.+\\.svg$': 'jest-transform-stub',
   },
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+  setupFiles: ['jest-canvas-mock'],
 };
