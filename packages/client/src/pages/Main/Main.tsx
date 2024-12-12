@@ -150,8 +150,8 @@ export const Main = () => {
             {buttons.map(({ href, text, className }, index) => (
               <Button
                 key={index}
-                onClick={() => navigate(href)}
                 size="lg"
+                onClick={() => navigate(href)}
                 className={`${styles['menu-button']} ${className || ''}`.trim()}>
                 {text}
               </Button>
