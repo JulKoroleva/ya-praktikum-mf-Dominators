@@ -6,34 +6,24 @@ export function hslToRgb(h: number, s: number, l: number): string {
   const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
   const m = lNorm - c / 2;
 
-  let r = 0,
-    g = 0,
-    b = 0;
-  if (h >= 0 && h < 60) {
-    r = c;
-    g = x;
-    b = 0;
-  } else if (h >= 60 && h < 120) {
-    r = x;
-    g = c;
-    b = 0;
-  } else if (h >= 120 && h < 180) {
-    r = 0;
-    g = c;
-    b = x;
-  } else if (h >= 180 && h < 240) {
-    r = 0;
-    g = x;
-    b = c;
-  } else if (h >= 240 && h < 300) {
-    r = x;
-    g = 0;
-    b = c;
-  } else if (h >= 300 && h < 360) {
-    r = c;
-    g = 0;
-    b = x;
-  }
+  const [r, g, b] = (() => {
+    switch (true) {
+      case h >= 0 && h < 60:
+        return [c, x, 0];
+      case h >= 60 && h < 120:
+        return [x, c, 0];
+      case h >= 120 && h < 180:
+        return [0, c, x];
+      case h >= 180 && h < 240:
+        return [0, x, c];
+      case h >= 240 && h < 300:
+        return [x, 0, c];
+      case h >= 300 && h < 360:
+        return [c, 0, x];
+      default:
+        return [0, 0, 0];
+    }
+  })();
 
   const rRgb = Math.round((r + m) * 255);
   const gRgb = Math.round((g + m) * 255);

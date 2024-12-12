@@ -57,55 +57,25 @@ export function CanvasComponent({
     }
   }, [imageElement, baseAvatar]);
 
-  // useEffect(() => {
-  //   console.log('isPaused',isPaused)
-  //   if (isPaused) return;
-  //   const animate = () => {
-  //     if (isPaused || !controllerRef.current || !refCanvas.current) return;
+  useEffect(() => {
+    if (isPaused) {
+      if (animationFrameRef.current !== null) {
+        cancelAnimationFrame(animationFrameRef.current);
+        animationFrameRef.current = null;
+      }
+    } else {
+      if (!animationFrameRef.current) {
+        animate();
+      }
+    }
 
-  //     const controller = controllerRef.current;
-  //     if (controller.Player.Player.Status === STATUS.DEAD) {
-  //       endGameCallback(controller.Result);
-  //       return;
-  //     }
-  //     setScore(controller.Player.MyScore);
-
-  //     const ctx = refCanvas.current.getContext('2d');
-  //     if (!ctx) return;
-
-  //     const renderCanvas = (ctx: CanvasRenderingContext2D) => {
-  //       const controller = controllerRef.current;
-  //       if (!controller) return;
-
-  //       const canvas = refCanvas.current;
-  //       if (!canvas) return;
-
-  //       controller.Camera.Scale = Math.max(10 - controller.Player.Player.Radius / 10, 1);
-
-  //       ctx.setTransform(controller.Camera.Scale, 0, 0, controller.Camera.Scale, 0, 0);
-  //       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  //       controller.DrawGrid(ctx);
-
-  //       controller.MovePlayer(mouseCoodrs.current.X, mouseCoodrs.current.Y);
-  //       controller.MoveStatics();
-  //       controller.EnemyPlayersMove();
-
-  //       controller.Camera.focus(canvas, controller.Map, controller.Player.Player);
-  //       ctx.translate(-controller.Camera.X, -controller.Camera.Y);
-
-  //       controller.CollisionFoodDetection();
-  //       controller.CollisionEnemyDetection();
-  //       controller.CollisionDetection();
-  //       controller.DrawAll(ctx);
-  //     };
-
-  //     renderCanvas(ctx);
-  //     requestAnimationFrame(animate);
-  //   };
-
-  //   animate();
-  // }, [isPaused]);
+    return () => {
+      if (animationFrameRef.current !== null) {
+        cancelAnimationFrame(animationFrameRef.current);
+        animationFrameRef.current = null;
+      }
+    };
+  }, [isPaused]);
 
   const renderCanvas = (ctx: CanvasRenderingContext2D) => {
     const controller = controllerRef.current;
@@ -149,36 +119,10 @@ export function CanvasComponent({
     if (!ctx) return;
     renderCanvas(ctx);
 
-    animationFrameRef.current = requestAnimationFrame(animate);
+    if (!isPaused) {
+      animationFrameRef.current = requestAnimationFrame(animate);
+    }
   };
-
-  useEffect(() => {
-    if (isPaused) {
-      if (animationFrameRef.current !== null) {
-        cancelAnimationFrame(animationFrameRef.current);
-        animationFrameRef.current = null;
-      }
-    } else {
-      animate();
-    }
-  }, [isPaused]);
-
-  useEffect(() => {
-    const canvas = refCanvas.current;
-    if (canvas) {
-      const setCanvasSize = () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-      };
-
-      setCanvasSize();
-      window.addEventListener('resize', setCanvasSize);
-
-      return () => {
-        window.removeEventListener('resize', setCanvasSize);
-      };
-    }
-  }, []);
 
   useEffect(() => {
     const controller = controllerRef.current;

@@ -4,6 +4,7 @@ import { RootState } from '@/redux/store';
 import { Color } from 'react-slider-color-picker/dist/interfaces';
 import { hslToRgb } from '../utils/hslToRgb';
 import { setUserAvatar } from '@/redux/slices/globalSlices/userSlices/userSlice';
+
 export const useCirclePicker = () => {
   const [isPickerVisible, setPickerVisible] = useState(false);
   const [localImage, setLocalImage] = useState<string | null>(null);

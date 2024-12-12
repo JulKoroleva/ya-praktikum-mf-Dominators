@@ -68,7 +68,7 @@ export class CanvasController {
   }
 
   public CollisionDetection() {
-    const Player = this.Player.Player;
+    const { Player } = this.Player;
     const playerArea = Player.getAreaOfCircle();
     const playerRadius = Player.Radius;
     const playerX = Player.X;
