@@ -12,6 +12,7 @@ export const Game = () => {
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [result, setResult] = useState<Array<Array<TResult>>>([]);
   const [isEndedGame, setEndedGame] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
 
   const [showModal, setShowModal] = useState(false);
 
@@ -31,6 +32,7 @@ export const Game = () => {
 
   const handleBackButtonClick = () => {
     setShowModal(true);
+    setIsPaused(true);
   };
 
   const confirmNavigation = () => {
@@ -40,6 +42,7 @@ export const Game = () => {
 
   const cancelNavigation = () => {
     setShowModal(false);
+    setIsPaused(false);
   };
 
   return (
@@ -51,6 +54,7 @@ export const Game = () => {
           <CanvasComponent
             endGameCallback={handleEndGame}
             onBackButtonClick={handleBackButtonClick}
+            isPaused={isPaused}
           />
 
           <UniversalModal

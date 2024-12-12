@@ -15,10 +15,19 @@ import { TResult } from '../../Game.interface';
 export function CanvasComponent({
   endGameCallback,
   onBackButtonClick,
+  isPaused,
 }: {
   endGameCallback: (result: Array<TResult>) => void;
   onBackButtonClick: () => void;
+  isPaused: boolean;
 }) {
+  const refCanvas = useRef<HTMLCanvasElement>(null);
+  const animationFrameRef = useRef<number | null>(null);
+  const mouseCoodrs = useMousePosition();
+  const [score, setScore] = useState(0);
+
+  useCanvasResize();
+
   const controllerRef = useRef<CanvasController | null>(null);
   const baseAvatar = useSelector(
     (state: RootState) => state.global.user.userInfo?.avatar || 'rgb(0, 0, 0)',
@@ -48,11 +57,55 @@ export function CanvasComponent({
     }
   }, [imageElement, baseAvatar]);
 
-  const refCanvas = useRef<HTMLCanvasElement>(null);
-  const mouseCoodrs = useMousePosition();
-  const [score, setScore] = useState(0);
+  // useEffect(() => {
+  //   console.log('isPaused',isPaused)
+  //   if (isPaused) return;
+  //   const animate = () => {
+  //     if (isPaused || !controllerRef.current || !refCanvas.current) return;
 
-  useCanvasResize();
+  //     const controller = controllerRef.current;
+  //     if (controller.Player.Player.Status === STATUS.DEAD) {
+  //       endGameCallback(controller.Result);
+  //       return;
+  //     }
+  //     setScore(controller.Player.MyScore);
+
+  //     const ctx = refCanvas.current.getContext('2d');
+  //     if (!ctx) return;
+
+  //     const renderCanvas = (ctx: CanvasRenderingContext2D) => {
+  //       const controller = controllerRef.current;
+  //       if (!controller) return;
+
+  //       const canvas = refCanvas.current;
+  //       if (!canvas) return;
+
+  //       controller.Camera.Scale = Math.max(10 - controller.Player.Player.Radius / 10, 1);
+
+  //       ctx.setTransform(controller.Camera.Scale, 0, 0, controller.Camera.Scale, 0, 0);
+  //       ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  //       controller.DrawGrid(ctx);
+
+  //       controller.MovePlayer(mouseCoodrs.current.X, mouseCoodrs.current.Y);
+  //       controller.MoveStatics();
+  //       controller.EnemyPlayersMove();
+
+  //       controller.Camera.focus(canvas, controller.Map, controller.Player.Player);
+  //       ctx.translate(-controller.Camera.X, -controller.Camera.Y);
+
+  //       controller.CollisionFoodDetection();
+  //       controller.CollisionEnemyDetection();
+  //       controller.CollisionDetection();
+  //       controller.DrawAll(ctx);
+  //     };
+
+  //     renderCanvas(ctx);
+  //     requestAnimationFrame(animate);
+  //   };
+
+  //   animate();
+  // }, [isPaused]);
 
   const renderCanvas = (ctx: CanvasRenderingContext2D) => {
     const controller = controllerRef.current;
@@ -82,6 +135,7 @@ export function CanvasComponent({
   };
 
   const animate = () => {
+    if (isPaused || !controllerRef.current || !refCanvas.current) return;
     const controller = controllerRef.current;
     if (!controller || !refCanvas.current) return;
 
@@ -95,8 +149,19 @@ export function CanvasComponent({
     if (!ctx) return;
     renderCanvas(ctx);
 
-    requestAnimationFrame(animate);
+    animationFrameRef.current = requestAnimationFrame(animate);
   };
+
+  useEffect(() => {
+    if (isPaused) {
+      if (animationFrameRef.current !== null) {
+        cancelAnimationFrame(animationFrameRef.current);
+        animationFrameRef.current = null;
+      }
+    } else {
+      animate();
+    }
+  }, [isPaused]);
 
   useEffect(() => {
     const canvas = refCanvas.current;
