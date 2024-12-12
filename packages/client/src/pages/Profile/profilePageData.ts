@@ -3,6 +3,10 @@ import { validateEmail } from '@/services/validationUtils';
 
 export const settingsFields: IFieldConfig[] = [
   {
+    id: 'avatar',
+    type: 'avatar',
+  },
+  {
     id: 'email',
     label: 'Email',
     type: 'text',

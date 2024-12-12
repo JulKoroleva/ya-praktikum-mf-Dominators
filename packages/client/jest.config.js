@@ -11,6 +11,7 @@ export default {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^.+\\.(css|less|scss)$': 'identity-obj-proxy',
+    '^.+\\.(png|jpe?g|gif|webp|avif|ico)$': 'jest-transform-stub',
   },
   transform: {
     '^.+\\.svg$': 'jest-transform-stub',

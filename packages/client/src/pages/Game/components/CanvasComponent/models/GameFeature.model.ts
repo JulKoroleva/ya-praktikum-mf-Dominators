@@ -1,35 +1,45 @@
-import { ICircle, STATUS } from '../CanvasComponent.interface';
+import { ICircle, STATUS } from '../interfaces/CanvasComponent.interface';
 
 import { DrawCircle } from '../utils';
 
-const BASE_COLOR = 'black';
-
 export class GameFeatureModel implements ICircle {
-  //#region static & dinamic
+  //#region static & dynamic
   public X = 0;
   public Y = 0;
   public Radius = 10;
   public Status = STATUS.ALIVE;
-  public StrokeStyle = BASE_COLOR;
-  public ColorFill = BASE_COLOR;
-  public LineWidth: number;
+  public ColorFill = '';
+  public ImageFill;
+  public StrokeStyle = '';
+  public LineWidth;
   //#endregion
 
-  //#region dinamic
+  //#region dynamic
   public ToX = 0;
   public ToY = 0;
   public Speed = 1;
   public Movable = false;
   public Angle = 0;
+  public DeformationX = 0;
+  public DeformationY = 0;
   //#endregion
 
-  constructor({ X, Y, Radius, StrokeStyle, ColorFill, LineWidth }: ICircle) {
+  constructor({ X, Y, Radius, ColorFill, LineWidth, ImageFill }: ICircle) {
     this.X = X;
     this.Y = Y;
     this.Radius = Radius;
-    this.StrokeStyle = StrokeStyle || BASE_COLOR;
-    this.ColorFill = ColorFill || BASE_COLOR;
-    this.LineWidth = LineWidth || 2;
+    this.ColorFill = ColorFill || 'rgb(0, 0, 0)';
+    this.ImageFill = ImageFill;
+    this.StrokeStyle = this.calculateDarkerColor(this.ColorFill, 0.8);
+    this.LineWidth = LineWidth || 0;
+  }
+
+  private calculateDarkerColor(rgb: string, factor: number): string {
+    const match = rgb.match(/\d+/g);
+    if (!match || match.length < 3) return rgb;
+
+    const [r, g, b] = match.map(Number);
+    return `rgb(${Math.floor(r * factor)}, ${Math.floor(g * factor)}, ${Math.floor(b * factor)})`;
   }
 
   getAreaOfCircle() {
@@ -55,8 +65,27 @@ export class GameFeatureModel implements ICircle {
 
   draw(ctx: CanvasRenderingContext2D) {
     DrawCircle(ctx, {
-      ...this,
-      lineWidth: 2,
+      Radius: this.Radius,
+      X: this.X,
+      Y: this.Y,
+      StrokeStyle: this.StrokeStyle,
+      ColorFill: this.ColorFill,
+      ImageFill: this.ImageFill,
+      LineWidth: this.Radius / 5,
+      DeformationX: this.DeformationX,
+      DeformationY: this.DeformationY,
     });
+    const recoveryRate = 0.1;
+    if (Math.abs(this.DeformationX) > 0.1) {
+      this.DeformationX *= 1 - recoveryRate;
+    } else {
+      this.DeformationX = 0;
+    }
+
+    if (Math.abs(this.DeformationY) > 0.1) {
+      this.DeformationY *= 1 - recoveryRate;
+    } else {
+      this.DeformationY = 0;
+    }
   }
 }
