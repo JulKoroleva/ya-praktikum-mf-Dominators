@@ -8,16 +8,16 @@ import { CanvasController } from './CanvasComponent.controller';
 import styles from './CanvasComponent.module.scss';
 import { STATUS } from './interfaces/CanvasComponent.interface';
 import { Button } from 'react-bootstrap';
-import { ROUTES } from '@/constants/routes';
-import { Navigation } from '@/components';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { TResult } from '../../Game.interface';
 
 export function CanvasComponent({
   endGameCallback,
+  onBackButtonClick,
 }: {
   endGameCallback: (result: Array<TResult>) => void;
+  onBackButtonClick: () => void;
 }) {
   const controllerRef = useRef<CanvasController | null>(null);
   const baseAvatar = useSelector(
@@ -167,11 +167,9 @@ export function CanvasComponent({
           <div className={styles['canvas-page__score-block__points']}>{score}</div>
         </div>
         <div className={styles['canvas-page__button_container']}>
-          <Navigation title="" to={ROUTES.main()} />
-          <Button
-            className={styles['back-button']}
-            type="button"
-            onClick={() => ROUTES.main()}></Button>
+          <Button className={styles['back-button']} type="button" onClick={onBackButtonClick}>
+            <img src="/src/assets/icons/back.svg" alt="back arrow" />
+          </Button>
         </div>
       </div>
       <canvas className={styles['canvas']} ref={refCanvas} />
