@@ -1,13 +1,21 @@
 import { CanvasComponent } from './CanvasComponent';
-import { screen, render } from '@testing-library/react';
+import { screen } from '@testing-library/react';
+import { customRender } from '@/utils/customRender';
 
 describe('Canvas test', () => {
   beforeEach(() => {
-    render(<CanvasComponent endGameCallback={() => {}} />);
+    customRender(
+      <CanvasComponent
+        // eslint-disable-next-line no-empty-pattern
+        endGameCallback={([]) => {}}
+        isPaused={false}
+        onBackButtonClick={() => {}}
+      />,
+    );
   });
 
   test('render', () => {
-    expect(screen.getByText('Игрок:')).toBeDefined();
+    expect(screen.getByText('Score:')).toBeDefined();
   });
 
   test('canvas exist', async () => {

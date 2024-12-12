@@ -3,6 +3,8 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { customRender } from '@/utils/customRender';
 
+jest.setTimeout(10000);
+
 describe('Game test', () => {
   const user = userEvent.setup();
 
@@ -28,6 +30,9 @@ describe('Game test', () => {
     expect(screen.getByText('Разделяйтесь (клавиша Space)', { exact: false })).toBeDefined();
 
     await user.click(screen.getByText(/Ready!/i));
-    expect(screen.getByText('Go!')).toBeDefined();
+    expect(screen.getByText('3', { exact: false })).toBeDefined();
+
+    await new Promise(r => setTimeout(r, 5000));
+    expect(screen.getByText('Score:')).toBeDefined();
   });
 });
