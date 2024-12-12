@@ -1,4 +1,4 @@
-import { ICircle } from '../CanvasComponent.interface';
+import { ICircle } from '../interfaces/CanvasComponent.interface';
 
 import { GameFeatureModel } from './GameFeature.model';
 
@@ -20,5 +20,13 @@ export class FoodModel extends GameFeatureModel {
     const dY = this.ToY - this.Y;
 
     this.Angle = Math.atan2(dY, dX);
+  }
+
+  draw(ctx: CanvasRenderingContext2D): void {
+    ctx.beginPath();
+    ctx.arc(this.X, this.Y, this.Radius, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.fillStyle = this.ColorFill;
+    ctx.fill();
   }
 }

@@ -7,7 +7,16 @@ import { IUserSlice } from './userSlice.interface';
 const initialState: IUserSlice = {
   getUserStatus: 'idle',
   getUserError: '',
-  userInfo: null,
+  userInfo: {
+    id: 0,
+    first_name: '',
+    second_name: '',
+    display_name: '',
+    login: '',
+    avatar: 'rgb(0, 224, 255)',
+    email: '',
+    phone: '',
+  },
 };
 
 export const userSlice = createSlice({
@@ -18,6 +27,11 @@ export const userSlice = createSlice({
       state.getUserStatus = 'idle';
       state.getUserError = '';
       state.userInfo = null;
+    },
+    setUserAvatar: (state, action) => {
+      if (state.userInfo) {
+        state.userInfo.avatar = action.payload;
+      }
     },
   },
   extraReducers: builder => {
@@ -37,4 +51,4 @@ export const userSlice = createSlice({
   },
 });
 
-export const { clearUserState } = userSlice.actions;
+export const { clearUserState, setUserAvatar } = userSlice.actions;

@@ -1,4 +1,4 @@
-import { ICoords } from '../CanvasComponent.interface';
+import { ICoords } from '../interfaces/CanvasComponent.interface';
 
 import { GameFeatureModel, MapRegionModel } from '.';
 

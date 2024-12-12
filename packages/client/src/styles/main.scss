@@ -4,7 +4,7 @@ body {
   background-image: linear-gradient(to right, $app-cell-color 1px, transparent 1px),
     linear-gradient(to bottom, $app-cell-color 1px, transparent 1px);
   background-size: $app-cell-size $app-cell-size;
-  color: $color-black-custom;
+  color: $color-black;
 }
 
 * {

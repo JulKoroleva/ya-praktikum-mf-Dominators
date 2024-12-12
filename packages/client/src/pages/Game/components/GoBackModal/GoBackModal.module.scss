@@ -1,0 +1,29 @@
+@use 'src/styles/formPage' as *;
+@use 'src/styles/buttons' as *;
+
+.modal__content {
+  padding: 20px;
+  width: 300px;
+
+  &_buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+
+    .confirm-btn {
+      @extend %custom-button-outline;
+
+      background-color: $secondary-color;
+      border-color: $secondary-color;
+      color: $color-white;
+      opacity: 0.4;
+    }
+
+    .cancel-btn {
+      @extend %custom-button-outline;
+
+      background-color: $color-green-main;
+      color: $color-white;
+    }
+  }
+}

@@ -2,7 +2,7 @@ import { FOOD_MASS, GROW_BY_FOOD_COEFFICIENT, MAX_DIVISIONS } from '@/constants/
 
 import { CameraModel, FoodModel, GameFeatureModel, PlayerFeatureModel } from '.';
 
-import { ICircle } from '../CanvasComponent.interface';
+import { ICircle } from '../interfaces/CanvasComponent.interface';
 
 export class PlayerModel {
   public Player: PlayerFeatureModel;
