@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import { Form } from 'react-bootstrap';
 
 // import CloseIcon from '@/assets/icons/close.svg?react';
+import { REQUIRED_FIELD_ERROR } from '@/constants/letters';
 
 import { IFieldConfig, IFormFieldProps } from './FormField.interface';
 
@@ -23,7 +24,7 @@ export const FormField = <T extends FieldValues>({
   const validationRules = {
     ...(validation ? validation(getValues, trigger, clearErrors) : {}),
     ...(isRequired
-      ? { required: { value: true, message: 'This field is required' } }
+      ? { required: { value: true, message: REQUIRED_FIELD_ERROR } }
       : { required: '' }),
   };
 

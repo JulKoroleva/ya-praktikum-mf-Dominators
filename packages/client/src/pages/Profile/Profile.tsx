@@ -11,6 +11,7 @@ import {
   changePasswordFields,
 } from './profilePageData';
 import { ROUTES } from '@/constants/routes';
+import { HEADERS } from '@/constants/headers';
 
 import styles from './profile.module.scss';
 
@@ -28,7 +29,7 @@ export const Profile = () => {
 
   const settings = (
     <>
-      <h1>Profile</h1>
+      <h1>{HEADERS.profile}</h1>
       <FormComponent
         fields={settingsFields}
         onSubmit={onSubmit}

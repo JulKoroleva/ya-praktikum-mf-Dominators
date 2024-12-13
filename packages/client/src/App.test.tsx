@@ -4,6 +4,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { store } from './redux/store/store';
 import { ROUTES } from '@/constants/routes';
+import { HEADERS } from '@/constants/headers';
 
 // @ts-expect-error
 global.fetch = jest.fn(() =>
@@ -25,14 +26,14 @@ describe('Full app rendering/routing', () => {
   });
 
   test('render', () => {
-    expect(screen.getByText('DOMinators')).toBeDefined();
+    expect(screen.getByText(HEADERS.main)).toBeDefined();
   });
 
   test('authorization page', async () => {
     await user.click(screen.getByText(/Log in/i));
 
     expect(window.location.pathname).toBe(ROUTES.authorization());
-    expect(screen.getByText('Authorization')).toBeDefined();
+    expect(screen.getByText(HEADERS.authorization)).toBeDefined();
   });
 
   test('registration page', async () => {
@@ -40,28 +41,28 @@ describe('Full app rendering/routing', () => {
     await user.click(screen.getByText(/Create account/i));
 
     expect(window.location.pathname).toBe(ROUTES.registration());
-    expect(screen.getByText('Create account')).toBeDefined();
+    expect(screen.getByText(HEADERS.registration)).toBeDefined();
   });
 
   test('profile page', async () => {
     await user.click(screen.getByText(/Profile/i));
 
     expect(window.location.pathname).toBe(ROUTES.profile());
-    expect(screen.getByText('Profile')).toBeDefined();
+    expect(screen.getByText(HEADERS.profile)).toBeDefined();
   });
 
   test('leaderboard page', async () => {
     await user.click(screen.getByText(/Leaderboard/i));
 
     expect(window.location.pathname).toBe(ROUTES.leaderboard());
-    expect(screen.getByText('Leader Board')).toBeDefined();
+    expect(screen.getByText(HEADERS.leaderboard)).toBeDefined();
   });
 
   test('forum page', async () => {
     await user.click(screen.getByText(/Forum/i));
 
     expect(window.location.pathname).toBe(ROUTES.forum());
-    expect(screen.getByText('Game Forum')).toBeDefined();
+    expect(screen.getByText(HEADERS.forum)).toBeDefined();
   });
 
   test('game page', async () => {
