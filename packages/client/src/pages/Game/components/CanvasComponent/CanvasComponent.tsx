@@ -183,9 +183,18 @@ export function CanvasComponent({
     };
   }, []);
 
-  const handleFullscreenToggle = () => {
+  const handleFullscreenToggle = (status?: boolean) => {
     const canvasContainer = refCanvas.current?.parentElement;
-    if (canvasContainer) {
+
+    if (!canvasContainer) return;
+
+    if (typeof status !== 'undefined') {
+      if (status && !document.fullscreenElement) {
+        canvasContainer.requestFullscreen();
+      } else if (!status && document.fullscreenElement) {
+        document.exitFullscreen();
+      }
+    } else {
       if (document.fullscreenElement) {
         document.exitFullscreen();
       } else {
@@ -201,14 +210,22 @@ export function CanvasComponent({
           <div className={styles['canvas-page__score-block__name']}>Score: </div>
           <div className={styles['canvas-page__score-block__points']}>{score}</div>
         </div>
-        <Button className={styles['back-button']} type="button" onClick={onBackButtonClick}>
+        <Button
+          className={styles['back-button']}
+          type="button"
+          onClick={() => {
+            handleFullscreenToggle(false);
+            onBackButtonClick();
+          }}>
           <img src="/src/assets/icons/back.svg" alt="back arrow" />
         </Button>
       </div>
       <Button
         className={styles['fullscreen-button']}
         type="button"
-        onClick={handleFullscreenToggle}>
+        onClick={() => {
+          handleFullscreenToggle();
+        }}>
         <img
           className={styles['fullscreen-button__icon']}
           src={isFullscreen ? normalScrenIcon : fullScrenIcon}
