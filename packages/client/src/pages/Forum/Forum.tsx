@@ -5,6 +5,7 @@ import { TopicList, Pagination, TPaginationOptions, TTopic } from './components'
 import { createNewTopicFields, createNewTopicFieldsInitialValues } from './FormData';
 import { topicsMockData } from './ForumMock';
 import { ROUTES } from '@/constants/routes';
+import { HEADERS } from '@/constants/headers';
 import add from '@/assets/icons/add.svg';
 import styles from './Forum.module.scss';
 
@@ -33,7 +34,7 @@ export const Forum = () => {
   return (
     <div className={`${styles['game-forum']} ${styles['fade-in']}`}>
       <ErrorNotification>
-        <Navigation title="Game Forum" to={ROUTES.main()} />
+        <Navigation title={HEADERS.forum} to={ROUTES.main()} />
         <Button
           className={styles['game-forum__button']}
           type="button"

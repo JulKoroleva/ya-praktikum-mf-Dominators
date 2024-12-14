@@ -181,7 +181,7 @@ export function CanvasComponent({
           </Button>
         </div>
       </div>
-      <canvas className={styles['canvas']} ref={refCanvas} />
+      <canvas data-testid="canvas" className={styles['canvas']} ref={refCanvas} />
     </div>
   );
 }

@@ -19,10 +19,11 @@ import { selectRegistrationStatus, selectRegistrationError } from '@/redux/selec
 import {
   registrationPageFields,
   registrationPageFieldsInitialValues,
-} from './registrationPageData';
+} from './RegistrationPageData';
 import { ROUTES } from '@/constants/routes';
+import { HEADERS } from '@/constants/headers';
 
-import styles from './registration.module.scss';
+import styles from './Registration.module.scss';
 
 export const Registration = () => {
   const navigate = useNavigate();
@@ -93,7 +94,7 @@ export const Registration = () => {
     <div className={styles['registration-page']}>
       <div className={styles['form-container']}>
         <ErrorNotification>
-          <h1>Create account</h1>
+          <h1>{HEADERS.registration}</h1>
           <FormComponent
             fields={registrationPageFields}
             onSubmit={onSubmit}

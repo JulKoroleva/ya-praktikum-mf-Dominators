@@ -16,6 +16,7 @@ import { clearUserState } from '@/redux/slices';
 import { IParticle, IButtonConfig } from './Main.interface';
 
 import { ROUTES } from '@/constants/routes';
+import { HEADERS } from '@/constants/headers';
 import { COLOR_PALETTE } from './constants/color.constant';
 
 import { deleteCookie, getCookie } from '@/services/cookiesHandler';
@@ -140,7 +141,7 @@ export const Main = () => {
         {init && (
           <Particles id="tsparticles" particlesLoaded={particlesLoaded} options={particlesConfig} />
         )}
-        <h1 className={styles['main-page__title']}>DOMinators</h1>
+        <h1 className={styles['main-page__title']}>{HEADERS.main}</h1>
         <div className={styles['main-page__menu']}>
           <h3 className={styles['main-page__menu_greetings']}>
             Привет, {userInfo?.login || 'Guest'}!

@@ -22,6 +22,7 @@ import {
   authorizationPageFieldsInitialValues,
 } from './AuthorizationPageData';
 import { ROUTES } from '@/constants/routes';
+import { HEADERS } from '@/constants/headers';
 
 import { setCustomCookieWithMaxAge } from '@/services/cookiesHandler';
 
@@ -103,7 +104,7 @@ export const Authorization = () => {
     <div className={styles['authorization-page']}>
       <div className={styles['form-container']}>
         <ErrorNotification>
-          <h1>Authorization</h1>
+          <h1>{HEADERS.authorization}</h1>
           <FormComponent
             fields={authorizationPageFields}
             onSubmit={onSubmit}
