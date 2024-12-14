@@ -12,6 +12,9 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { TResult } from '../../Game.interface';
 
+import fullScrenIcon from '@/assets/icons/screen-full.svg';
+import normalScrenIcon from '@/assets/icons/screen-normal.svg';
+
 export function CanvasComponent({
   endGameCallback,
   onBackButtonClick,
@@ -25,6 +28,7 @@ export function CanvasComponent({
   const animationFrameRef = useRef<number | null>(null);
   const mouseCoodrs = useMousePosition();
   const [score, setScore] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   useCanvasResize();
 
@@ -168,6 +172,28 @@ export function CanvasComponent({
     };
   }, []);
 
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    };
+  }, []);
+
+  const handleFullscreenToggle = () => {
+    const canvasContainer = refCanvas.current?.parentElement;
+    if (canvasContainer) {
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      } else {
+        canvasContainer.requestFullscreen();
+      }
+    }
+  };
+
   return (
     <div className={styles['canvas-page']}>
       <div className={styles['canvas-page__menu']}>
@@ -175,12 +201,20 @@ export function CanvasComponent({
           <div className={styles['canvas-page__score-block__name']}>Score: </div>
           <div className={styles['canvas-page__score-block__points']}>{score}</div>
         </div>
-        <div className={styles['canvas-page__button_container']}>
-          <Button className={styles['back-button']} type="button" onClick={onBackButtonClick}>
-            <img src="/src/assets/icons/back.svg" alt="back arrow" />
-          </Button>
-        </div>
+        <Button className={styles['back-button']} type="button" onClick={onBackButtonClick}>
+          <img src="/src/assets/icons/back.svg" alt="back arrow" />
+        </Button>
       </div>
+      <Button
+        className={styles['fullscreen-button']}
+        type="button"
+        onClick={handleFullscreenToggle}>
+        <img
+          className={styles['fullscreen-button__icon']}
+          src={isFullscreen ? normalScrenIcon : fullScrenIcon}
+          alt="fullscreen toggle"
+        />
+      </Button>
       <canvas data-testid="canvas" className={styles['canvas']} ref={refCanvas} />
     </div>
   );

@@ -12,5 +12,5 @@ export interface IUserInfo {
 export interface IUserSlice {
   getUserStatus?: 'loading' | 'succeeded' | 'failed' | 'idle';
   getUserError?: string;
-  userInfo: IUserInfo | null;
+  userInfo: IUserInfo;
 }
