@@ -1,7 +1,8 @@
 import { IFieldConfig } from '@/components/FormComponent/components/FormField/FormField.interface';
+import { IUserInfo, IUserPassword } from '@/redux/slices';
 import { validateEmail } from '@/services/validationUtils';
 
-export const settingsFields: IFieldConfig[] = [
+export const settingsFields: IFieldConfig<IUserInfo>[] = [
   {
     id: 'avatar',
     type: 'avatar',
@@ -65,16 +66,9 @@ export const settingsFields: IFieldConfig[] = [
   },
 ];
 
-export const settingsFieldsInitialValues = {
-  email: 'user@mail.ru',
-  first_name: 'Username',
-  second_name: 'Usersecondname',
-  phone: '1234567890',
-};
-
-export const changePasswordFields: IFieldConfig[] = [
+export const changePasswordFields: IFieldConfig<IUserPassword>[] = [
   {
-    id: 'old_password',
+    id: 'oldPassword',
     label: 'Old password',
     type: 'password',
     placeholder: 'Enter your old password',
@@ -89,7 +83,7 @@ export const changePasswordFields: IFieldConfig[] = [
     }),
   },
   {
-    id: 'new_password',
+    id: 'newPassword',
     label: 'New password',
     type: 'password',
     placeholder: 'Enter your new password',
@@ -104,14 +98,14 @@ export const changePasswordFields: IFieldConfig[] = [
     }),
   },
   {
-    id: 'new_password_repeat',
+    id: 'newPasswordRepeat',
     label: 'Repeat new password',
     type: 'password',
     placeholder: 'Repeat your new password',
     isRequired: true,
     validation: getValues => ({
       validate: value => {
-        if (getValues('new_password') !== value) {
+        if (getValues('newPassword') !== value) {
           return 'Passwords do not match';
         }
         return true;

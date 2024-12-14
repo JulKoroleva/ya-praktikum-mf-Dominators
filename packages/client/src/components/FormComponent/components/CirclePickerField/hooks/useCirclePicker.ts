@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { Color } from 'react-slider-color-picker/dist/interfaces';
 import { hslToRgb } from '../utils/hslToRgb';
-import { setUserAvatar } from '@/redux/slices/globalSlices/userSlices/userSlice';
+import { avatarRequests } from '@/redux/requests';
+import { TypeDispatch } from '@/redux/store';
 
 export const useCirclePicker = () => {
   const [isPickerVisible, setPickerVisible] = useState(false);
@@ -12,7 +13,7 @@ export const useCirclePicker = () => {
   const pickerRef = useRef<HTMLDivElement | null>(null);
 
   const avatar = useSelector((state: RootState) => state.global.user.userInfo?.avatar);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<TypeDispatch>();
 
   useEffect(() => {
     if (avatar && avatar.startsWith('data:image')) {
@@ -43,7 +44,8 @@ export const useCirclePicker = () => {
     const colorString = hslToRgb(newColor.h, newColor.s, newColor.l);
 
     setLocalImage(null);
-    dispatch(setUserAvatar(colorString));
+    // TODO решить проблему с сохранением цвета в виде файла
+    // dispatch(avatarRequests(colorString));
     onChange(colorString);
   };
 
@@ -52,7 +54,7 @@ export const useCirclePicker = () => {
     reader.onload = () => {
       const result = reader.result as string;
       setLocalImage(result);
-      dispatch(setUserAvatar(result));
+      dispatch(avatarRequests(file));
       onChange(result);
       setPickerVisible(false);
     };

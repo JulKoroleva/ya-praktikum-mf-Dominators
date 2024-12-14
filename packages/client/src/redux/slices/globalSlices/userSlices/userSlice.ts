@@ -1,12 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { getUserInfoRequest } from '@/redux/requests';
+import {
+  getUserInfoRequest,
+  profileRequests,
+  avatarRequests,
+  passwordRequests,
+} from '@/redux/requests';
 
 import { IUserSlice } from './userSlice.interface';
 
 const initialState: IUserSlice = {
   getUserStatus: 'idle',
   getUserError: '',
+  changeUserStatus: 'idle',
+  changeUserError: '',
   userInfo: {
     id: 0,
     first_name: '',
@@ -28,10 +35,9 @@ export const userSlice = createSlice({
       state.getUserError = '';
       state.userInfo = null;
     },
-    setUserAvatar: (state, action) => {
-      if (state.userInfo) {
-        state.userInfo.avatar = action.payload;
-      }
+    clearChangeUserState: state => {
+      state.changeUserStatus = 'idle';
+      state.changeUserError = '';
     },
   },
   extraReducers: builder => {
@@ -47,8 +53,38 @@ export const userSlice = createSlice({
       .addCase(getUserInfoRequest.rejected, (state, action) => {
         state.getUserStatus = 'failed';
         state.getUserError = action.payload as string;
+      })
+      .addCase(profileRequests.pending, state => {
+        state.changeUserStatus = 'loading';
+      })
+      .addCase(profileRequests.fulfilled, (state, action) => {
+        state.changeUserStatus = 'succeeded';
+        state.changeUserError = '';
+        state.userInfo = action.payload;
+      })
+      .addCase(profileRequests.rejected, (state, action) => {
+        state.changeUserStatus = 'failed';
+        state.changeUserError = action.payload as string;
+      })
+      .addCase(avatarRequests.fulfilled, (state, action) => {
+        if (state.userInfo) {
+          state.userInfo.avatar = action.payload;
+        }
+      })
+      .addCase(passwordRequests.pending, state => {
+        state.changeUserStatus = 'loading';
+      })
+      .addCase(passwordRequests.fulfilled, state => {
+        console.log('succeeded');
+        state.changeUserStatus = 'succeeded';
+        state.changeUserError = '';
+      })
+      .addCase(passwordRequests.rejected, (state, action) => {
+        console.log('failed');
+        state.changeUserStatus = 'failed';
+        state.changeUserError = action.payload as string;
       });
   },
 });
 
-export const { clearUserState, setUserAvatar } = userSlice.actions;
+export const { clearUserState, clearChangeUserState } = userSlice.actions;

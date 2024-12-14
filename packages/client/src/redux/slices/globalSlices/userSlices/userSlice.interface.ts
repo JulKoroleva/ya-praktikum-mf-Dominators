@@ -1,3 +1,5 @@
+import { TModalStatus } from '@/components';
+
 export interface IUserInfo {
   id: number;
   first_name: string;
@@ -10,7 +12,15 @@ export interface IUserInfo {
 }
 
 export interface IUserSlice {
-  getUserStatus?: 'loading' | 'succeeded' | 'failed' | 'idle';
+  getUserStatus?: TModalStatus;
   getUserError?: string;
+  changeUserStatus?: TModalStatus;
+  changeUserError?: string;
   userInfo: IUserInfo | null;
+}
+
+export interface IUserPassword {
+  oldPassword: string;
+  newPassword: string;
+  newPasswordRepeat?: string;
 }

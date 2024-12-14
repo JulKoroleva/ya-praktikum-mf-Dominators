@@ -9,3 +9,8 @@ export const LOGOUT_URL = `${MAIN_URL}/auth/logout`;
 
 //USER
 export const GET_USER_INFO_URL = `${MAIN_URL}/auth/user`;
+
+//USER SETTINGS
+export const PROFILE_URL = `${MAIN_URL}/user/profile`;
+export const CHANGE_PASSWORD_URL = `${MAIN_URL}/user/password`;
+export const CHANGE_AVATAR_URL = `${MAIN_URL}/user/profile/avatar`;

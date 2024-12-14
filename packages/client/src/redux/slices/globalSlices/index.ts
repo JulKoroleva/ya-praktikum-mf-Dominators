@@ -1,2 +1,2 @@
-export { userSlice, clearUserState } from './userSlices';
-export type { IUserSlice, IUserInfo } from './userSlices';
+export { userSlice, clearUserState, clearChangeUserState } from './userSlices';
+export type { IUserSlice, IUserInfo, IUserPassword } from './userSlices';
