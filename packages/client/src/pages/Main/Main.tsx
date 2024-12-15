@@ -20,6 +20,7 @@ import { HEADERS } from '@/constants/headers';
 import { COLOR_PALETTE } from './constants/color.constant';
 
 import { deleteCookie, getCookie } from '@/services/cookiesHandler';
+import { useIsAuthorized } from '@/services/hooks';
 
 import styles from './Main.module.scss';
 
@@ -30,6 +31,7 @@ export const Main = () => {
   const containerRef = useRef<Container | null>(null);
 
   const [init, setInit] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useIsAuthorized();
 
   const userInfo = useSelector(selectUser);
 
@@ -43,7 +45,6 @@ export const Main = () => {
     { href: ROUTES.forum(), text: 'Forum' },
   ];
   const authCookie = getCookie('auth');
-  const isAuth: boolean = authCookie === 'true';
 
   useEffect(() => {
     const initializeParticles = async () => {
@@ -135,6 +136,12 @@ export const Main = () => {
     [handleCollision],
   );
 
+  useEffect(() => {
+    if (authCookie) {
+      setIsAuthorized(true);
+    }
+  }, [authCookie]);
+
   return (
     <div className={styles['main-page']}>
       <ErrorNotification>
@@ -148,29 +155,32 @@ export const Main = () => {
           </h3>
           <p className={styles['main-page__menu_description']}>{description}</p>
           <div className={styles['main-page__menu_buttons']}>
-            {buttons.map(({ href, text, className }, index) => (
-              <Button
-                key={index}
-                size="lg"
-                onClick={() => navigate(href)}
-                className={`${styles['menu-button']} ${className || ''}`.trim()}>
-                {text}
-              </Button>
-            ))}
+            {buttons
+              .filter(({ href }) => isAuthorized || href !== ROUTES.profile())
+              .map(({ href, text, className }, index) => (
+                <Button
+                  key={index}
+                  size="lg"
+                  onClick={() => navigate(href)}
+                  className={`${styles['menu-button']} ${className || ''}`.trim()}>
+                  {text}
+                </Button>
+              ))}
           </div>
         </div>
         <Button
           className={styles['main-page__logout-button']}
           onClick={() => {
-            if (isAuth) {
+            if (isAuthorized) {
               dispatch(logoutRequest());
               dispatch(clearUserState());
+              setIsAuthorized(false);
               deleteCookie('auth');
               return;
             }
             navigate(ROUTES.authorization());
           }}>
-          {userInfo?.login ? 'Log out' : 'Log in'}
+          {isAuthorized ? 'Log out' : 'Log in'}
         </Button>
       </ErrorNotification>
     </div>
