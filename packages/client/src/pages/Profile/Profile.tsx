@@ -135,14 +135,12 @@ export const Profile = () => {
   const settings = (
     <>
       <h1>{HEADERS.profile}</h1>
-      {userInfo?.id && (
-        <FormComponent
-          fields={settingsFields}
-          onSubmit={onSubmit}
-          initialValues={userInfo || undefined}
-          submitButtonText="Save"
-        />
-      )}
+      <FormComponent
+        fields={settingsFields}
+        onSubmit={onSubmit}
+        initialValues={userInfo || undefined}
+        submitButtonText="Save"
+      />
       <Button
         className={styles['change-password-button']}
         variant="primary"
