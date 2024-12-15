@@ -5,19 +5,18 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { FormComponent, ErrorNotification } from '@/components';
 
-import {
-  settingsFields,
-  settingsFieldsInitialValues,
-  changePasswordFields,
-} from './profilePageData';
+import { settingsFields, changePasswordFields } from './profilePageData';
 import { ROUTES } from '@/constants/routes';
 import { HEADERS } from '@/constants/headers';
 
 import styles from './profile.module.scss';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 export const Profile = () => {
   const navigate = useNavigate();
   const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const userInfo = useSelector((state: RootState) => state.global.user.userInfo);
 
   const onSubmit = () => {
     if (isChangingPassword) {
@@ -33,7 +32,7 @@ export const Profile = () => {
       <FormComponent
         fields={settingsFields}
         onSubmit={onSubmit}
-        initialValues={settingsFieldsInitialValues}
+        initialValues={userInfo}
         submitButtonText="Save"
       />
       <Button

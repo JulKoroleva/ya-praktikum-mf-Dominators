@@ -26,7 +26,7 @@ export const userSlice = createSlice({
     clearUserState: state => {
       state.getUserStatus = 'idle';
       state.getUserError = '';
-      state.userInfo = null;
+      state.userInfo = initialState.userInfo;
     },
     setUserAvatar: (state, action) => {
       if (state.userInfo) {
@@ -42,7 +42,10 @@ export const userSlice = createSlice({
       .addCase(getUserInfoRequest.fulfilled, (state, action) => {
         state.getUserStatus = 'succeeded';
         state.getUserError = '';
-        state.userInfo = action.payload;
+        state.userInfo = {
+          ...action.payload,
+          avatar: action.payload.avatar || initialState.userInfo?.avatar,
+        };
       })
       .addCase(getUserInfoRequest.rejected, (state, action) => {
         state.getUserStatus = 'failed';

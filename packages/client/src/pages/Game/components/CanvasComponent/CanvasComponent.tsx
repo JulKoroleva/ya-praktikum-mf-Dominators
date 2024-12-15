@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-
 import { useMousePosition } from '@/utils/useMousePosition';
 import { useCanvasResize } from '@/utils/useCanvasResize';
+import { useFullscreen } from './hooks/useFullscreen';
+import { useAvatarImage } from './hooks/useAvatar';
 
 import { CanvasController } from './CanvasComponent.controller';
 
@@ -11,6 +12,9 @@ import { Button } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { TResult } from '../../Game.interface';
+
+import fullScrenIcon from '@/assets/icons/screen-full.svg';
+import normalScrenIcon from '@/assets/icons/screen-normal.svg';
 
 export function CanvasComponent({
   endGameCallback,
@@ -28,34 +32,18 @@ export function CanvasComponent({
 
   useCanvasResize();
 
+  const { isFullscreen, toggleFullscreen } = useFullscreen();
   const controllerRef = useRef<CanvasController | null>(null);
   const baseAvatar = useSelector(
     (state: RootState) => state.global.user.userInfo?.avatar || 'rgb(0, 0, 0)',
   );
 
-  const [imageElement, setImageElement] = useState<HTMLImageElement | null>(null);
-
-  useEffect(() => {
-    if (baseAvatar?.startsWith('data:image')) {
-      const img = new Image();
-      img.src = baseAvatar;
-      img.onload = () => {
-        setImageElement(img);
-      };
-    } else {
-      if (!controllerRef.current) {
-        controllerRef.current = new CanvasController(baseAvatar || 'rgb(0, 0, 0)', undefined);
-        animate();
-      }
-    }
-  }, [baseAvatar]);
-
-  useEffect(() => {
-    if (!controllerRef.current && (imageElement || (!baseAvatar && !imageElement))) {
+  const imageElement = useAvatarImage(baseAvatar, () => {
+    if (!controllerRef.current) {
       controllerRef.current = new CanvasController(baseAvatar, imageElement || undefined);
       animate();
     }
-  }, [imageElement, baseAvatar]);
+  });
 
   useEffect(() => {
     if (isPaused) {
@@ -123,7 +111,6 @@ export function CanvasComponent({
       animationFrameRef.current = requestAnimationFrame(animate);
     }
   };
-
   useEffect(() => {
     const controller = controllerRef.current;
     if (!controller) return;
@@ -175,12 +162,30 @@ export function CanvasComponent({
           <div className={styles['canvas-page__score-block__name']}>Score: </div>
           <div className={styles['canvas-page__score-block__points']}>{score}</div>
         </div>
-        <div className={styles['canvas-page__button_container']}>
-          <Button className={styles['back-button']} type="button" onClick={onBackButtonClick}>
-            <img src="/src/assets/icons/back.svg" alt="back arrow" />
-          </Button>
-        </div>
+        <Button
+          className={styles['back-button']}
+          type="button"
+          onClick={() => {
+            const parentElement = refCanvas.current?.parentElement || null;
+            toggleFullscreen(parentElement, false);
+            onBackButtonClick();
+          }}>
+          <img src="/src/assets/icons/back.svg" alt="back arrow" />
+        </Button>
       </div>
+      <Button
+        className={styles['fullscreen-button']}
+        type="button"
+        onClick={() => {
+          const parentElement = refCanvas.current?.parentElement || null;
+          toggleFullscreen(parentElement);
+        }}>
+        <img
+          className={styles['fullscreen-button__icon']}
+          src={isFullscreen ? normalScrenIcon : fullScrenIcon}
+          alt="fullscreen toggle"
+        />
+      </Button>
       <canvas data-testid="canvas" className={styles['canvas']} ref={refCanvas} />
     </div>
   );

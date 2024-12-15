@@ -65,13 +65,6 @@ export const settingsFields: IFieldConfig[] = [
   },
 ];
 
-export const settingsFieldsInitialValues = {
-  email: 'user@mail.ru',
-  first_name: 'Username',
-  second_name: 'Usersecondname',
-  phone: '1234567890',
-};
-
 export const changePasswordFields: IFieldConfig[] = [
   {
     id: 'old_password',
