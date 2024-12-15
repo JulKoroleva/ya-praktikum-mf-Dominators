@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import { Button } from 'react-bootstrap';
-import { FormComponent, ErrorNotification } from '@/components';
+import { FormComponent, ErrorNotification, Loader } from '@/components';
 
 import { selectUser } from '@/redux/selectors';
 
@@ -54,10 +54,16 @@ export const Profile = () => {
   );
 
   return (
-    <div className={styles['profile-page']}>
-      <div className={styles['form-container']}>
-        <ErrorNotification>{isChangingPassword ? changePassword : settings}</ErrorNotification>
-      </div>
-    </div>
+    <>
+      {!userInfo?.id ? (
+        <Loader />
+      ) : (
+        <div className={styles['profile-page']}>
+          <div className={styles['form-container']}>
+            <ErrorNotification>{isChangingPassword ? changePassword : settings}</ErrorNotification>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
