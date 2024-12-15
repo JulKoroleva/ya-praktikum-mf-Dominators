@@ -21,7 +21,7 @@ const routes = [
   { path: ROUTES.forum(), element: <Forum /> },
   { path: ROUTES.leaderboard(), element: <Leaderboard /> },
   { path: ROUTES.profile(), element: <Profile /> },
-  { path: ROUTES.error(404), element: <Error /> },
+  { path: ROUTES.error(':code'), element: <Error /> },
   { path: ROUTES.topic(), element: <Topic /> },
   {
     path: ROUTES.home(),

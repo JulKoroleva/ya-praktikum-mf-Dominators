@@ -11,7 +11,7 @@ export const CirclePickerField = <T extends FieldValues>({
   control,
 }: CirclePickerFieldProps<T>) => {
   const {
-    avatar,
+    // avatar,
     isPickerVisible,
     setPickerVisible,
     localImage,
@@ -30,7 +30,6 @@ export const CirclePickerField = <T extends FieldValues>({
           <CirclePicker
             onClick={() => setPickerVisible(!isPickerVisible)}
             localImage={localImage}
-            avatar={avatar || null}
             color={color}
             fieldValue={field.value}
           />

@@ -6,7 +6,7 @@ import styles from './Error.module.scss';
 const ERROR_TEXT = 'UPS...\nsomething went wrong...';
 
 export const Error = () => {
-  const { id } = useParams();
+  const { code } = useParams<{ code: string }>();
   const navigate = useNavigate();
 
   return (
@@ -14,7 +14,7 @@ export const Error = () => {
       <div className={styles['error-page__title']}>
         <h1>{ERROR_TEXT}</h1>
       </div>
-      <h2>Error {id}</h2>
+      <h2>Error {code}</h2>
       <Button className={styles['error-page__button']} type="button" onClick={() => navigate(-1)}>
         Go back
       </Button>
