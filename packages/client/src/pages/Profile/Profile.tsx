@@ -1,22 +1,22 @@
 import React, { useState } from 'react';
-
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import { Button } from 'react-bootstrap';
 import { FormComponent, ErrorNotification } from '@/components';
+
+import { selectUser } from '@/redux/selectors';
 
 import { settingsFields, changePasswordFields } from './profilePageData';
 import { ROUTES } from '@/constants/routes';
 import { HEADERS } from '@/constants/headers';
 
 import styles from './profile.module.scss';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
 
 export const Profile = () => {
   const navigate = useNavigate();
   const [isChangingPassword, setIsChangingPassword] = useState(false);
-  const userInfo = useSelector((state: RootState) => state.global.user.userInfo);
+  const userInfo = useSelector(selectUser);
 
   const onSubmit = () => {
     if (isChangingPassword) {
@@ -29,12 +29,14 @@ export const Profile = () => {
   const settings = (
     <>
       <h1>{HEADERS.profile}</h1>
-      <FormComponent
-        fields={settingsFields}
-        onSubmit={onSubmit}
-        initialValues={userInfo}
-        submitButtonText="Save"
-      />
+      {userInfo?.id && (
+        <FormComponent
+          fields={settingsFields}
+          onSubmit={onSubmit}
+          initialValues={userInfo}
+          submitButtonText="Save"
+        />
+      )}
       <Button
         className={styles['change-password-button']}
         variant="primary"

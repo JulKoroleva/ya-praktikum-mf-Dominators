@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+
 import {
   Authorization,
   Forum,
@@ -10,8 +12,16 @@ import {
   Error,
   Game,
 } from '@/pages';
-import { ROUTES } from '@/constants/routes';
 import { Topic } from './pages/Topic';
+
+import { TypeDispatch } from './redux/store';
+import { getUserInfoRequest } from './redux/requests';
+
+import { ROUTES } from '@/constants/routes';
+
+import { getCookie } from './services/cookiesHandler';
+
+const authCookie = getCookie('auth');
 
 const routes = [
   { path: ROUTES.authorization(), element: <Authorization /> },
@@ -34,6 +44,7 @@ const routes = [
 ];
 
 function App() {
+  const dispatch = useDispatch<TypeDispatch>();
   useEffect(() => {
     const fetchServerData = async () => {
       if (typeof __SERVER_PORT__ === 'undefined') return;
@@ -45,6 +56,12 @@ function App() {
 
     fetchServerData();
   }, []);
+
+  useEffect(() => {
+    if (authCookie) {
+      dispatch(getUserInfoRequest());
+    }
+  });
 
   return (
     <BrowserRouter>
