@@ -7,6 +7,6 @@ export const ROUTES = {
   forum: () => `/forum`,
   profile: () => `/profile`,
   leaderboard: () => `/leaderboard`,
-  error: (code: number) => `/error${code}`,
+  error: (code: string | number = ':code') => `/error/${code}`,
   topic: (id?: number) => `/forum/${id || ':id'}`,
 };
