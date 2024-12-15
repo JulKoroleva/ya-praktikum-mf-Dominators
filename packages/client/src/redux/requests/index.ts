@@ -1,2 +1,9 @@
-export { authorizationRequest, registrationRequest, logoutRequest } from './pagesRequests';
+export {
+  authorizationRequest,
+  registrationRequest,
+  logoutRequest,
+  profileRequests,
+  avatarRequests,
+  passwordRequests,
+} from './pagesRequests';
 export { getUserInfoRequest } from './globalRequests';

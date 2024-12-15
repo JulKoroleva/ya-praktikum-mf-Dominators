@@ -1,1 +1,1 @@
-export { selectUser } from './userSelectors';
+export { selectUser, selectUserError, selectUserStatus } from './userSelectors';

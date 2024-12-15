@@ -35,12 +35,12 @@ export function CanvasComponent({
   const { isFullscreen, toggleFullscreen } = useFullscreen();
   const controllerRef = useRef<CanvasController | null>(null);
   const baseAvatar = useSelector(
-    (state: RootState) => state.global.user.userInfo?.avatar || 'rgb(0, 0, 0)',
+    (state: RootState) => state.global.user.processedAvatar || 'rgb(0, 0, 0)',
   );
 
-  const imageElement = useAvatarImage(baseAvatar, () => {
+  useAvatarImage(baseAvatar, (baseColor: string | null, img: HTMLImageElement | null) => {
     if (!controllerRef.current) {
-      controllerRef.current = new CanvasController(baseAvatar, imageElement || undefined);
+      controllerRef.current = new CanvasController(baseColor || 'rgb(0, 0, 0)', img || undefined);
       animate();
     }
   });

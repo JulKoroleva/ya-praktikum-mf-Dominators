@@ -10,7 +10,15 @@
     .change-password-button {
       @extend %custom-button;
 
-      margin-top: 24px;
+      margin-top: 12px;
+    }
+
+    .back-button {
+      @extend %custom-button-outline;
+
+      margin-top: 12px;
+      min-width: max-content;
+      width: 60%;
     }
   }
 }

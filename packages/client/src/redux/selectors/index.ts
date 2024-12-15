@@ -5,4 +5,4 @@ export {
   selectRegistrationError,
 } from './pagesSelectors';
 
-export { selectUser } from './globalSelectors';
+export { selectUser, selectUserError, selectUserStatus } from './globalSelectors';

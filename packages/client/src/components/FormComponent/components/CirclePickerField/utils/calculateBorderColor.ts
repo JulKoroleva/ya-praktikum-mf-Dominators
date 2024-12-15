@@ -2,11 +2,11 @@ import { Color } from 'react-slider-color-picker/dist/interfaces';
 import { hslToRgb } from './hslToRgb';
 
 export const calculateBorderColor = (
-  color: Color,
+  color: Color | null,
   hasImage: boolean,
   selectedColor: string | null,
 ) => {
-  if (!selectedColor) return null;
+  if (!selectedColor || typeof selectedColor === 'object') return null;
 
   if (hasImage) return 'black';
 
@@ -19,6 +19,10 @@ export const calculateBorderColor = (
     const darkenedB = Math.max(0, b * 0.8);
 
     return `rgb(${Math.round(darkenedR)}, ${Math.round(darkenedG)}, ${Math.round(darkenedB)})`;
+  }
+
+  if (!color) {
+    return 'transparent';
   }
 
   const rgbValue = hslToRgb(color.h, color.s, color.l * 0.8);

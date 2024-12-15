@@ -17,6 +17,7 @@
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.2",
     "eslint-config-prettier": "^8.5.0",
+    "exiftool": "^0.0.3",
     "express": "^4.18.1",
     "husky": "^9.1.7",
     "pg": "^8.8.0",

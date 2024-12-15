@@ -21,6 +21,7 @@
     "classnames": "^2.5.1",
     "dotenv": "^16.0.2",
     "eslint-config-prettier": "^8.5.0",
+    "exiftool": "^0.0.3",
     "husky": "^9.1.7",
     "path": "^0.12.7",
     "prettier": "^2.7.1",

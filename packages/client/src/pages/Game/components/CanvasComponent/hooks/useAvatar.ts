@@ -1,21 +1,27 @@
+import { RESURSES_URL } from '@/constants/apiUrls';
 import { useState, useEffect } from 'react';
 
-export const useAvatarImage = (avatar: string | null, onAvatarReady: () => void) => {
+export const useAvatarImage = (
+  avatar: string | null,
+  onAvatarReady: (baseColor: string | null, img: HTMLImageElement | null) => void,
+) => {
   const [imageElement, setImageElement] = useState<HTMLImageElement | null>(null);
 
   useEffect(() => {
-    if (avatar?.startsWith('data:image')) {
+    const isRgbColor = avatar?.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+
+    if (isRgbColor) {
+      setImageElement(null);
+      onAvatarReady(avatar, null);
+    } else {
       const img = new Image();
-      img.src = avatar;
+      img.src = avatar?.startsWith('http') ? avatar : `${RESURSES_URL}${avatar}`;
       img.onload = () => {
         setImageElement(img);
-        onAvatarReady();
+        onAvatarReady(null, img);
       };
-    } else {
-      setImageElement(null);
-      onAvatarReady();
     }
-  }, [avatar, onAvatarReady]);
+  }, []);
 
   return imageElement;
 };
