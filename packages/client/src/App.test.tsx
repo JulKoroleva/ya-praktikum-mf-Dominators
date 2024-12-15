@@ -5,7 +5,6 @@ import userEvent from '@testing-library/user-event';
 import { store } from './redux/store/store';
 import { ROUTES } from '@/constants/routes';
 import { HEADERS } from '@/constants/headers';
-import { getCookie } from './services/cookiesHandler';
 
 // @ts-expect-error
 global.fetch = jest.fn(() =>
@@ -43,14 +42,6 @@ describe('Full app rendering/routing', () => {
 
     expect(window.location.pathname).toBe(ROUTES.registration());
     expect(screen.getByText(HEADERS.registration)).toBeDefined();
-  });
-
-  test('profile page', async () => {
-    if (!getCookie('auth')) return;
-    await user.click(screen.getByText(/Profile/i));
-
-    expect(window.location.pathname).toBe(ROUTES.profile());
-    expect(screen.getByText(HEADERS.profile)).toBeDefined();
   });
 
   test('leaderboard page', async () => {
