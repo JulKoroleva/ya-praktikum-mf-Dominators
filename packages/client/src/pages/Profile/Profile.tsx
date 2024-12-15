@@ -6,6 +6,7 @@ import { Button } from 'react-bootstrap';
 import {
   FormComponent,
   ErrorNotification,
+  Loader,
   UniversalModal,
   IModalConfig,
   TModalStatus,
@@ -25,10 +26,11 @@ import { HEADERS } from '@/constants/headers';
 
 import { TypeDispatch } from '@/redux/store';
 
-import styles from './profile.module.scss';
 import { embedTextInImage } from '@/utils/colorFileUtils';
 import { createImageFile } from '@/utils/createImageFile';
 import { base64ToFile } from '@/utils/base64ToFile';
+
+import styles from './profile.module.scss';
 
 export const Profile = () => {
   const navigate = useNavigate();
@@ -170,17 +172,23 @@ export const Profile = () => {
   );
 
   return (
-    <div className={styles['profile-page']}>
-      <div className={styles['form-container']}>
-        <ErrorNotification>{isChangingPassword ? changePassword : settings}</ErrorNotification>
-        <UniversalModal
-          show={modalConfig.show}
-          title={modalConfig.header}
-          status={modalConfig.status}
-          zIndex={2000}
-          onHide={handleCloseModal}
-        />
-      </div>
-    </div>
+    <>
+      {!userInfo?.id ? (
+        <Loader />
+      ) : (
+        <div className={styles['profile-page']}>
+          <div className={styles['form-container']}>
+            <ErrorNotification>{isChangingPassword ? changePassword : settings}</ErrorNotification>
+            <UniversalModal
+              show={modalConfig.show}
+              title={modalConfig.header}
+              status={modalConfig.status}
+              zIndex={2000}
+              onHide={handleCloseModal}
+            />
+          </div>
+        </div>
+      )}
+    </>
   );
 };
