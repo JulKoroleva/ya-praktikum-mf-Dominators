@@ -10,11 +10,14 @@ export const CircleOptions = ({
 }: {
   handleChangeColor: (newColor: Color) => void;
   handleImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  color: Color;
+  color: Color | null;
 }) => (
   <div className={styles['options']}>
     <div className={styles['circle-slider']}>
-      <HueSlider handleChangeColor={handleChangeColor} color={color} />
+      <HueSlider
+        handleChangeColor={handleChangeColor}
+        color={color || { h: 0, s: 0, l: 100, a: 1 }}
+      />
     </div>
     <div className={styles['upload-option']}>
       <label htmlFor="image-upload" className={styles['upload-label']}>

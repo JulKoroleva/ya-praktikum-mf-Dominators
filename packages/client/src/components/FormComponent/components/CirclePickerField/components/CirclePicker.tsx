@@ -12,12 +12,12 @@ export const CirclePicker = ({
 }: {
   onClick: () => void;
   localImage?: string | null;
-  color: Color;
+  color: Color | null;
   fieldValue?: string;
 }) => {
   const backgroundStyles = getBackgroundStyles({
     localImage: localImage || null,
-    color: !localImage ? hslToRgb(color.h, color.s, color.l) : null,
+    color: !localImage && color !== null ? hslToRgb(color.h, color.s, color.l) : null,
     fieldValue,
   });
   return (

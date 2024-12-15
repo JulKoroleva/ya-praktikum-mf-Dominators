@@ -12,8 +12,6 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { TResult } from '../../Game.interface';
 import { RESURSES_URL } from '@/constants/apiUrls';
-import { urlToFile } from '@/utils/urlToFile';
-import { extractTextFromImage } from '@/utils/colorFileUtils';
 
 export function CanvasComponent({
   endGameCallback,

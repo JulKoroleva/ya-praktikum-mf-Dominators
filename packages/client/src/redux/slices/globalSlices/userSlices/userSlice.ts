@@ -8,7 +8,6 @@ import {
 } from '@/redux/requests';
 
 import { IUserSlice } from './userSlice.interface';
-import { RESURSES_URL } from '@/constants/apiUrls';
 
 const initialState: IUserSlice = {
   getUserStatus: 'idle',
