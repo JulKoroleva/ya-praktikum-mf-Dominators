@@ -1,3 +1,3 @@
-export { userSlice, clearUserState, clearChangeUserState } from './userSlice';
+export { userSlice, clearUserState, clearChangeUserState, setUserAvatar } from './userSlice';
 
 export type { IUserSlice, IUserInfo, IUserPassword } from './userSlice.interface';

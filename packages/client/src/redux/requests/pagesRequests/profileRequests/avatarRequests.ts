@@ -7,18 +7,18 @@ export const avatarRequests = createAsyncThunk<string, File, { rejectValue: stri
   async (data, { rejectWithValue }) => {
     const sendData = new FormData();
     sendData.append('avatar', data);
-    const request = await fetch(CHANGE_AVATAR_URL, {
+    const response = await fetch(CHANGE_AVATAR_URL, {
       method: 'PUT',
       body: sendData,
       credentials: 'include',
     });
 
-    if (!request.ok) {
-      const response = await request.json();
-      const rejectReason = response.reason ? response.reason : 'Unknown error';
+    if (!response.ok) {
+      const result = await response.json();
+      const rejectReason = result.reason ? result.reason : 'Unknown error';
       return rejectWithValue(rejectReason);
     }
 
-    return request.json();
+    return response.url;
   },
 );

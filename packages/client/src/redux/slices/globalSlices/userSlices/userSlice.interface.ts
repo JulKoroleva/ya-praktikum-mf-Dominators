@@ -6,7 +6,7 @@ export interface IUserInfo {
   second_name: string;
   display_name?: string;
   login: string;
-  avatar?: string;
+  avatar: string;
   email: string;
   phone: string;
 }
@@ -16,7 +16,8 @@ export interface IUserSlice {
   getUserError?: string;
   changeUserStatus?: TModalStatus;
   changeUserError?: string;
-  userInfo: IUserInfo | null;
+  userInfo: IUserInfo;
+  processedAvatar: string;
 }
 
 export interface IUserPassword {

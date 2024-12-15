@@ -33,11 +33,16 @@ export const userSlice = createSlice({
     clearUserState: state => {
       state.getUserStatus = 'idle';
       state.getUserError = '';
-      state.userInfo = null;
+      state.userInfo = initialState.userInfo;
     },
     clearChangeUserState: state => {
       state.changeUserStatus = 'idle';
       state.changeUserError = '';
+    },
+    setUserAvatar: (state, action) => {
+      if (state.userInfo) {
+        state.userInfo.avatar = action.payload;
+      }
     },
   },
   extraReducers: builder => {
@@ -87,4 +92,4 @@ export const userSlice = createSlice({
   },
 });
 
-export const { clearUserState, clearChangeUserState } = userSlice.actions;
+export const { clearUserState, clearChangeUserState, setUserAvatar } = userSlice.actions;

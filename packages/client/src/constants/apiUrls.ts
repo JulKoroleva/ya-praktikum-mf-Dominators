@@ -1,4 +1,5 @@
 export const MAIN_URL = 'https://ya-praktikum.tech/api/v2';
+export const RESURSES_URL = `${MAIN_URL}/resources/`;
 
 // REGISTRATION
 export const REGISTER_URL = `${MAIN_URL}/auth/signup`;

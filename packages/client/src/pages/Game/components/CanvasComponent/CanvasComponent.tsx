@@ -11,6 +11,9 @@ import { Button } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { TResult } from '../../Game.interface';
+import { RESURSES_URL } from '@/constants/apiUrls';
+import { urlToFile } from '@/utils/urlToFile';
+import { extractTextFromImage } from '@/utils/colorFileUtils';
 
 export function CanvasComponent({
   endGameCallback,
@@ -36,18 +39,37 @@ export function CanvasComponent({
   const [imageElement, setImageElement] = useState<HTMLImageElement | null>(null);
 
   useEffect(() => {
-    if (baseAvatar?.startsWith('data:image')) {
-      const img = new Image();
-      img.src = baseAvatar;
-      img.onload = () => {
-        setImageElement(img);
-      };
-    } else {
-      if (!controllerRef.current) {
-        controllerRef.current = new CanvasController(baseAvatar || 'rgb(0, 0, 0)', undefined);
-        animate();
+    const processAvatar = async () => {
+      const isRgbColor = baseAvatar?.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+
+      if (isRgbColor) {
+        if (!controllerRef.current) {
+          controllerRef.current = new CanvasController(baseAvatar, undefined);
+          animate();
+        }
+        return;
       }
-    }
+
+      try {
+        const avatarFile = await urlToFile(`${RESURSES_URL}${baseAvatar}`, 'avatar_image.jpg');
+        const extractedColor = await extractTextFromImage(avatarFile);
+
+        if (extractedColor) {
+          if (!controllerRef.current) {
+            controllerRef.current = new CanvasController(extractedColor, undefined);
+            animate();
+          }
+        }
+      } catch (error) {
+        const img = new Image();
+        img.src = `${RESURSES_URL}${baseAvatar}`;
+        img.onload = () => {
+          setImageElement(img);
+        };
+      }
+    };
+
+    processAvatar();
   }, [baseAvatar]);
 
   useEffect(() => {
