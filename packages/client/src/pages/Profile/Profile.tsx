@@ -11,7 +11,12 @@ import {
   TModalStatus,
 } from '@/components';
 
-import { profileRequests, passwordRequests, avatarRequests } from '@/redux/requests';
+import {
+  profileRequests,
+  passwordRequests,
+  avatarRequests,
+  getUserInfoRequest,
+} from '@/redux/requests';
 import { clearChangeUserState, IUserInfo, IUserPassword } from '@/redux/slices';
 import { selectUser, selectUserError, selectUserStatus } from '@/redux/selectors';
 
@@ -23,6 +28,7 @@ import { TypeDispatch } from '@/redux/store';
 import styles from './profile.module.scss';
 import { embedTextInImage } from '@/utils/colorFileUtils';
 import { createImageFile } from '@/utils/createImageFile';
+import { base64ToFile } from '@/utils/base64ToFile';
 
 export const Profile = () => {
   const navigate = useNavigate();
@@ -58,14 +64,14 @@ export const Profile = () => {
           const generatedImage = await createImageFile(100, 100, userInfo.avatar as string);
           const colorFile = await embedTextInImage(generatedImage, userInfo.avatar);
           const response = await dispatch(avatarRequests(colorFile));
-
           avatarUrl = response.payload as string;
         } catch (error) {
           return;
         }
-      } else if (userInfo.avatar instanceof File) {
+      } else if (userInfo.avatar.startsWith('data:image/')) {
         try {
-          const response = await dispatch(avatarRequests(userInfo.avatar));
+          const file = base64ToFile(userInfo.avatar, 'avatar.jpg');
+          const response = await dispatch(avatarRequests(file));
           avatarUrl = response.payload as string;
         } catch (error) {
           return;
@@ -73,7 +79,8 @@ export const Profile = () => {
       }
 
       const updatedData: IUserInfo = { ...userInfo, avatar: avatarUrl };
-      dispatch(profileRequests(updatedData));
+      await dispatch(profileRequests(updatedData));
+      dispatch(getUserInfoRequest());
     }
   };
 

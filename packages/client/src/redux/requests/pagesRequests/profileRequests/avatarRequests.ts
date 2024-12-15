@@ -7,6 +7,7 @@ export const avatarRequests = createAsyncThunk<string, File, { rejectValue: stri
   async (data, { rejectWithValue }) => {
     const sendData = new FormData();
     sendData.append('avatar', data);
+
     const response = await fetch(CHANGE_AVATAR_URL, {
       method: 'PUT',
       body: sendData,
@@ -19,6 +20,12 @@ export const avatarRequests = createAsyncThunk<string, File, { rejectValue: stri
       return rejectWithValue(rejectReason);
     }
 
-    return response.url;
+    const result = await response.json();
+
+    if (!result.avatar) {
+      return rejectWithValue('Avatar path not found in response');
+    }
+
+    return result.avatar;
   },
 );

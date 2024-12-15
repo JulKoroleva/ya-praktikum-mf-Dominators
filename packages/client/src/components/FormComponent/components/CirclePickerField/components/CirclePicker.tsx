@@ -7,13 +7,11 @@ import { hslToRgb } from '../utils/hslToRgb';
 export const CirclePicker = ({
   onClick,
   localImage = null,
-  // avatar,
   color,
   fieldValue = '',
 }: {
   onClick: () => void;
   localImage?: string | null;
-  // avatar: string | null;
   color: Color;
   fieldValue?: string;
 }) => {

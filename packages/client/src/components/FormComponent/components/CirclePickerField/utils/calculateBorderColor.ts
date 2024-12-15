@@ -21,10 +21,8 @@ export const calculateBorderColor = (
     return `rgb(${Math.round(darkenedR)}, ${Math.round(darkenedG)}, ${Math.round(darkenedB)})`;
   }
 
-  // Проверяем, что color не null
   if (!color) {
-    console.error('Color is null or undefined');
-    return 'transparent'; // Возвращаем прозрачный цвет, если color не определён
+    return 'transparent';
   }
 
   const rgbValue = hslToRgb(color.h, color.s, color.l * 0.8);

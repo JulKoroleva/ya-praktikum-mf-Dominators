@@ -33,43 +33,30 @@ export function CanvasComponent({
 
   const controllerRef = useRef<CanvasController | null>(null);
   const baseAvatar = useSelector(
-    (state: RootState) => state.global.user.userInfo?.avatar || 'rgb(0, 0, 0)',
+    (state: RootState) => state.global.user.processedAvatar || 'rgb(0, 0, 0)',
   );
 
   const [imageElement, setImageElement] = useState<HTMLImageElement | null>(null);
 
   useEffect(() => {
-    const processAvatar = async () => {
-      const isRgbColor = baseAvatar?.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+    const isRgbColor = baseAvatar?.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
 
-      if (isRgbColor) {
+    if (isRgbColor) {
+      if (!controllerRef.current) {
+        controllerRef.current = new CanvasController(baseAvatar, undefined);
+        animate();
+      }
+    } else {
+      const img = new Image();
+      img.src = baseAvatar.startsWith('http') ? baseAvatar : `${RESURSES_URL}${baseAvatar}`;
+      img.onload = () => {
+        setImageElement(img);
         if (!controllerRef.current) {
-          controllerRef.current = new CanvasController(baseAvatar, undefined);
+          controllerRef.current = new CanvasController('rgb(0, 0, 0)', img);
           animate();
         }
-        return;
-      }
-
-      try {
-        const avatarFile = await urlToFile(`${RESURSES_URL}${baseAvatar}`, 'avatar_image.jpg');
-        const extractedColor = await extractTextFromImage(avatarFile);
-
-        if (extractedColor) {
-          if (!controllerRef.current) {
-            controllerRef.current = new CanvasController(extractedColor, undefined);
-            animate();
-          }
-        }
-      } catch (error) {
-        const img = new Image();
-        img.src = `${RESURSES_URL}${baseAvatar}`;
-        img.onload = () => {
-          setImageElement(img);
-        };
-      }
-    };
-
-    processAvatar();
+      };
+    }
   }, [baseAvatar]);
 
   useEffect(() => {

@@ -8,6 +8,7 @@ import {
 } from '@/redux/requests';
 
 import { IUserSlice } from './userSlice.interface';
+import { RESURSES_URL } from '@/constants/apiUrls';
 
 const initialState: IUserSlice = {
   getUserStatus: 'idle',
@@ -24,6 +25,7 @@ const initialState: IUserSlice = {
     email: '',
     phone: '',
   },
+  processedAvatar: 'rgb(0, 224, 255)',
 };
 
 export const userSlice = createSlice({
@@ -40,9 +42,7 @@ export const userSlice = createSlice({
       state.changeUserError = '';
     },
     setUserAvatar: (state, action) => {
-      if (state.userInfo) {
-        state.userInfo.avatar = action.payload;
-      }
+      state.processedAvatar = action.payload;
     },
   },
   extraReducers: builder => {
@@ -53,7 +53,8 @@ export const userSlice = createSlice({
       .addCase(getUserInfoRequest.fulfilled, (state, action) => {
         state.getUserStatus = 'succeeded';
         state.getUserError = '';
-        state.userInfo = action.payload;
+        state.userInfo = action.payload.userInfo;
+        state.processedAvatar = action.payload.processedAvatar;
       })
       .addCase(getUserInfoRequest.rejected, (state, action) => {
         state.getUserStatus = 'failed';
@@ -80,12 +81,10 @@ export const userSlice = createSlice({
         state.changeUserStatus = 'loading';
       })
       .addCase(passwordRequests.fulfilled, state => {
-        console.log('succeeded');
         state.changeUserStatus = 'succeeded';
         state.changeUserError = '';
       })
       .addCase(passwordRequests.rejected, (state, action) => {
-        console.log('failed');
         state.changeUserStatus = 'failed';
         state.changeUserError = action.payload as string;
       });

@@ -1,6 +1,6 @@
 export const urlToFile = async (url: string, fileName: string): Promise<File> => {
   try {
-    const response = await fetch(url, { credentials: 'include' }); // Добавлено включение куки
+    const response = await fetch(url, { credentials: 'include' });
     if (!response.ok) {
       throw new Error(`Failed to fetch image from URL: ${url}`);
     }
