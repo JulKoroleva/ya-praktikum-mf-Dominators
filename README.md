@@ -7,7 +7,7 @@ DOMinators  — это аркада, в которой игрок управля
 Этот проект — клон оригинальной Agar.IO, созданный для обучения и расширения навыков веб-разработки.
 
 
-### Демо игры - https://dominatorsgame.netlify.app/profile
+### Демо игры - https://dominatorsgame.netlify.app
 ### Видео-презентация задач 5 и 6 спринтов
 https://disk.yandex.ru/i/Ab5oxhYAhM4bZw
 
