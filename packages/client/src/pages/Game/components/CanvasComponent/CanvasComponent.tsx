@@ -15,6 +15,7 @@ import { TResult } from '../../Game.interface';
 
 import fullScrenIcon from '@/assets/icons/screen-full.svg';
 import normalScrenIcon from '@/assets/icons/screen-normal.svg';
+import backArrow from '@/assets/icons/back.svg';
 
 export function CanvasComponent({
   endGameCallback,
@@ -170,7 +171,7 @@ export function CanvasComponent({
             toggleFullscreen(parentElement, false);
             onBackButtonClick();
           }}>
-          <img src="/src/assets/icons/back.svg" alt="back arrow" />
+          <img src={backArrow} alt="back arrow" />
         </Button>
       </div>
       <Button
