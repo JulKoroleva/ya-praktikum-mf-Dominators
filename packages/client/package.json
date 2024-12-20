@@ -1,11 +1,10 @@
 {
   "name": "client",
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
+    "dev": "tsc --project tsconfig.server.json && cross-env NODE_ENV=development node server/index.js",
+    "build": "tsc --project tsconfig.server.json && vite build && vite build --ssr src/entry-server.tsx --outDir dist/server",
+    "preview": "node server/index.js",
     "lint": "eslint .",
     "lint:styles": "stylelint \"packages/client/**/*.scss\" --cache",
     "fix:styles": "stylelint \"packages/client/**/*.scss\" --fix",
@@ -22,6 +21,7 @@
     "dotenv": "^16.0.2",
     "eslint-config-prettier": "^8.5.0",
     "exiftool": "^0.0.3",
+    "express": "^4.21.2",
     "husky": "^9.1.7",
     "path": "^0.12.7",
     "prettier": "^2.7.1",
@@ -38,6 +38,7 @@
     "react-spinners": "^0.14.1",
     "react-textarea-autosize": "^8.5.5",
     "tsparticles": "^3.7.1",
+    "vite": "4.4.9",
     "vite-plugin-svgr": "^4.3.0"
   },
   "devDependencies": {
@@ -63,8 +64,7 @@
     "stylelint-config-standard-scss": "^13.1.0",
     "stylelint-scss": "^6.9.0",
     "ts-jest": "^28.0.8",
-    "typescript": "^4.8.2",
-    "vite": "^3.0.7"
+    "typescript": "^4.8.2"
   },
   "license": "MIT"
 }
