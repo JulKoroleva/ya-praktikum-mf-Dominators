@@ -1,10 +1,16 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { MockPage } from './MockPage';
+
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+
+import { routes } from './routes';
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
+
+const router = createBrowserRouter(routes);
 
 ReactDOM.hydrateRoot(
   document.getElementById('root') as HTMLElement,
-  <React.StrictMode>
-    <MockPage />
-  </React.StrictMode>,
+  <Provider store={store}>
+    <RouterProvider router={router} />
+  </Provider>,
 );

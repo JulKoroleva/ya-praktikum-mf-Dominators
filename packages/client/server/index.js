@@ -71,7 +71,7 @@ async function createServer() {
                 render = (await (_a = pathToServer, Promise.resolve().then(() => __importStar(require(_a))))).render;
             }
             // Получаем HTML-строку из JSX
-            const appHtml = await render();
+            const { html: appHtml, initialState } = await render(req);
             // Заменяем комментарий на сгенерированную HTML-строку
             const html = template.replace(`<!--ssr-outlet-->`, appHtml);
             // Завершаем запрос и отдаём HTML-страницу
