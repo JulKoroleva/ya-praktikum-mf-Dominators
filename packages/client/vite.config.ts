@@ -29,10 +29,13 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
-      util: "node:util",
+      util: 'node:util',
     },
   },
   build: {
     outDir: join(__dirname, 'dist/client'),
+  },
+  optimizeDeps: {
+    include: ['react-slider-color-picker'],
   },
 });

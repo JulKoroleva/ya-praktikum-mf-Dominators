@@ -30,7 +30,7 @@ export const createFetchRequest = (req: ExpressRequest) => {
     method: string;
     headers: Headers;
     signal: AbortSignal;
-    body?: any;
+    body?: BodyInit | null;
   } = {
     method: req.method,
     headers,
