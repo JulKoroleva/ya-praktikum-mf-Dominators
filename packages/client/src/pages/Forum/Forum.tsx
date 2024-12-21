@@ -22,7 +22,7 @@ export const Forum = () => {
    * ВРЕМЕННО. УБРАТЬ В GAME-30. До полноценной настройки SRR на клиенте возникает ошибка document is undefined.
    * Т.К. мы идём за куки до того, как документ отрендерился. фиксится в уроке 7/12 SSR */
   if (typeof window === 'undefined') {
-    return;
+    return <></>;
   }
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [topicList, setTopicList] = useState<TTopic[]>([]);
