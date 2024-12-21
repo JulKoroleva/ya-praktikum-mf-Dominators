@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config();
-
+import serialize from 'serialize-javascript';
 import fs from 'fs/promises';
 import { createServer as createViteServer, ViteDevServer } from 'vite';
 import express, { Request as ExpressRequest } from 'express';
@@ -56,7 +56,12 @@ async function createServer() {
       const { html: appHtml, initialState } = await render(req);
 
       // Заменяем комментарий на сгенерированную HTML-строку
-      const html = template.replace(`<!--ssr-outlet-->`, appHtml);
+      const html = template.replace(`<!--ssr-outlet-->`, appHtml).replace(
+        `<!--ssr-initial-state-->`,
+        `<script>window.APP_INITIAL_STATE = ${serialize(initialState, {
+          isJSON: true,
+        })}</script>`,
+      );
 
       // Завершаем запрос и отдаём HTML-страницу
       res.status(200).set({ 'Content-Type': 'text/html' }).end(html);

@@ -2,7 +2,7 @@
   "name": "client",
   "version": "0.0.0",
   "scripts": {
-    "dev": "tsc --project tsconfig.server.json && cross-env NODE_ENV=development node server/index.js",
+    "dev": "tsc --project tsconfig.server.json && cross-env NODE_ENV=development EXTERNAL_SERVER_URL='http://localhost:3001' INTERNAL_SERVER_URL='http://localhost:3001' node server/index.js",
     "build": "tsc --project tsconfig.server.json && vite build && vite build --ssr src/entry-server.tsx --outDir dist/server",
     "preview": "node server/index.js",
     "lint": "eslint .",
@@ -10,7 +10,7 @@
     "fix:styles": "stylelint \"packages/client/**/*.scss\" --fix",
     "format": "prettier --write .",
     "test": "jest ./",
-    "start": "tsc && vite build && node server.cjs"
+    "start": "tsc && vite build && node server/index.js"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.3.0",
@@ -37,6 +37,8 @@
     "react-slider-color-picker": "^2.0.0",
     "react-spinners": "^0.14.1",
     "react-textarea-autosize": "^8.5.5",
+    "redux": "^5.0.1",
+    "serialize-javascript": "^6.0.2",
     "tsparticles": "^3.7.1",
     "vite": "4.4.9",
     "vite-plugin-svgr": "^4.3.0"

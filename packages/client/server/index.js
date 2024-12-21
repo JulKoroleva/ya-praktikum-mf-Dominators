@@ -28,6 +28,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
+const serialize_javascript_1 = __importDefault(require("serialize-javascript"));
 const promises_1 = __importDefault(require("fs/promises"));
 const vite_1 = require("vite");
 const express_1 = __importDefault(require("express"));
@@ -73,7 +74,9 @@ async function createServer() {
             // Получаем HTML-строку из JSX
             const { html: appHtml, initialState } = await render(req);
             // Заменяем комментарий на сгенерированную HTML-строку
-            const html = template.replace(`<!--ssr-outlet-->`, appHtml);
+            const html = template.replace(`<!--ssr-outlet-->`, appHtml).replace(`<!--ssr-initial-state-->`, `<script>window.APP_INITIAL_STATE = ${(0, serialize_javascript_1.default)(initialState, {
+                isJSON: true,
+            })}</script>`);
             // Завершаем запрос и отдаём HTML-страницу
             res.status(200).set({ 'Content-Type': 'text/html' }).end(html);
         }

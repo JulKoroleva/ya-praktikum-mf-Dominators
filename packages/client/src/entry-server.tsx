@@ -9,13 +9,17 @@ import {
 } from 'react-router-dom/server';
 
 import { createFetchRequest } from './entry-server.utils';
-import { store } from './redux/store/store';
 import { routes } from './routes';
+import { configureStore } from '@reduxjs/toolkit';
+import { reducer } from './redux/store/store';
 
 export const render = async (req: ExpressRequest) => {
   const { query, dataRoutes } = createStaticHandler(routes);
   const fetchRequest = createFetchRequest(req);
   const context = await query(fetchRequest);
+  const store = configureStore({
+    reducer,
+  });
 
   if (context instanceof Response) {
     throw context;
