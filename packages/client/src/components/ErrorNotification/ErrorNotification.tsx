@@ -1,7 +1,7 @@
 import React, { ComponentType } from 'react';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
-import styles from './ErrorNotification.module.scss';
 import { IErrorNotificationProps } from './ErrorNotification.interface';
+import styles from './ErrorNotification.module.scss';
 
 const FallbackComponent: ComponentType<FallbackProps> = ({ error }) => (
   <div className={styles['notification-error']}>Something went wrong: {error.message}</div>
