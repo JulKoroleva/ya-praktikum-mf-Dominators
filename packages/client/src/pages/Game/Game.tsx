@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Popup, UniversalModal } from '@/components';
 import { EndGame, StartGame, CanvasComponent } from './components';
 import { TResult } from './Game.interface';
@@ -6,9 +6,17 @@ import { MODAL_CONTENT } from './components/CanvasComponent/constants/modal.cons
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import { GoBackModalContent } from './components/GoBackModal/GoBackModal';
+import { addLeaderBoardEntry } from '@/redux/requests/pagesRequests/leaderBoardRequest/leaderBoardRequest';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState, TypeDispatch } from '@/redux/store';
+import { getCookie } from '@/services/cookiesHandler';
+import { useIsAuthorized } from '@/services/hooks';
 
 export const Game = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch<TypeDispatch>();
+  const [isAuthorized, setIsAuthorized] = useIsAuthorized();
+  const playerInfo = useSelector((state: RootState) => state.global.user.userInfo);
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [result, setResult] = useState<Array<Array<TResult>>>([]);
   const [isEndedGame, setEndedGame] = useState(false);
@@ -16,13 +24,30 @@ export const Game = () => {
 
   const [showModal, setShowModal] = useState(false);
 
+  const authCookie = getCookie('auth');
+
+  useEffect(() => {
+    setIsAuthorized(!!authCookie);
+  }, [authCookie]);
+
   const handleStartGame = () => {
     setIsGameStarted(true);
   };
 
-  const handleEndGame = (result: Array<TResult> = []) => {
+  const handleEndGame = async (result: Array<TResult> = []) => {
     setResult(prev => [result, ...prev]);
     setEndedGame(true);
+    const scorePoints = result.find(res => res.title === 'Score Points')?.value || 0;
+
+    const leaderboardData = {
+      username: playerInfo?.first_name || 'Guest',
+      scoredominators: scorePoints,
+      id: playerInfo?.id || 0,
+    };
+
+    if (isAuthorized) {
+      await dispatch(addLeaderBoardEntry(leaderboardData));
+    }
   };
 
   const handleRepeat = () => {

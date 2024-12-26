@@ -24,5 +24,17 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+
+    &_empty {
+      text-align: center;
+      margin-top: 20px;
+      opacity: 0.5;
+    }
   }
+}
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  height: 100vh;
 }

@@ -31,10 +31,14 @@ import { createImageFile } from '@/utils/createImageFile';
 import { base64ToFile } from '@/utils/base64ToFile';
 
 import styles from './profile.module.scss';
+import { useIsAuthorized } from '@/services/hooks';
+import { ROUTES } from '@/constants/routes';
+import { getCookie } from '@/services/cookiesHandler';
 
 export const Profile = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<TypeDispatch>();
+  const [isAuthorized, setIsAuthorized] = useIsAuthorized();
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const userInfo = useSelector(selectUser);
   const userStatus = useSelector(selectUserStatus);
@@ -45,6 +49,8 @@ export const Profile = () => {
     header: '',
     status: undefined,
   });
+
+  const authCookie = getCookie('auth');
 
   const onSubmit = async (data: IUserInfo | IUserPassword) => {
     if (isChangingPassword) {
@@ -170,6 +176,15 @@ export const Profile = () => {
       </Button>
     </>
   );
+
+  useEffect(() => {
+    setIsAuthorized(!!authCookie);
+  }, [authCookie]);
+
+  if (!isAuthorized) {
+    navigate(ROUTES.authorization());
+    return null;
+  }
 
   return (
     <>
