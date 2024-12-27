@@ -7,6 +7,7 @@ export const ROUTES = {
   forum: () => `/forum`,
   profile: () => `/profile`,
   leaderboard: () => `/leaderboard`,
+  oAuthTokenPage: () => `/oauth`,
   error: (code: string | number = ':code') => `/error/${code}`,
   topic: (id?: number) => `/forum/${id || ':id'}`,
 };

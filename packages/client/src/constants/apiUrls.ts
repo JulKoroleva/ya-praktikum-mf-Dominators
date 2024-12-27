@@ -15,3 +15,7 @@ export const GET_USER_INFO_URL = `${MAIN_URL}/auth/user`;
 export const PROFILE_URL = `${MAIN_URL}/user/profile`;
 export const CHANGE_PASSWORD_URL = `${MAIN_URL}/user/password`;
 export const CHANGE_AVATAR_URL = `${MAIN_URL}/user/profile/avatar`;
+
+//OAUTH
+export const GET_SERVICE_ID = `${MAIN_URL}/oauth/yandex/service-id`;
+export const OAUTH_SIGN_IN_UP = `${MAIN_URL}/oauth/yandex`;
