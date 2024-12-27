@@ -2,6 +2,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
 import { authenticationReducer } from '../reducers/pageReducers/authenticationReducer';
 import { globalReducer } from '../reducers/globalReducers';
+import { leaderboardReducer } from '../reducers/pageReducers/leaderBoardReducer/leaderBoardReducer';
 
 // Глобально декларируем в window наш ключ
 // и задаем ему тип такой же, как у стейта в сторе
@@ -14,6 +15,7 @@ declare global {
 export const reducer = combineReducers({
   authentication: authenticationReducer,
   global: globalReducer,
+  leaderboard: leaderboardReducer,
 });
 
 export const store = configureStore({

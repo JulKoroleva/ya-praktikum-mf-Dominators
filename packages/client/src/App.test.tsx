@@ -44,13 +44,6 @@ describe('Full app rendering/routing', () => {
     expect(screen.getByText(HEADERS.registration)).toBeDefined();
   });
 
-  test('leaderboard page', async () => {
-    await user.click(screen.getByText(/Leaderboard/i));
-
-    expect(window.location.pathname).toBe(ROUTES.leaderboard());
-    expect(screen.getByText(HEADERS.leaderboard)).toBeDefined();
-  });
-
   test('forum page', async () => {
     await user.click(screen.getByText(/Forum/i));
 

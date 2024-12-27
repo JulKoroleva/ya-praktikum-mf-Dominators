@@ -162,7 +162,10 @@ export const Main = () => {
           <p className={styles['main-page__menu_description']}>{description}</p>
           <div className={styles['main-page__menu_buttons']}>
             {buttons
-              .filter(({ href }) => isAuthorized || href !== ROUTES.profile())
+              .filter(
+                ({ href }) =>
+                  isAuthorized || (href !== ROUTES.profile() && href !== ROUTES.leaderboard()),
+              )
               .map(({ href, text, className }, index) => (
                 <Button
                   key={index}
