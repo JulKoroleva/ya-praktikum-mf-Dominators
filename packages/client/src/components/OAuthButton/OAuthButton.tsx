@@ -34,10 +34,12 @@ function OAuthButton({ onSuccess, onError }: IOAuthButtonProps) {
   };
 
   useEffect(() => {
+    const tokenPageOrigin = window.location.origin;
+
     async function fetchServiceId() {
       try {
         const response = await OAuthApi.getServiceId({
-          redirect_uri: `${window.location.origin}${ROUTES.oAuthTokenPage()}`,
+          redirect_uri: `${tokenPageOrigin}${ROUTES.oAuthTokenPage()}`,
         });
 
         if (response) {
@@ -46,9 +48,8 @@ function OAuthButton({ onSuccess, onError }: IOAuthButtonProps) {
           const oauthQueryParams = {
             response_type: 'code',
             client_id: serviceId,
-            redirect_uri: `${window.location.origin}${ROUTES.oAuthTokenPage()}`,
+            redirect_uri: `${tokenPageOrigin}${ROUTES.oAuthTokenPage()}`,
           };
-          const tokenPageOrigin = window.location.origin;
           // At the moment it is impossible to pull up user data from Yandex to display it in a button
           // due to Content Security Policy, which does not work on localhost,
           // so the button is activated after 5 seconds timeout
