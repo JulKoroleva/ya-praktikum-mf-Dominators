@@ -52,7 +52,7 @@ export const getUserInfoRequest = createAsyncThunk<
 
 export const fetchUserThunk = createAsyncThunk(
   'user/fetchUserThunk',
-  async (_: void) => {
+  async () => {
     const url = `${SERVER_HOST}/user`
     return fetch(url).then(res => res.json())
   }
