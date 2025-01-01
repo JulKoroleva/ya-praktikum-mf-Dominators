@@ -18,3 +18,7 @@ app.get('/', (_, res) => {
 app.listen(port, () => {
   console.log(`  ➜ 🎸 Server is listening on port: ${port}`);
 });
+
+app.get('/user', (_, res) => {
+  res.json({ name: '</script>Степа', secondName: 'Степанов' })
+})

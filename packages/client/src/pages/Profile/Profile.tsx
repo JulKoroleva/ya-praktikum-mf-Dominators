@@ -141,7 +141,15 @@ export const Profile = () => {
   const settings = (
     <>
       <h1>{HEADERS.profile}</h1>
-      <FormComponent
+      {userInfo ? (
+        <div>
+          <p>{userInfo.first_name}</p>
+          <p>{userInfo.second_name}</p>
+        </div>
+      ) : (
+        <p>Пользователь не найден!</p>
+      )}
+      {/* <FormComponent
         fields={settingsFields}
         onSubmit={onSubmit}
         initialValues={userInfo || undefined}
@@ -152,7 +160,7 @@ export const Profile = () => {
         variant="primary"
         onClick={() => setIsChangingPassword(true)}>
         Change password
-      </Button>
+      </Button> */}
       <Button
         className={styles['back-button']}
         type="button"

@@ -1,12 +1,16 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { IUserInfo } from '@/redux/slices/globalSlices/userSlices/userSlice.interface';
-import { GET_USER_INFO_URL, RESURSES_URL } from '@/constants/apiUrls';
+
+import { GET_USER_INFO_URL, RESOURCES_URL } from '@/constants/apiUrls';
+import { SERVER_HOST } from "@/constants/serverHost";
+
 import { extractTextFromImage } from '@/utils/colorFileUtils';
 import { urlToFile } from '@/utils/urlToFile';
 
+import { IUserInfo } from '@/redux/slices/globalSlices/userSlices/userSlice.interface';
+
 async function processUserAvatarSync(avatar: string): Promise<string> {
   try {
-    const avatarUrl = `${RESURSES_URL}${avatar}`;
+    const avatarUrl = `${RESOURCES_URL}${avatar}`;
     const avatarFile = await urlToFile(avatarUrl, 'avatar_image.jpg');
     const extractedColor = await extractTextFromImage(avatarFile);
 
@@ -16,7 +20,7 @@ async function processUserAvatarSync(avatar: string): Promise<string> {
 
     return avatarUrl;
   } catch (error) {
-    return `${RESURSES_URL}${avatar}`;
+    return `${RESOURCES_URL}${avatar}`;
   }
 }
 
@@ -45,3 +49,11 @@ export const getUserInfoRequest = createAsyncThunk<
 
   return { userInfo, processedAvatar };
 });
+
+export const fetchUserThunk = createAsyncThunk(
+  'user/fetchUserThunk',
+  async (_: void) => {
+    const url = `${SERVER_HOST}/user`
+    return fetch(url).then(res => res.json())
+  }
+)
