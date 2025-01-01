@@ -6,7 +6,7 @@ import { createServer as createViteServer, ViteDevServer } from 'vite';
 import express, { Request as ExpressRequest } from 'express';
 import path from 'path';
 
-const port = process.env.PORT || 80;
+const port = process.env.PORT || 3000;
 const clientPath = path.join(__dirname, '..');
 const isDev = process.env.NODE_ENV === 'development';
 

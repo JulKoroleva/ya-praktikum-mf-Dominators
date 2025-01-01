@@ -10,6 +10,7 @@ import {
   Topic,
 } from '@/pages';
 import { ROUTES } from './constants/routes';
+import { OAuthTokenPage } from './pages/OAuthTokenPage';
 
 export const routes = [
   { path: ROUTES.authorization(), element: <Authorization /> },
@@ -19,6 +20,7 @@ export const routes = [
   { path: ROUTES.game(), element: <Game /> },
   { path: ROUTES.forum(), element: <Forum /> },
   { path: ROUTES.leaderboard(), element: <Leaderboard /> },
+  { path: ROUTES.oAuthTokenPage(), element: <OAuthTokenPage /> },
   { path: ROUTES.profile(), element: <Profile /> },
   { path: ROUTES.error(':code'), element: <Error /> },
   { path: ROUTES.topic(), element: <Topic /> },

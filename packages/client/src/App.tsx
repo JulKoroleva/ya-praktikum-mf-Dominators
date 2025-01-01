@@ -20,6 +20,7 @@ import { getUserInfoRequest } from './redux/requests';
 import { ROUTES } from '@/constants/routes';
 
 import { getCookie } from './services/cookiesHandler';
+import { OAuthTokenPage } from './pages/OAuthTokenPage';
 
 const authCookie = getCookie('auth');
 
@@ -31,6 +32,7 @@ const routes = [
   { path: ROUTES.forum(), element: <Forum /> },
   { path: ROUTES.leaderboard(), element: <Leaderboard /> },
   { path: ROUTES.profile(), element: <Profile /> },
+  { path: ROUTES.oAuthTokenPage(), element: <OAuthTokenPage /> },
   { path: ROUTES.error(':code'), element: <Error /> },
   { path: ROUTES.topic(), element: <Topic /> },
   {

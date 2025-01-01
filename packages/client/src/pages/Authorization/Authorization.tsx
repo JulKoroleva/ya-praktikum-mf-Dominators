@@ -27,6 +27,7 @@ import { HEADERS } from '@/constants/headers';
 import { setCustomCookieWithMaxAge } from '@/services/cookiesHandler';
 
 import styles from './Authorization.module.scss';
+import OAuthButton from '@/components/OAuthButton/OAuthButton';
 
 export const Authorization = () => {
   const navigate = useNavigate();
@@ -52,6 +53,19 @@ export const Authorization = () => {
     if (status === 'succeeded') {
       navigate(ROUTES.main());
     }
+  };
+
+  const handleCreateOAuthReques = (code: string) => {
+    const request = {
+      code: JSON.parse(code)['code'],
+      redirect_uri: `${window.location.origin}${ROUTES.oAuthTokenPage()}`,
+    };
+    onSubmit(request);
+  };
+
+  const handleOAuthError = (errorMessage: string) => {
+    dispatch(clearAuthorizationState());
+    setModalConfig({ show: true, header: errorMessage, status: 'failed' });
   };
 
   useEffect(() => {
@@ -118,6 +132,7 @@ export const Authorization = () => {
             onClick={() => navigate('/registration')}>
             Create account
           </Button>
+          <OAuthButton onSuccess={handleCreateOAuthReques} onError={handleOAuthError} />
         </ErrorNotification>
         <UniversalModal
           show={modalConfig.show}
