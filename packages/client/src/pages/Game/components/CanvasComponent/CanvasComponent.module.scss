@@ -35,6 +35,20 @@ canvas {
       color: $color-medium-grey;
     }
   }
+
+  &__progress {
+    display: flex;
+    width: 100px;
+    height: 15px;
+    background: grey;
+    margin-top: 10px;
+    &__fill {
+      background: yellow;
+    }
+    &__complete {
+      background: green;
+    }
+  }
 }
 
 .back-button {
