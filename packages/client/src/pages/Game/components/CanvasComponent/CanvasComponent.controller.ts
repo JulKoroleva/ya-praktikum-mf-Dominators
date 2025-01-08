@@ -5,13 +5,7 @@ import {
   START_PLAYER_RADIUS,
 } from '@/constants/game';
 
-import {
-  CameraModel,
-  EnemyStatic,
-  MapRegionModel,
-  PlayerFeatureModel,
-  PlayerModel,
-} from './models';
+import { CameraModel, EnemyStatic, MapRegionModel, PlayerModel } from './models';
 
 import { STATUS } from './interfaces/CanvasComponent.interface';
 
@@ -203,9 +197,6 @@ export class CanvasController {
         element.Status = STATUS.DEAD;
         if (target instanceof EnemyStatic) {
           target.prepareMove(element.X, element.Y);
-        }
-        if (target instanceof PlayerFeatureModel) {
-          target.Score++;
         }
       }
     }
