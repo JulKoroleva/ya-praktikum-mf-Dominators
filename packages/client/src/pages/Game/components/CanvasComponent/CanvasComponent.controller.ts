@@ -204,25 +204,28 @@ export class CanvasController {
 
   public CollisionEnemyDetection() {
     for (const element of this.EnemyFields) {
-      if (element instanceof EnemyPlayerModel) {
-        if (IsCollided(element, this.Player.Player)) {
-          if (this.Player.Player.Radius <= element.Radius) {
-            /** @TODO там как-то разлетается он вроде */
-            this.Player.Player.Status = STATUS.DEAD;
-            return;
-          }
+      if (!(element instanceof EnemyStatic)) {
+        continue;
+      }
 
-          const collisionAngle = Math.atan2(
-            element.Y - this.Player.Player.Y,
-            element.X - this.Player.Player.X,
-          );
-          const deformationAmount = Math.min(element.Radius, this.Player.Player.Radius) * 0.3;
+      const { Player } = this.Player;
+      const dx = element.X - Player.X;
+      const dy = element.Y - Player.Y;
+      const distSq = dx * dx + dy * dy;
+      const sumRadius = element.Radius + Player.Radius;
+      const sumRadiusSq = sumRadius * sumRadius;
 
-          this.Player.Player.DeformationX -= Math.cos(collisionAngle) * deformationAmount;
-          this.Player.Player.DeformationY -= Math.sin(collisionAngle) * deformationAmount;
+      if (distSq > sumRadiusSq) {
+        continue;
+      }
 
-          element.DeformationX += Math.cos(collisionAngle) * deformationAmount;
-          element.DeformationY += Math.sin(collisionAngle) * deformationAmount;
+      if (Player.Radius > element.Radius) {
+        const massLossRate = 0.003;
+        const massLoss = Player.Radius * massLossRate;
+
+        Player.Radius -= massLoss;
+        if (Player.Radius <= 0.5) {
+          Player.Status = STATUS.DEAD;
         }
       }
     }
