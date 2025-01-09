@@ -17,7 +17,7 @@ export class PlayerModel {
   }
 
   public get MyScore() {
-    return this.Player.Score;
+    return Math.round(this.Player.Radius * 10);
   }
 
   moveDivision(camera: CameraModel, mouseX: number, mouseY: number) {
