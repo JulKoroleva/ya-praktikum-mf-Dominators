@@ -68,6 +68,8 @@ export class CanvasController {
     const playerX = Player.X;
     const playerY = Player.Y;
 
+    this.CollisionEnemyToEnemyDetection();
+
     this.EnemyPlayers = this.EnemyPlayers.filter(el => el.Status !== STATUS.DEAD);
 
     for (const element of this.EnemyPlayers) {
@@ -209,23 +211,89 @@ export class CanvasController {
       }
 
       const { Player } = this.Player;
-      const dx = element.X - Player.X;
-      const dy = element.Y - Player.Y;
-      const distSq = dx * dx + dy * dy;
-      const sumRadius = element.Radius + Player.Radius;
-      const sumRadiusSq = sumRadius * sumRadius;
+      const dxPlayer = element.X - Player.X;
+      const dyPlayer = element.Y - Player.Y;
+      const distSqPlayer = dxPlayer * dxPlayer + dyPlayer * dyPlayer;
+      const sumRadiusPlayer = element.Radius + Player.Radius;
+      const sumRadiusSqPlayer = sumRadiusPlayer * sumRadiusPlayer;
 
-      if (distSq > sumRadiusSq) {
-        continue;
+      if (distSqPlayer <= sumRadiusSqPlayer) {
+        if (Player.Radius > element.Radius) {
+          const massLossRate = 0.003;
+          const massLoss = Player.Radius * massLossRate;
+
+          Player.Radius -= massLoss;
+
+          if (Player.Radius <= 0.5) {
+            Player.Status = STATUS.DEAD;
+          }
+        }
       }
 
-      if (Player.Radius > element.Radius) {
-        const massLossRate = 0.003;
-        const massLoss = Player.Radius * massLossRate;
+      for (const enemy of this.EnemyPlayers) {
+        const dxEnemy = element.X - enemy.X;
+        const dyEnemy = element.Y - enemy.Y;
+        const distSqEnemy = dxEnemy * dxEnemy + dyEnemy * dyEnemy;
+        const sumRadiusEnemy = element.Radius + enemy.Radius;
+        const sumRadiusSqEnemy = sumRadiusEnemy * sumRadiusEnemy;
 
-        Player.Radius -= massLoss;
-        if (Player.Radius <= 0.5) {
-          Player.Status = STATUS.DEAD;
+        if (distSqEnemy <= sumRadiusSqEnemy) {
+          if (enemy.Radius > element.Radius) {
+            const massLossRateEnemy = 0.003;
+            const massLossEnemy = enemy.Radius * massLossRateEnemy;
+
+            enemy.Radius -= massLossEnemy;
+            if (enemy.Radius <= 0.5) {
+              enemy.Status = STATUS.DEAD;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  public CollisionEnemyToEnemyDetection() {
+    for (let i = 0; i < this.EnemyPlayers.length; i++) {
+      const enemyA = this.EnemyPlayers[i];
+
+      for (let j = i + 1; j < this.EnemyPlayers.length; j++) {
+        const enemyB = this.EnemyPlayers[j];
+
+        const dx = enemyA.X - enemyB.X;
+        const dy = enemyA.Y - enemyB.Y;
+        const distSq = dx * dx + dy * dy;
+        const sumRadius = enemyA.Radius + enemyB.Radius;
+        const sumRadiusSq = sumRadius * sumRadius;
+
+        if (distSq > sumRadiusSq) {
+          continue;
+        }
+
+        if (enemyA.Radius > enemyB.Radius) {
+          const absorptionRate = 0.5;
+          const absorbedRadius = enemyB.Radius * absorptionRate;
+
+          enemyA.Radius += absorbedRadius;
+          enemyB.Radius -= absorbedRadius;
+
+          if (enemyB.Radius <= 0.5) {
+            enemyB.Status = STATUS.DEAD;
+            this.EnemyPlayers.splice(j, 1);
+            j--;
+          }
+        } else if (enemyB.Radius > enemyA.Radius) {
+          const absorptionRate = 0.5;
+          const absorbedRadius = enemyA.Radius * absorptionRate;
+
+          enemyB.Radius += absorbedRadius;
+          enemyA.Radius -= absorbedRadius;
+
+          if (enemyA.Radius <= 0.5) {
+            enemyA.Status = STATUS.DEAD;
+            this.EnemyPlayers.splice(i, 1);
+            i--;
+            break;
+          }
         }
       }
     }
