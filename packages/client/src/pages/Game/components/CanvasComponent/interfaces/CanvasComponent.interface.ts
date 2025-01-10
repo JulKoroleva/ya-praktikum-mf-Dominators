@@ -4,6 +4,7 @@ export interface ICircle extends ICoords, IDeformationCoords {
   ImageFill?: HTMLImageElement;
   LineWidth?: number;
   Radius: number;
+  Speed?: number;
 }
 
 export interface ICoords {

@@ -17,7 +17,13 @@ export class GameFeatureModel implements ICircle {
   //#region dynamic
   public ToX = 0;
   public ToY = 0;
-  public Speed = 1;
+  public get Speed(): number {
+    const minR = 5;
+    const maxR = 80;
+    const R = Math.max(minR, Math.min(this.Radius, maxR));
+    const t = (R - minR) / (maxR - minR);
+    return 1 - 0.5 * t; // Скорость рассчитывается для каждого объекта отдельно
+  }
   public Movable = false;
   public Angle = 0;
   public DeformationX = 0;

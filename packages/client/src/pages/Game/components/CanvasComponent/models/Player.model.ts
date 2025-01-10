@@ -6,7 +6,7 @@ import { ICircle } from '../interfaces/CanvasComponent.interface';
 
 export class PlayerModel {
   public Player: PlayerFeatureModel;
-  public Speed: number = 0;
+  public Speed: number = 1;
   public Way: { x: number; y: number } = { x: 0, y: 0 };
   public Divisions: PlayerFeatureModel[] = [];
 
