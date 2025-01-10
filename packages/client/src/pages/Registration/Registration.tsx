@@ -22,6 +22,9 @@ import {
 } from './RegistrationPageData';
 import { ROUTES } from '@/constants/routes';
 import { HEADERS } from '@/constants/headers';
+import { initPageWithoutData } from '@/routes';
+
+import { usePage } from '@/services/hooks';
 
 import styles from './Registration.module.scss';
 
@@ -89,6 +92,8 @@ export const Registration = () => {
       });
     }
   }, [registrationStatus, registrationError]);
+
+  usePage({ initPage: initPageWithoutData });
 
   return (
     <div className={styles['registration-page']}>

@@ -1,4 +1,4 @@
-import { RESURSES_URL } from '@/constants/apiUrls';
+import { RESOURCES_URL } from '@/constants/apiUrls';
 import { useState, useEffect } from 'react';
 
 export const useAvatarImage = (
@@ -15,7 +15,7 @@ export const useAvatarImage = (
       onAvatarReady(avatar, null);
     } else {
       const img = new Image();
-      img.src = avatar?.startsWith('http') ? avatar : `${RESURSES_URL}${avatar}`;
+      img.src = avatar?.startsWith('http') ? avatar : `${RESOURCES_URL}${avatar}`;
       img.onload = () => {
         setImageElement(img);
         onAvatarReady(null, img);

@@ -29,11 +29,13 @@ import { TypeDispatch } from '@/redux/store';
 import { embedTextInImage } from '@/utils/colorFileUtils';
 import { createImageFile } from '@/utils/createImageFile';
 import { base64ToFile } from '@/utils/base64ToFile';
+import { useIsAuthorized, usePage } from '@/services/hooks';
+import { getCookie } from '@/services/cookiesHandler';
+
+import { ROUTES } from '@/constants/routes';
+import { initPageWithoutData } from '@/routes';
 
 import styles from './profile.module.scss';
-import { useIsAuthorized } from '@/services/hooks';
-import { ROUTES } from '@/constants/routes';
-import { getCookie } from '@/services/cookiesHandler';
 
 export const Profile = () => {
   const navigate = useNavigate();
@@ -137,6 +139,8 @@ export const Profile = () => {
       });
     }
   }, [userStatus, userError]);
+
+  usePage({ initPage: initPageWithoutData });
 
   const settings = (
     <>

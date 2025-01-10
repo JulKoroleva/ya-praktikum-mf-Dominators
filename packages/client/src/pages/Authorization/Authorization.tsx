@@ -10,6 +10,7 @@ import {
   ErrorNotification,
   TModalStatus,
 } from '@/components';
+import OAuthButton from '@/components/OAuthButton/OAuthButton';
 
 import { TypeDispatch } from '@/redux/store/store';
 
@@ -23,11 +24,12 @@ import {
 } from './AuthorizationPageData';
 import { ROUTES } from '@/constants/routes';
 import { HEADERS } from '@/constants/headers';
+import { initPageWithoutData } from '@/routes';
 
 import { setCustomCookieWithMaxAge } from '@/services/cookiesHandler';
+import { usePage } from '@/services/hooks';
 
 import styles from './Authorization.module.scss';
-import OAuthButton from '@/components/OAuthButton/OAuthButton';
 
 export const Authorization = () => {
   const navigate = useNavigate();
@@ -113,6 +115,8 @@ export const Authorization = () => {
       handleCloseModal();
     };
   }, []);
+
+  usePage({ initPage: initPageWithoutData });
 
   return (
     <div className={styles['authorization-page']}>

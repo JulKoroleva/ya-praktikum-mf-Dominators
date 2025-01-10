@@ -10,6 +10,8 @@ import { useEffect } from 'react';
 import { fetchLeaderBoard } from '@/redux/requests/pagesRequests/leaderBoardRequest/leaderBoardRequest';
 import { RootState, TypeDispatch } from '@/redux/store';
 import { getCookie } from '@/services/cookiesHandler';
+import { usePage } from '@/services/hooks';
+import { initPageWithoutData } from '@/routes';
 
 export const Leaderboard = () => {
   const navigate = useNavigate();
@@ -27,6 +29,8 @@ export const Leaderboard = () => {
       navigate(ROUTES.authorization());
     }
   }, [authCookie]);
+
+  usePage({ initPage: initPageWithoutData });
 
   if (loading === 'loading')
     return (

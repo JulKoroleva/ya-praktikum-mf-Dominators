@@ -1,0 +1,1 @@
+export { fetchForum } from './forumRequests';
