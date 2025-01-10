@@ -7,7 +7,9 @@ export function Comment({ comment }: IComment) {
     <div className={styles.comment}>
       <div className={styles.comment__info}>
         <span className={styles.comment__author}>{author}</span>
-        <span className={styles.comment__date}>{createdAt}</span>
+        <span className={styles.comment__date}>
+          {createdAt.includes('-') ? new Date(createdAt).toDateString() : createdAt}
+        </span>
       </div>
       <p className={styles.comment__text}>{message}</p>
     </div>

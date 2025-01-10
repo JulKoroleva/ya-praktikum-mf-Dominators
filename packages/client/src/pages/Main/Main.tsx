@@ -18,16 +18,19 @@ import { IParticle, IButtonConfig } from './Main.interface';
 import { ROUTES } from '@/constants/routes';
 import { HEADERS } from '@/constants/headers';
 import { COLOR_PALETTE } from './constants/color.constant';
+import { initPageWithoutData } from '@/routes';
 
 import { deleteCookie, getCookie } from '@/services/cookiesHandler';
-import { useIsAuthorized } from '@/services/hooks';
+import { useIsAuthorized, usePage } from '@/services/hooks';
 
 import styles from './Main.module.scss';
 
 export const Main = () => {
-  /**
-   * ВРЕМЕННО. УБРАТЬ В GAME-30. До полноценной настройки SRR на клиенте возникает ошибка document is undefined.
-   * Т.К. мы идём за куки до того, как документ отрендерился. фиксится в уроке 7/12 SSR */
+  // /**
+  //  * ВРЕМЕННО. УБРАТЬ В GAME-30. До полноценной настройки SRR на клиенте возникает ошибка document is undefined.
+  //  * Т.К. мы идём за куки до того, как документ отрендерился. фиксится в уроке 7/12 SSR */
+
+  // Остаётся на 9 спринт в соответствии с задачей, так как в задаче GAME-30 указано, что регистрация по куке будет производиться именно в 9 спринте.
   if (typeof window === 'undefined') {
     return <></>;
   }
@@ -50,6 +53,7 @@ export const Main = () => {
     { href: ROUTES.leaderboard(), text: 'Leaderboard' },
     { href: ROUTES.forum(), text: 'Forum' },
   ];
+
   const authCookie = getCookie('auth');
 
   useEffect(() => {
@@ -147,6 +151,8 @@ export const Main = () => {
       setIsAuthorized(true);
     }
   }, [authCookie]);
+
+  usePage({ initPage: initPageWithoutData });
 
   return (
     <div className={styles['main-page']}>

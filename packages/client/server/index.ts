@@ -14,6 +14,7 @@ async function createServer() {
   const app = express();
 
   let vite: ViteDevServer | undefined;
+
   if (isDev) {
     vite = await createViteServer({
       server: { middlewareMode: true },

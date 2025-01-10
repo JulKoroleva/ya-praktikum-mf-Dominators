@@ -1,26 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { Button } from 'react-bootstrap';
 
 import { FormComponent, Navigation, Popup, ErrorNotification } from '@/components';
 import { TopicList, Pagination, TPaginationOptions, TTopic } from './components';
 
-import { ROUTES } from '@/constants/routes';
-import { HEADERS } from '@/constants/headers';
-import { createNewTopicFields, createNewTopicFieldsInitialValues } from './FormData';
+import { fetchForum } from '@/redux/requests';
+import { selectPaginationOptions, selectTopicList } from '@/redux/selectors';
 
-import { useIsAuthorized } from '@/services/hooks';
+import { useIsAuthorized, usePage } from '@/services/hooks';
 import { getCookie } from '@/services/cookiesHandler';
 
-import { topicsMockData } from './ForumMock';
+import { ROUTES } from '@/constants/routes';
+import { PageInitArgs } from '@/routes';
+import { HEADERS } from '@/constants/headers';
+import { createNewTopicFields, createNewTopicFieldsInitialValues } from './FormData';
 
 import add from '@/assets/icons/add.svg';
 
 import styles from './Forum.module.scss';
 
 export const Forum = () => {
-  /**
-   * ВРЕМЕННО. УБРАТЬ В GAME-30. До полноценной настройки SRR на клиенте возникает ошибка document is undefined.
-   * Т.К. мы идём за куки до того, как документ отрендерился. фиксится в уроке 7/12 SSR */
+  // /**
+  //  * ВРЕМЕННО. УБРАТЬ В GAME-30. До полноценной настройки SRR на клиенте возникает ошибка document is undefined.
+  //  * Т.К. мы идём за куки до того, как документ отрендерился. фиксится в уроке 7/12 SSR */
+
+  // Остаётся на 9 спринт в соответствии с задачей, так как в задаче GAME-30 указано, что регистрация по куке будет производиться именно в 9 спринте.
   if (typeof window === 'undefined') {
     return <></>;
   }
@@ -34,15 +39,8 @@ export const Forum = () => {
 
   const authCookie = getCookie('auth');
 
-  useEffect(() => {
-    fetchTopics();
-  }, []);
-
-  const fetchTopics = (paginationOptions?: TPaginationOptions) => {
-    const res = topicsMockData;
-    setTopicList(res.topics);
-    setPaginationOptions(paginationOptions || res.pagination);
-  };
+  const topicListFromServer = useSelector(selectTopicList);
+  const paginationOptionsFromServer = useSelector(selectPaginationOptions);
 
   const onSubmit = (data: Record<string, string>) => {
     return data;
@@ -51,6 +49,13 @@ export const Forum = () => {
   useEffect(() => {
     setIsAuthorized(!!authCookie);
   }, [authCookie]);
+
+  useEffect(() => {
+    setTopicList(topicListFromServer);
+    setPaginationOptions(paginationOptionsFromServer);
+  }, [topicListFromServer, paginationOptionsFromServer]);
+
+  usePage({ initPage: initForumPage });
 
   return (
     <div className={`${styles['game-forum']} ${styles['fade-in']}`}>
@@ -66,7 +71,7 @@ export const Forum = () => {
           </Button>
         )}
         <TopicList topicList={topicList} />
-        <Pagination options={paginationOptions} onChange={fetchTopics} />
+        <Pagination options={paginationOptions} />
         <Popup open={isOpen} withOverlay onClose={() => setIsOpen(false)}>
           {isOpen && (
             <FormComponent
@@ -80,4 +85,12 @@ export const Forum = () => {
       </ErrorNotification>
     </div>
   );
+};
+
+export const initForumPage = ({ dispatch, state }: PageInitArgs) => {
+  const queue: Array<Promise<unknown>> = [dispatch(fetchForum())];
+  if (!selectTopicList(state)) {
+    queue.push(dispatch(fetchForum()));
+  }
+  return Promise.all(queue);
 };

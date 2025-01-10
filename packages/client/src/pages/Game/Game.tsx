@@ -10,7 +10,8 @@ import { addLeaderBoardEntry } from '@/redux/requests/pagesRequests/leaderBoardR
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, TypeDispatch } from '@/redux/store';
 import { getCookie } from '@/services/cookiesHandler';
-import { useIsAuthorized } from '@/services/hooks';
+import { useIsAuthorized, usePage } from '@/services/hooks';
+import { initPageWithoutData } from '@/routes';
 
 export const Game = () => {
   const navigate = useNavigate();
@@ -69,6 +70,8 @@ export const Game = () => {
     setShowModal(false);
     setIsPaused(false);
   };
+
+  usePage({ initPage: initPageWithoutData });
 
   return (
     <>
