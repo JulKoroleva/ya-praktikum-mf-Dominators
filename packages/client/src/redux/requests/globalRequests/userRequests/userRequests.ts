@@ -1,7 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { GET_USER_INFO_URL, RESOURCES_URL } from '@/constants/apiUrls';
-import { SERVER_HOST } from "@/constants/serverHost";
 
 import { extractTextFromImage } from '@/utils/colorFileUtils';
 import { urlToFile } from '@/utils/urlToFile';
@@ -49,11 +48,3 @@ export const getUserInfoRequest = createAsyncThunk<
 
   return { userInfo, processedAvatar };
 });
-
-export const fetchUserThunk = createAsyncThunk(
-  'user/fetchUserThunk',
-  async () => {
-    const url = `${SERVER_HOST}/user`
-    return fetch(url).then(res => res.json())
-  }
-)

@@ -8,7 +8,6 @@ import {
 } from '@/redux/requests';
 
 import { IUserSlice } from './userSlice.interface';
-import { fetchUserThunk } from "@/redux/requests/globalRequests/userRequests/userRequests";
 
 const initialState: IUserSlice = {
   getUserStatus: 'idle',
@@ -87,18 +86,6 @@ export const userSlice = createSlice({
       .addCase(passwordRequests.rejected, (state, action) => {
         state.changeUserStatus = 'failed';
         state.changeUserError = action.payload as string;
-      })
-      .addCase(fetchUserThunk.pending, state => {
-        state.getUserStatus = 'loading';
-      })
-      .addCase(fetchUserThunk.fulfilled, (state, action) => {
-        state.getUserStatus = 'succeeded';
-        state.getUserError = '';
-        state.userInfo = action.payload;
-      })
-      .addCase(fetchUserThunk.rejected, (state, action) => {
-        state.getUserStatus = 'failed';
-        state.getUserError = action.payload as string;
       });
   },
 });

@@ -1,1 +1,1 @@
-export { getUserInfoRequest, fetchUserThunk } from './userRequests';
+export { getUserInfoRequest } from './userRequests';

@@ -29,11 +29,13 @@ import { TypeDispatch } from '@/redux/store';
 import { embedTextInImage } from '@/utils/colorFileUtils';
 import { createImageFile } from '@/utils/createImageFile';
 import { base64ToFile } from '@/utils/base64ToFile';
+import { useIsAuthorized, usePage } from '@/services/hooks';
+import { getCookie } from '@/services/cookiesHandler';
+
+import { ROUTES } from '@/constants/routes';
+import { initPageWithoutData } from '@/routes';
 
 import styles from './profile.module.scss';
-import { useIsAuthorized } from '@/services/hooks';
-import { ROUTES } from '@/constants/routes';
-import { getCookie } from '@/services/cookiesHandler';
 
 export const Profile = () => {
   const navigate = useNavigate();
@@ -138,18 +140,12 @@ export const Profile = () => {
     }
   }, [userStatus, userError]);
 
+  usePage({ initPage: initPageWithoutData });
+
   const settings = (
     <>
       <h1>{HEADERS.profile}</h1>
-      {userInfo ? (
-        <div>
-          <p>{userInfo.first_name}</p>
-          <p>{userInfo.second_name}</p>
-        </div>
-      ) : (
-        <p>Пользователь не найден!</p>
-      )}
-      {/* <FormComponent
+      <FormComponent
         fields={settingsFields}
         onSubmit={onSubmit}
         initialValues={userInfo || undefined}
@@ -160,7 +156,7 @@ export const Profile = () => {
         variant="primary"
         onClick={() => setIsChangingPassword(true)}>
         Change password
-      </Button> */}
+      </Button>
       <Button
         className={styles['back-button']}
         type="button"
