@@ -5,7 +5,14 @@ import {
   START_PLAYER_RADIUS,
 } from '@/constants/game';
 
-import { CameraModel, EnemyStatic, MapRegionModel, PlayerModel } from './models';
+import {
+  CameraModel,
+  EnemyStatic,
+  GameFeatureModel,
+  MapRegionModel,
+  PlayerFeatureModel,
+  PlayerModel,
+} from './models';
 
 import { STATUS } from './interfaces/CanvasComponent.interface';
 
@@ -68,100 +75,184 @@ export class CanvasController {
     const playerX = Player.X;
     const playerY = Player.Y;
 
-    this.EnemyPlayers = this.EnemyPlayers.filter(el => el.Status !== STATUS.DEAD);
+    this.CollisionEnemyToEnemyDetection();
+
+    this.EnemyPlayers = this.filterDeadEnemies();
 
     for (const element of this.EnemyPlayers) {
-      if (element instanceof EnemyStatic) {
+      if (this.isStaticEnemy(element)) {
         continue;
       }
 
-      const dx = element.X - playerX;
-      const dy = element.Y - playerY;
-      const distSq = dx * dx + dy * dy;
-      const sumRadius = element.Radius + playerRadius;
-      const sumRadiusSq = sumRadius * sumRadius;
+      const collisionData = this.calculateCollisionData(element, playerX, playerY, playerRadius);
 
-      if (distSq > sumRadiusSq) {
+      if (!this.shouldProcessCollision(collisionData, playerArea, element, Player)) {
         continue;
       }
 
-      if (isCollidedBySquare(element, Player) < playerArea / 3) {
-        continue;
-      }
-
-      if (!IsCollided(element, Player)) {
-        continue;
-      }
-
-      const distance = Math.sqrt(distSq);
-      const overlap = sumRadius - distance;
-
-      if (Math.abs(playerRadius - element.Radius) < 0.01) {
-        continue;
-      }
-
-      if (distance < sumRadius) {
-        const angle = Math.atan2(dy, dx);
-        const deformationAmount = (sumRadius - distance) * 0.5;
-
-        const cosA = Math.cos(angle);
-        const sinA = Math.sin(angle);
-
-        Player.DeformationX -= cosA * deformationAmount;
-        Player.DeformationY -= sinA * deformationAmount;
-
-        const waveSpread = Math.sin(angle * 3) * deformationAmount * 0.4;
-        const angleOffset = angle + Math.PI / 4;
-        const cosAO = Math.cos(angleOffset);
-        const sinAO = Math.sin(angleOffset);
-
-        Player.DeformationX += cosAO * waveSpread;
-        Player.DeformationY += sinAO * waveSpread;
-
-        element.DeformationX += cosA * deformationAmount * 0.5;
-        element.DeformationY += sinA * deformationAmount * 0.5;
-      }
-
-      if (overlap > 0) {
-        const angle = Math.atan2(dy, dx);
-        const cosA = Math.cos(angle);
-        const sinA = Math.sin(angle);
-        const deformationAmount = overlap * 0.3;
-
-        Player.DeformationX += cosA * deformationAmount;
-        Player.DeformationY += sinA * deformationAmount;
-
-        element.DeformationX -= cosA * deformationAmount * 0.5;
-        element.DeformationY -= sinA * deformationAmount * 0.5;
-      }
-
-      if (overlap >= element.Radius * 0.8) {
-        const absorptionRate = 0.5;
-        const absorbedRadius = element.Radius * absorptionRate;
-
-        if (playerRadius > element.Radius) {
-          Player.Radius += absorbedRadius;
-          element.Radius -= absorbedRadius;
-
-          if (element.Radius <= Player.Radius && element.Radius <= 0.5) {
-            element.Status = STATUS.DEAD;
-            element.Radius = 0;
-          }
-        } else {
-          element.Radius += playerRadius * absorptionRate;
-          Player.Radius -= playerRadius * absorptionRate;
-
-          if (Player.Radius <= element.Radius) {
-            animateAbsorption(element, Player);
-            element.Destroy();
-            Player.Status = STATUS.DEAD;
-            element.isColliding = false;
-          }
-        }
-      }
+      this.resolveCollision(element, Player, collisionData, playerRadius);
     }
 
-    this.EnemyPlayers = this.EnemyPlayers.filter(el => el.Status !== STATUS.DEAD);
+    this.EnemyPlayers = this.filterDeadEnemies();
+  }
+
+  filterDeadEnemies() {
+    return this.EnemyPlayers.filter(el => el.Status !== STATUS.DEAD);
+  }
+
+  isStaticEnemy(enemy: EnemyPlayerModel) {
+    return enemy instanceof EnemyStatic;
+  }
+
+  calculateCollisionData(
+    element: EnemyPlayerModel,
+    playerX: number,
+    playerY: number,
+    playerRadius: number,
+  ) {
+    const dx = element.X - playerX;
+    const dy = element.Y - playerY;
+    const distSq = dx * dx + dy * dy;
+    const sumRadius = element.Radius + playerRadius;
+    const sumRadiusSq = sumRadius * sumRadius;
+
+    return { dx, dy, distSq, sumRadius, sumRadiusSq };
+  }
+
+  shouldProcessCollision(
+    collisionData: {
+      dx?: number;
+      dy?: number;
+      distSq: number;
+      sumRadius?: number;
+      sumRadiusSq: number;
+    },
+    playerArea: number,
+    element: GameFeatureModel,
+    Player: GameFeatureModel,
+  ) {
+    const { distSq, sumRadiusSq } = collisionData;
+
+    if (distSq > sumRadiusSq) {
+      return false;
+    }
+
+    if (isCollidedBySquare(element, Player) < playerArea / 3) {
+      return false;
+    }
+
+    if (!IsCollided(element, Player)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  resolveCollision(
+    element: EnemyPlayerModel,
+    Player: PlayerFeatureModel,
+    collisionData: {
+      dx: number;
+      dy: number;
+      distSq: number;
+      sumRadius: number;
+      sumRadiusSq?: number;
+    },
+    playerRadius: number,
+  ) {
+    const { dx, dy, distSq, sumRadius } = collisionData;
+
+    const distance = Math.sqrt(distSq);
+    const overlap = sumRadius - distance;
+
+    if (Math.abs(playerRadius - element.Radius) < 0.01) {
+      return;
+    }
+
+    if (distance < sumRadius) {
+      this.handleDeformation(element, Player, dx, dy, sumRadius, distance);
+    }
+
+    if (overlap > 0) {
+      this.handleOverlap(element, Player, dx, dy, overlap);
+    }
+
+    if (overlap >= element.Radius * 0.8) {
+      this.handleAbsorption(element, Player, playerRadius);
+    }
+  }
+
+  handleDeformation(
+    element: { DeformationX: number; DeformationY: number },
+    Player: { DeformationX: number; DeformationY: number },
+    dx: number,
+    dy: number,
+    sumRadius: number,
+    distance: number,
+  ) {
+    const angle = Math.atan2(dy, dx);
+    const deformationAmount = (sumRadius - distance) * 0.5;
+
+    const cosA = Math.cos(angle);
+    const sinA = Math.sin(angle);
+
+    Player.DeformationX -= cosA * deformationAmount;
+    Player.DeformationY -= sinA * deformationAmount;
+
+    const waveSpread = Math.sin(angle * 3) * deformationAmount * 0.4;
+    const angleOffset = angle + Math.PI / 4;
+    const cosAO = Math.cos(angleOffset);
+    const sinAO = Math.sin(angleOffset);
+
+    Player.DeformationX += cosAO * waveSpread;
+    Player.DeformationY += sinAO * waveSpread;
+
+    element.DeformationX += cosA * deformationAmount * 0.5;
+    element.DeformationY += sinA * deformationAmount * 0.5;
+  }
+
+  handleOverlap(
+    element: { DeformationX: number; DeformationY: number },
+    Player: { DeformationX: number; DeformationY: number },
+    dx: number,
+    dy: number,
+    overlap: number,
+  ) {
+    const angle = Math.atan2(dy, dx);
+    const cosA = Math.cos(angle);
+    const sinA = Math.sin(angle);
+    const deformationAmount = overlap * 0.3;
+
+    Player.DeformationX += cosA * deformationAmount;
+    Player.DeformationY += sinA * deformationAmount;
+
+    element.DeformationX -= cosA * deformationAmount * 0.5;
+    element.DeformationY -= sinA * deformationAmount * 0.5;
+  }
+
+  handleAbsorption(element: EnemyPlayerModel, Player: PlayerFeatureModel, playerRadius: number) {
+    const absorptionRate = 0.5;
+    const absorbedRadius = element.Radius * absorptionRate;
+
+    if (playerRadius > element.Radius) {
+      Player.Radius += absorbedRadius;
+      element.Radius -= absorbedRadius;
+
+      if (element.Radius <= Player.Radius && element.Radius <= 0.5) {
+        element.Status = STATUS.DEAD;
+        element.Radius = 0;
+      }
+    } else {
+      element.Radius += playerRadius * absorptionRate;
+      Player.Radius -= playerRadius * absorptionRate;
+
+      if (Player.Radius <= element.Radius) {
+        animateAbsorption(element, Player);
+        element.Destroy();
+        Player.Status = STATUS.DEAD;
+        element.isColliding = false;
+      }
+    }
   }
 
   public CollisionFoodDetection() {
@@ -204,25 +295,109 @@ export class CanvasController {
 
   public CollisionEnemyDetection() {
     for (const element of this.EnemyFields) {
-      if (element instanceof EnemyPlayerModel) {
-        if (IsCollided(element, this.Player.Player)) {
-          if (this.Player.Player.Radius <= element.Radius) {
-            /** @TODO там как-то разлетается он вроде */
-            this.Player.Player.Status = STATUS.DEAD;
-            return;
+      if (!(element instanceof EnemyStatic)) {
+        continue;
+      }
+
+      this.detectCollisionWithPlayer(element);
+      this.detectCollisionWithEnemies(element);
+    }
+  }
+
+  private detectCollisionWithPlayer(element: EnemyStatic) {
+    const { Player } = this.Player;
+    const dxPlayer = element.X - Player.X;
+    const dyPlayer = element.Y - Player.Y;
+    const distSqPlayer = dxPlayer * dxPlayer + dyPlayer * dyPlayer;
+    const sumRadiusPlayer = element.Radius + Player.Radius;
+    const sumRadiusSqPlayer = sumRadiusPlayer * sumRadiusPlayer;
+
+    if (distSqPlayer <= sumRadiusSqPlayer) {
+      this.handlePlayerCollision(Player, element);
+    }
+  }
+
+  private handlePlayerCollision(player: PlayerFeatureModel, element: { Radius: number }) {
+    if (player.Radius > element.Radius) {
+      const massLossRate = 0.003;
+      const massLoss = player.Radius * massLossRate;
+
+      player.Radius -= massLoss;
+
+      if (player.Radius <= 0.5) {
+        player.Status = STATUS.DEAD;
+      }
+    }
+  }
+
+  private detectCollisionWithEnemies(element: EnemyStatic) {
+    for (const enemy of this.EnemyPlayers) {
+      const dxEnemy = element.X - enemy.X;
+      const dyEnemy = element.Y - enemy.Y;
+      const distSqEnemy = dxEnemy * dxEnemy + dyEnemy * dyEnemy;
+      const sumRadiusEnemy = element.Radius + enemy.Radius;
+      const sumRadiusSqEnemy = sumRadiusEnemy * sumRadiusEnemy;
+
+      if (distSqEnemy <= sumRadiusSqEnemy) {
+        this.handleEnemyCollision(enemy, element);
+      }
+    }
+  }
+
+  private handleEnemyCollision(enemy: EnemyPlayerModel, element: EnemyStatic) {
+    if (enemy.Radius > element.Radius) {
+      const massLossRateEnemy = 0.003;
+      const massLossEnemy = enemy.Radius * massLossRateEnemy;
+
+      enemy.Radius -= massLossEnemy;
+      if (enemy.Radius <= 0.5) {
+        enemy.Status = STATUS.DEAD;
+      }
+    }
+  }
+
+  public CollisionEnemyToEnemyDetection() {
+    for (let i = 0; i < this.EnemyPlayers.length; i++) {
+      const enemyA = this.EnemyPlayers[i];
+
+      for (let j = i + 1; j < this.EnemyPlayers.length; j++) {
+        const enemyB = this.EnemyPlayers[j];
+
+        const dx = enemyA.X - enemyB.X;
+        const dy = enemyA.Y - enemyB.Y;
+        const distSq = dx * dx + dy * dy;
+        const sumRadius = enemyA.Radius + enemyB.Radius;
+        const sumRadiusSq = sumRadius * sumRadius;
+
+        if (distSq > sumRadiusSq) {
+          continue;
+        }
+
+        if (enemyA.Radius > enemyB.Radius) {
+          const absorptionRate = 0.5;
+          const absorbedRadius = enemyB.Radius * absorptionRate;
+
+          enemyA.Radius += absorbedRadius;
+          enemyB.Radius -= absorbedRadius;
+
+          if (enemyB.Radius <= 0.5) {
+            enemyB.Status = STATUS.DEAD;
+            this.EnemyPlayers.splice(j, 1);
+            j--;
           }
+        } else if (enemyB.Radius > enemyA.Radius) {
+          const absorptionRate = 0.5;
+          const absorbedRadius = enemyA.Radius * absorptionRate;
 
-          const collisionAngle = Math.atan2(
-            element.Y - this.Player.Player.Y,
-            element.X - this.Player.Player.X,
-          );
-          const deformationAmount = Math.min(element.Radius, this.Player.Player.Radius) * 0.3;
+          enemyB.Radius += absorbedRadius;
+          enemyA.Radius -= absorbedRadius;
 
-          this.Player.Player.DeformationX -= Math.cos(collisionAngle) * deformationAmount;
-          this.Player.Player.DeformationY -= Math.sin(collisionAngle) * deformationAmount;
-
-          element.DeformationX += Math.cos(collisionAngle) * deformationAmount;
-          element.DeformationY += Math.sin(collisionAngle) * deformationAmount;
+          if (enemyA.Radius <= 0.5) {
+            enemyA.Status = STATUS.DEAD;
+            this.EnemyPlayers.splice(i, 1);
+            i--;
+            break;
+          }
         }
       }
     }
