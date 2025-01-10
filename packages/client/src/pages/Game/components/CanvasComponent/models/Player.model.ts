@@ -1,4 +1,10 @@
-import { FOOD_MASS, GROW_BY_FOOD_COEFFICIENT, MAX_DIVISIONS } from '@/constants/game';
+import {
+  FOOD_MASS,
+  GROW_BY_FOOD_COEFFICIENT,
+  SPEED_BOOST_COEFFICIENT,
+  SPEED_BOOST_PROGRESS_INTERVAL,
+  SPEED_BOOST_TIME,
+} from '@/constants/game';
 
 import { CameraModel, FoodModel, GameFeatureModel, PlayerFeatureModel } from '.';
 
@@ -6,7 +12,9 @@ import { ICircle } from '../interfaces/CanvasComponent.interface';
 
 export class PlayerModel {
   public Player: PlayerFeatureModel;
-  public Speed: number = 0;
+  public Speed = 0;
+  public SpeedBoostLastTime = 0;
+  public SpeedBoostCoefficient = 1;
   public Way: { x: number; y: number } = { x: 0, y: 0 };
   public Divisions: PlayerFeatureModel[] = [];
 
@@ -14,6 +22,7 @@ export class PlayerModel {
     this.Player = new PlayerFeatureModel(props);
     this.Way.x = props.X;
     this.Way.y = props.Y;
+    this.resestBoostInterval();
   }
 
   public get MyScore() {
@@ -39,30 +48,21 @@ export class PlayerModel {
 
     const angle = Math.atan2(dY, dX);
 
-    this.Player.Y += (Math.sin(angle) * 1) / Math.sqrt(this.Player.Radius);
-    this.Player.X += (Math.cos(angle) * 1) / Math.sqrt(this.Player.Radius);
+    this.Player.Y +=
+      ((Math.sin(angle) * 1) / Math.sqrt(this.Player.Radius)) * this.SpeedBoostCoefficient;
+    this.Player.X +=
+      ((Math.cos(angle) * 1) / Math.sqrt(this.Player.Radius)) * this.SpeedBoostCoefficient;
   }
 
-  cellDivision(camera: CameraModel, mouseX: number, mouseY: number) {
-    if (this.Divisions.length >= MAX_DIVISIONS) {
+  activateSpeedBooster() {
+    if (this.BoostProgress < 100) {
       return;
     }
-
-    this.Player.Radius /= 2;
-
-    /** подумать над доработкой MAX_COUNT + MIN_SIZE */
-    this.Divisions.push(
-      new PlayerFeatureModel({
-        Y:
-          this.Player.Y +
-          ((mouseY / camera.Scale + camera.Y - this.Player.Y) * 4) / this.Player.Radius,
-        X:
-          this.Player.X +
-          ((mouseX / camera.Scale + camera.X - this.Player.X) * 4) / this.Player.Radius,
-        Radius: this.Player.Radius,
-        ColorFill: 'red',
-      }),
-    );
+    this.SpeedBoostCoefficient = SPEED_BOOST_COEFFICIENT;
+    setTimeout(() => {
+      this.SpeedBoostCoefficient = 1;
+    }, SPEED_BOOST_TIME);
+    this.resestBoostInterval();
   }
 
   throwFood(camera: CameraModel, food: Array<GameFeatureModel>, mouseX: number, mouseY: number) {
@@ -89,5 +89,13 @@ export class PlayerModel {
     });
 
     food.push(foode);
+  }
+
+  resestBoostInterval() {
+    this.SpeedBoostLastTime = new Date().getTime();
+  }
+
+  public get BoostProgress() {
+    return ((new Date().getTime() - this.SpeedBoostLastTime) / SPEED_BOOST_PROGRESS_INTERVAL) * 100;
   }
 }

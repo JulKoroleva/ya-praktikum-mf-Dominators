@@ -8,7 +8,7 @@ import { CanvasController } from './CanvasComponent.controller';
 
 import styles from './CanvasComponent.module.scss';
 import { STATUS } from './interfaces/CanvasComponent.interface';
-import { Button } from 'react-bootstrap';
+import { Button, ProgressBar } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { TResult } from '../../Game.interface';
@@ -29,6 +29,7 @@ export function CanvasComponent({
   const animationFrameRef = useRef<number | null>(null);
   const mouseCoodrs = useMousePosition();
   const [score, setScore] = useState(0);
+  const [progress, setProgress] = useState(0);
 
   useCanvasResize();
 
@@ -103,6 +104,7 @@ export function CanvasComponent({
     }
     setScore(controller.Player.MyScore);
 
+    setProgress(controller.Player.BoostProgress);
     const ctx = refCanvas.current.getContext('2d');
     if (!ctx) return;
     renderCanvas(ctx);
@@ -132,11 +134,7 @@ export function CanvasComponent({
 
     const cb = (event: KeyboardEvent) => {
       if (event.code === 'Space') {
-        controller.Player.cellDivision(
-          controller.Camera,
-          mouseCoodrs.current.X,
-          mouseCoodrs.current.Y,
-        );
+        controller.Player.activateSpeedBooster();
         return;
       }
       if (event.code === 'KeyW') {
@@ -162,6 +160,17 @@ export function CanvasComponent({
           <div className={styles['canvas-page__score-block__name']}>Score: </div>
           <div className={styles['canvas-page__score-block__points']}>{score}</div>
         </div>
+        <ProgressBar className={styles['canvas-page__progress']}>
+          <ProgressBar
+            className={
+              progress < 100
+                ? styles['canvas-page__progress__fill']
+                : styles['canvas-page__progress__complete']
+            }
+            now={progress}
+            max={100}
+          />
+        </ProgressBar>
         <Button
           className={styles['back-button']}
           type="button"
