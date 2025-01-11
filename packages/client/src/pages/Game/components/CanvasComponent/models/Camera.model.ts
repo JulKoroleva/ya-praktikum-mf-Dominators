@@ -6,6 +6,8 @@ export class CameraModel implements ICoords {
   public X = 0;
   public Y = 0;
   public Scale = 1;
+  public ViewWidth: number;
+  public ViewHeight: number;
 
   /**
    * @params initialX используем если сразу хотим сдвинуть камеру по X
@@ -14,6 +16,8 @@ export class CameraModel implements ICoords {
   constructor(initialX?: number, initialY?: number) {
     this.X = initialX || 0;
     this.Y = initialY || 0;
+    this.ViewWidth = window.innerWidth / this.Scale;
+    this.ViewHeight = window.innerHeight / this.Scale;
   }
 
   focus(

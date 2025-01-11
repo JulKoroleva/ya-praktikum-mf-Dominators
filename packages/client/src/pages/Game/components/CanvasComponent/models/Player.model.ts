@@ -4,7 +4,10 @@ import { CameraModel, FoodModel, GameFeatureModel, PlayerFeatureModel } from '.'
 
 import { ICircle } from '../interfaces/CanvasComponent.interface';
 
+import { v4 as uuidv4 } from 'uuid';
+
 export class PlayerModel {
+  public id: string = uuidv4();
   public Player: PlayerFeatureModel;
   public Speed: number = 1;
   public Way: { x: number; y: number } = { x: 0, y: 0 };
@@ -53,6 +56,8 @@ export class PlayerModel {
     /** подумать над доработкой MAX_COUNT + MIN_SIZE */
     this.Divisions.push(
       new PlayerFeatureModel({
+        Speed: this.Player.Speed,
+        id: this.Player.id,
         Y:
           this.Player.Y +
           ((mouseY / camera.Scale + camera.Y - this.Player.Y) * 4) / this.Player.Radius,
@@ -79,6 +84,7 @@ export class PlayerModel {
 
     const foode = new FoodModel({
       /** тут делиться на 4, пока рандомно. Надо додумать коэффициент */
+      id: this.Player.id,
       Y: this.Player.Y + (((Math.sin(angle) * this.Player.Radius) / 2) * camera.Scale) / 2,
       X: this.Player.X + (((Math.cos(angle) * this.Player.Radius) / 2) * camera.Scale) / 2,
       ToY: this.Player.Y + ((Math.sin(angle) * this.Player.Radius) / 2) * camera.Scale * 2,

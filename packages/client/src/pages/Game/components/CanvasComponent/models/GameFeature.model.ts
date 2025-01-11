@@ -4,6 +4,7 @@ import { DrawCircle } from '../utils';
 
 export class GameFeatureModel implements ICircle {
   //#region static & dynamic
+  public id: string;
   public X = 0;
   public Y = 0;
   public Radius = 10;
@@ -17,22 +18,18 @@ export class GameFeatureModel implements ICircle {
   //#region dynamic
   public ToX = 0;
   public ToY = 0;
-  public get Speed(): number {
-    const minR = 5;
-    const maxR = 80;
-    const R = Math.max(minR, Math.min(this.Radius, maxR));
-    const t = (R - minR) / (maxR - minR);
-    return 1 - 0.5 * t; // Скорость рассчитывается для каждого объекта отдельно
-  }
+  public Speed: number;
   public Movable = false;
   public Angle = 0;
   public DeformationX = 0;
   public DeformationY = 0;
   //#endregion
 
-  constructor({ X, Y, Radius, ColorFill, LineWidth, ImageFill }: ICircle) {
+  constructor({ id, X, Y, Radius, ColorFill, LineWidth, ImageFill, Speed }: ICircle) {
+    this.id = id;
     this.X = X;
     this.Y = Y;
+    this.Speed = Speed;
     this.Radius = Radius;
     this.ColorFill = ColorFill || 'rgb(0, 0, 0)';
     this.ImageFill = ImageFill;
@@ -53,7 +50,7 @@ export class GameFeatureModel implements ICircle {
   }
 
   move() {
-    if (!this.Movable || this.Status !== STATUS.ALIVE) {
+    if (!this.Speed || !this.Movable || this.Status !== STATUS.ALIVE) {
       return;
     }
     const xDirection = Math.cos(this.Angle) > 0 ? 1 : -1;
@@ -71,6 +68,7 @@ export class GameFeatureModel implements ICircle {
 
   draw(ctx: CanvasRenderingContext2D) {
     DrawCircle(ctx, {
+      id: this.id,
       Radius: this.Radius,
       X: this.X,
       Y: this.Y,
@@ -80,6 +78,7 @@ export class GameFeatureModel implements ICircle {
       LineWidth: this.Radius / 5,
       DeformationX: this.DeformationX,
       DeformationY: this.DeformationY,
+      Speed: this.Speed,
     });
     const recoveryRate = 0.1;
     if (Math.abs(this.DeformationX) > 0.1) {

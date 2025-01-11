@@ -80,7 +80,6 @@ export function CanvasComponent({
     controller.DrawGrid(ctx);
 
     controller.MovePlayer(mouseCoodrs.current.X, mouseCoodrs.current.Y);
-    controller.MoveStatics();
     controller.EnemyPlayersMove();
 
     controller.Camera.focus(canvas, controller.Map, controller.Player.Player);
@@ -101,7 +100,6 @@ export function CanvasComponent({
       endGameCallback(controller.Result);
       return;
     }
-    setScore(controller.Player.MyScore);
 
     const ctx = refCanvas.current.getContext('2d');
     if (!ctx) return;
@@ -111,6 +109,17 @@ export function CanvasComponent({
       animationFrameRef.current = requestAnimationFrame(animate);
     }
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (controllerRef.current) {
+        setScore(controllerRef.current.Player.MyScore);
+      }
+    }, 300);
+
+    return () => clearInterval(interval);
+  }, []);
+
   useEffect(() => {
     const controller = controllerRef.current;
     if (!controller) return;

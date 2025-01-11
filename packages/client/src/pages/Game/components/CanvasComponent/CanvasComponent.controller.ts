@@ -22,6 +22,7 @@ import { isCollidedBySquare } from './utils/isCollidedBySquare';
 import { TResult } from '../../Game.interface';
 import { animateAbsorption } from './utils/animateAbsorption';
 import { generateRandomEnemies } from './utils/generateRandomEnemies';
+import { v4 as uuidv4 } from 'uuid';
 
 export class CanvasController {
   public Map = new MapRegionModel();
@@ -39,17 +40,17 @@ export class CanvasController {
 
   public EnemyFields: EnemyStatic[] = [...GenerateEnemy({ width: MAP_SIZE, height: MAP_SIZE })];
 
-  private frameCounter = 0;
-
   constructor(baseColor: string, imageFill?: HTMLImageElement) {
     this.Player = new PlayerModel({
+      id: uuidv4(),
       X: 2000,
       Y: 2000,
       Radius: START_PLAYER_RADIUS,
       ColorFill: baseColor,
       ImageFill: imageFill,
+      Speed: 1,
     });
-    this.EnemyPlayers = generateRandomEnemies(100, this.Player.Player.X, this.Player.Player.Y);
+    this.EnemyPlayers = generateRandomEnemies(150, this.Player.Player.X, this.Player.Player.Y);
   }
 
   public MovePlayer(mouseX: number, mouseY: number) {
@@ -57,20 +58,9 @@ export class CanvasController {
     this.Player.moveDivision(this.Camera, mouseX, mouseY);
   }
 
-  public MoveStatics() {
-    for (const staticField of [...this.FoodFields, ...this.EnemyFields].filter(
-      field => field.Movable,
-    )) {
-      staticField.move();
-    }
-  }
-
   public EnemyPlayersMove() {
-    this.frameCounter++;
-    if (this.frameCounter % 2 === 0) {
-      for (const enemy of this.EnemyPlayers) {
-        enemy.move(this.Player, this.FoodFields, this.EnemyPlayers);
-      }
+    for (const enemy of this.EnemyPlayers) {
+      enemy.move(this.Player.Player, this.FoodFields, this.EnemyPlayers);
     }
   }
 
@@ -82,24 +72,43 @@ export class CanvasController {
     const playerY = Player.Y;
 
     this.CollisionEnemyToEnemyDetection();
-
     this.EnemyPlayers = this.filterDeadEnemies();
 
     for (const element of this.EnemyPlayers) {
-      if (this.isStaticEnemy(element)) {
+      if (!this.isVisible(element, this.getViewBoundary())) {
         continue;
       }
 
       const collisionData = this.calculateCollisionData(element, playerX, playerY, playerRadius);
-
       if (!this.shouldProcessCollision(collisionData, playerArea, element, Player)) {
         continue;
       }
-
       this.resolveCollision(element, Player, collisionData, playerRadius);
     }
 
-    this.EnemyPlayers = this.filterDeadEnemies();
+    this.AddFoodOverTime();
+    this.AddEnemyOverTime();
+  }
+
+  private isVisible(
+    item: GameFeatureModel,
+    viewBoundary: { x: number; y: number; width: number; height: number },
+  ) {
+    return !(
+      item.X + item.Radius < viewBoundary.x ||
+      item.X - item.Radius > viewBoundary.x + viewBoundary.width ||
+      item.Y + item.Radius < viewBoundary.y ||
+      item.Y - item.Radius > viewBoundary.y + viewBoundary.height
+    );
+  }
+
+  private getViewBoundary() {
+    return {
+      x: this.Camera.X - this.Camera.ViewWidth / 2,
+      y: this.Camera.Y - this.Camera.ViewHeight / 2,
+      width: this.Camera.ViewWidth,
+      height: this.Camera.ViewHeight,
+    };
   }
 
   filterDeadEnemies() {
@@ -189,7 +198,7 @@ export class CanvasController {
   }
 
   handleDeformation(
-    element: { DeformationX: number; DeformationY: number },
+    element: { DeformationX: number; DeformationY: number; X: number; Y: number; Radius: number },
     Player: { DeformationX: number; DeformationY: number },
     dx: number,
     dy: number,
@@ -414,40 +423,47 @@ export class CanvasController {
     this.EnemyPlayers = this.EnemyPlayers.filter(enemy => enemy.Status === STATUS.ALIVE);
   }
 
+  public AddEnemyOverTime() {
+    this.EnemyPlayers = this.filterDeadEnemies();
+    requestIdleCallback(() => {
+      if (this.EnemyPlayers.length < 130) {
+        const newEnemies = generateRandomEnemies(1, this.Player.Player.X, this.Player.Player.Y);
+        this.EnemyPlayers.push(...newEnemies);
+      }
+    });
+  }
+
+  public AddFoodOverTime(minFoodCount: number = 4900, foodToAdd: number = 100) {
+    requestIdleCallback(() => {
+      if (this.FoodFields.length < minFoodCount) {
+        const newFood = GenerateFood({
+          width: MAP_SIZE,
+          height: MAP_SIZE,
+        }).slice(0, foodToAdd);
+        this.FoodFields.push(...newFood);
+      }
+    });
+  }
+
   public DrawAll(ctx: CanvasRenderingContext2D) {
     this.DrawFood(ctx);
 
-    // Границы видимой области
-    const viewBoundary = {
-      x: this.Camera.X - ctx.canvas.width / 2,
-      y: this.Camera.Y - ctx.canvas.height / 2,
-      width: ctx.canvas.width,
-      height: ctx.canvas.height,
-    };
-
     const itemsToDraw = [
+      this.Player.Player,
       ...this.EnemyPlayers,
       ...this.EnemyFields,
       ...this.Player.Divisions,
-      this.Player.Player,
     ];
 
-    // Сортируем по радиусу, чтобы крупные перекрывали мелких
     itemsToDraw.sort((a, b) => a.Radius - b.Radius);
 
+    const viewBoundary = this.getViewBoundary();
+
     for (const item of itemsToDraw) {
-      // Проверяем, попадает ли враг в область экрана (с небольшим запасом)
-      if (
-        item.X + item.Radius < viewBoundary.x ||
-        item.X - item.Radius > viewBoundary.x + viewBoundary.width ||
-        item.Y + item.Radius < viewBoundary.y ||
-        item.Y - item.Radius > viewBoundary.y + viewBoundary.height
-      ) {
-        // Если полностью за пределами экрана, пропускаем отрисовку
+      if (!this.isVisible(item, viewBoundary)) {
         continue;
       }
 
-      // Иначе — рисуем
       if (item.Status === STATUS.ALIVE) {
         item.draw(ctx);
       }
@@ -456,6 +472,9 @@ export class CanvasController {
 
   public DrawFood(ctx: CanvasRenderingContext2D) {
     for (const food of this.FoodFields) {
+      if (!this.isVisible(food, this.getViewBoundary())) {
+        continue;
+      }
       if (food.Status === STATUS.ALIVE) {
         food.draw(ctx);
       }

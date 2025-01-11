@@ -11,7 +11,7 @@ const calculateDeformedPoints = (
   deformationX: number,
   deformationY: number,
 ): { x: number; y: number }[] => {
-  const time = Date.now() / 100;
+  const time = 2000;
   const baseDeform = [-deformationX, -deformationY];
 
   return Array.from({ length: numPoints }, (_, i) => {

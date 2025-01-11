@@ -1,33 +1,16 @@
-import { FoodModel, PlayerFeatureModel, PlayerModel } from '.';
+import { MAP_SIZE } from '@/constants/game';
+import { FoodModel, PlayerFeatureModel } from '.';
 import { ICircle, STATUS } from '../interfaces/CanvasComponent.interface';
 
 export class EnemyPlayerModel extends PlayerFeatureModel {
-  protected intervalId?: NodeJS.Timeout;
-
-  // Переменные скорости
-  private vx: number = 0;
-  private vy: number = 0;
-
-  // // Скорость, зависящая от размера
-  // public get maxSpeed(): number {
-  //   const minR = 5;
-  //   const maxR = 80;
-  //   const R = Math.max(minR, Math.min(this.Radius, maxR));
-  //   const t = (R - minR) / (maxR - minR);
-  //   return 1 - 0.5 * t; // Для врагов меньшее замедление
-  // }
-
-  // Текущая цель (x,y)
-  private currentTarget: { x: number; y: number } | null = null;
-
-  // Последний угол движения
-  private lastAngle: number | null = null;
-
-  /**
-   * Счётчик перезарядки (cooldown) на выбор новой цели.
-   * Например, 30 кадров — это ~0.5 секунды при 60 FPS.
-   */
-  private targetCooldown = 0;
+  private currentTargetId: string | undefined = undefined;
+  private currentTarget: FoodModel | PlayerFeatureModel | null = null;
+  private closestThreat: PlayerFeatureModel | EnemyPlayerModel | null = null;
+  private isRunningAway: boolean = false;
+  private runningAwayFrom: Array<PlayerFeatureModel | EnemyPlayerModel> = [];
+  private fleeCooldown: number = 0; // Таймер для текущего убегания
+  private readonly fleeDuration: number = 300; // 5 секунд (60 кадров в секунду)
+  private readonly detectionRange: number = 20;
 
   constructor(props: ICircle) {
     super(props);
@@ -39,276 +22,212 @@ export class EnemyPlayerModel extends PlayerFeatureModel {
    * @param foodFields
    * @param enemies
    */
-  public move(player?: PlayerModel, foodFields?: FoodModel[], enemies?: EnemyPlayerModel[]) {
-    if (!player || !foodFields || !enemies) return;
-
-    // Удаляем мёртвых врагов
-    enemies = enemies.filter(enemy => enemy.Status === STATUS.ALIVE);
-
-    // Уменьшаем cooldown
-    if (this.targetCooldown > 0) {
-      this.targetCooldown--;
+  public move(player?: PlayerFeatureModel, food?: FoodModel[], enemies?: EnemyPlayerModel[]): void {
+    if (!player || !food || !enemies) {
+      return;
     }
 
-    // Проверка на наличие опасного врага
-    const dangerousEnemy = this.findDangerousEnemyNearby(player, enemies);
-    if (dangerousEnemy) {
-      const dx = (dangerousEnemy as EnemyPlayerModel).X - this.X;
-      const dy = (dangerousEnemy as EnemyPlayerModel).Y - this.Y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
+    const threats = this.findAllBiggerObjects(player, enemies);
 
-      // Если враг рядом, отменяем цель и убегаем
-      if (distance < this.Radius + 50) {
-        this.currentTarget = {
-          x: this.X - dx * 10,
-          y: this.Y - dy * 10,
-        };
-        this.targetCooldown = 1800; // 30 секунд (60 FPS)
-      }
+    if (threats.length > 0) {
+      this.startFleeing(threats);
+      this.flee();
+      return;
     }
 
-    // // Если нет угрозы и цель еще не достигнута — не искать новую
-    // if (!dangerousEnemy && this.currentTarget && !this.isCurrentTargetReached()) {
-    //   this.moveTowardsCurrentTarget(foodFields);
-    //   return;
-    // }
-
-    // Если текущая цель отсутствует, выбираем новую
-    if (!this.currentTarget || this.isCurrentTargetReached() || this.targetCooldown === 0) {
-      this.retargetIfNeeded(player, foodFields, enemies);
+    if (this.isRunningAway) {
+      this.flee();
+      return;
     }
 
-    // Постоянное движение к текущей цели
-    this.moveTowardsCurrentTarget(foodFields);
+    if (!this.currentTarget || !this.isValidTarget(this.currentTarget)) {
+      this.currentTarget = this.findNearestSmallerObject(player, food, enemies);
+      this.currentTargetId = this.currentTarget?.id;
+    }
+
+    if (this.currentTarget) {
+      this.moveToTarget(this.currentTarget, food, enemies);
+    } else {
+      this.wanderRandomly();
+    }
   }
 
   /**
-   * Изменено: теперь цель меняется только если текущая цель мертва или достигнута
+   * Для рандомного движения
    */
-  private retargetIfNeeded(
-    player: PlayerModel,
-    foodFields: FoodModel[],
+  private wanderRandomly(): void {
+    const randomAngle = Math.random() * 2 * Math.PI;
+    this.X += Math.cos(randomAngle) * this.Speed;
+    this.Y += Math.sin(randomAngle) * this.Speed;
+
+    this.X = Math.max(0, Math.min(MAP_SIZE, this.X));
+    this.Y = Math.max(0, Math.min(MAP_SIZE, this.Y));
+  }
+
+  /**
+   * Поиск всех больших объектов (угроз) в пределах detectionRange.
+   */
+  private findAllBiggerObjects(
+    player: PlayerFeatureModel,
     enemies: EnemyPlayerModel[],
-  ) {
-    if (
-      !this.currentTarget ||
-      this.isCurrentTargetReached() ||
-      this.isCurrentTargetDead(player, foodFields, enemies)
-    ) {
-      this.chooseNewTarget(player, foodFields, enemies);
-      this.targetCooldown = 30;
+  ): Array<PlayerFeatureModel | EnemyPlayerModel> {
+    const threats: Array<PlayerFeatureModel | EnemyPlayerModel> = [];
+    const candidates: Array<PlayerFeatureModel | EnemyPlayerModel> = [
+      player,
+      ...enemies.filter(e => e.id !== this.id && e.Status === STATUS.ALIVE),
+    ];
+
+    for (const obj of candidates) {
+      if (obj.Radius > this.Radius && obj.Status === STATUS.ALIVE) {
+        // Исключаем равные по размеру
+        const dist = this.calculateDistance(obj);
+        if (dist < this.detectionRange) {
+          threats.push(obj);
+        }
+      }
     }
+
+    return threats;
   }
+
   /**
-   * Ищем рядом опасного врага или игрока (если у него радиус больше).
+   * Поиск ближайшего меньшего объекта (цели для преследования).
    */
-  private findDangerousEnemyNearby(
-    player: PlayerModel,
+  private findNearestSmallerObject(
+    player: PlayerFeatureModel,
+    foods: FoodModel[],
     enemies: EnemyPlayerModel[],
-  ): EnemyPlayerModel | PlayerModel | null {
-    const dangerDistance = this.Radius + 100;
+  ): FoodModel | PlayerFeatureModel | null {
+    let closestSmallerTarget: FoodModel | PlayerFeatureModel | null = null;
+    let closestDistance: number = Infinity;
 
-    let dx = player.Player.X - this.X;
-    let dy = player.Player.Y - this.Y;
-    let dist = Math.sqrt(dx * dx + dy * dy);
+    const extendedDetectionRange = this.detectionRange * 4;
 
-    if (player.Player.Radius > this.Radius && dist < dangerDistance) {
-      return player;
-    }
+    const candidates: Array<FoodModel | PlayerFeatureModel> = [player, ...enemies, ...foods];
 
-    for (const enemy of enemies) {
-      if (enemy === this || enemy.Status !== STATUS.ALIVE) continue;
-      dx = enemy.X - this.X;
-      dy = enemy.Y - this.Y;
-      dist = Math.sqrt(dx * dx + dy * dy);
-
-      if (enemy.Radius > this.Radius && dist < dangerDistance) {
-        return enemy;
+    for (const obj of candidates) {
+      const dist = this.calculateDistance(obj);
+      if (dist < extendedDetectionRange && obj.Radius < this.Radius && dist < closestDistance) {
+        closestDistance = dist;
+        closestSmallerTarget = obj;
       }
     }
 
-    return null;
+    return closestSmallerTarget;
   }
 
   /**
-   * Проверяем, достигнута ли текущая цель.
+   * Проверка, актуальна ли текущая цель.
    */
-  private isCurrentTargetReached(): boolean {
-    if (!this.currentTarget) return false;
-    const dx = this.currentTarget.x - this.X;
-    const dy = this.currentTarget.y - this.Y;
-    return Math.sqrt(dx * dx + dy * dy) < 10;
-  }
-
-  /**
-   * Проверяем, "жива" ли цель (кусок еды или враг).
-   */
-  private isCurrentTargetDead(
-    player: PlayerModel,
-    foodFields: FoodModel[],
-    enemies: EnemyPlayerModel[],
-  ): boolean {
-    if (!this.currentTarget) return true;
-
-    // Проверяем еду
-    for (const food of foodFields) {
-      if (food.Status !== STATUS.ALIVE) continue;
-      const dx = food.X - this.currentTarget.x;
-      const dy = food.Y - this.currentTarget.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < 1) {
-        return false;
-      }
-    }
-
-    // Проверяем вражеских игроков
-    for (const enemy of enemies) {
-      if (enemy.Status !== STATUS.ALIVE) continue;
-      const dx = enemy.X - this.currentTarget.x;
-      const dy = enemy.Y - this.currentTarget.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < 1) {
-        return false;
-      }
-    }
-
-    // Проверяем игрока
-    {
-      const dx = player.Player.X - this.currentTarget.x;
-      const dy = player.Player.Y - this.currentTarget.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < 1 && player.Player.Status === STATUS.ALIVE && player.Player.Radius > 0) {
-        return false;
-      }
-    }
-
+  private isValidTarget(target: FoodModel | PlayerFeatureModel | null): boolean {
+    if (!target) return false;
+    if (target.Status !== STATUS.ALIVE) return false;
+    if (target.Radius >= this.Radius) return false;
+    const dist = this.calculateDistance(target);
+    if (dist > this.detectionRange) return false;
     return true;
   }
 
   /**
-   * Выбираем новую ближайшую цель:
-   * - едим более мелких врагов
-   * - либо еду
-   * - либо игрока (если он меньше нас)
+   * Движение к цели.
    */
-  private chooseNewTarget(
-    player: PlayerModel,
-    foodFields: FoodModel[],
-    enemies: EnemyPlayerModel[],
+  private moveToTarget(
+    target: FoodModel | PlayerFeatureModel | EnemyPlayerModel,
+    food?: FoodModel[],
+    enemies?: EnemyPlayerModel[],
   ) {
-    let minDistance = Infinity;
-    let selected: { x: number; y: number } | null = null;
+    const distance = this.calculateDistance(target);
 
-    // Проверяем игрока
-    if (player.Player.Status === STATUS.ALIVE && player.Player.Radius < this.Radius) {
-      const dist = Math.hypot(player.Player.X - this.X, player.Player.Y - this.Y);
-      if (dist < minDistance) {
-        minDistance = dist;
-        selected = { x: player.Player.X, y: player.Player.Y };
+    // Проверка, достиг ли объект цели: если да, то удаляем съеденый объект
+    if (distance <= this.Speed) {
+      this.X = target.X;
+      this.Y = target.Y;
+
+      if (target instanceof FoodModel && food) {
+        const targetIndex = food.findIndex(f => f.id === target.id);
+        if (targetIndex !== -1) {
+          food.splice(targetIndex, 1);
+        }
       }
-    }
 
-    // Проверяем врагов
-    for (const enemy of enemies) {
-      if (enemy === this || enemy.Status !== STATUS.ALIVE || enemy.Radius >= this.Radius) continue;
-      const dist = Math.hypot(enemy.X - this.X, enemy.Y - this.Y);
-      if (dist < minDistance) {
-        minDistance = dist;
-        selected = { x: enemy.X, y: enemy.Y };
+      if (target instanceof EnemyPlayerModel && enemies) {
+        const targetIndex = enemies.findIndex(e => e.id === target.id);
+        if (targetIndex !== -1) {
+          enemies.splice(targetIndex, 1);
+        }
       }
-    }
 
-    // Проверяем еду
-    for (const food of foodFields) {
-      if (food.Status !== STATUS.ALIVE) continue;
-      const dist = Math.hypot(food.X - this.X, food.Y - this.Y);
-      if (dist < minDistance) {
-        minDistance = dist;
-        selected = { x: food.X, y: food.Y };
-      }
-    }
+      this.currentTarget = null;
+      this.currentTargetId = undefined;
 
-    // Если найдена цель, сразу вычисляем направление и устанавливаем скорость
-    if (selected) {
-      this.currentTarget = selected;
-      const dx = this.currentTarget.x - this.X;
-      const dy = this.currentTarget.y - this.Y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      this.vx = (dx / distance) * this.Speed;
-      this.vy = (dy / distance) * this.Speed;
-      this.lastAngle = Math.atan2(this.vy, this.vx);
-      this.targetCooldown = 30; // Обновление задержки для смены цели
-    }
-  }
-
-  private moveTowardsCurrentTarget(foodFields: FoodModel[]) {
-    if (!this.currentTarget) return;
-
-    const dx = this.currentTarget.x - this.X;
-    const dy = this.currentTarget.y - this.Y;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-
-    // Нормализация направления движения
-    const directionX = dx / distance;
-    const directionY = dy / distance;
-
-    // Вычисление текущего угла
-    const currentAngle = Math.atan2(directionY, directionX);
-    const lastAngle = this.lastAngle !== null ? this.lastAngle : currentAngle;
-
-    // Проверка отклонения угла
-    const angleDifference = Math.abs(currentAngle - lastAngle);
-
-    // Преобразование разницы углов в диапазон 0-180 градусов
-    const angleDifferenceDegrees = (angleDifference * 180) / Math.PI;
-
-    // Если угол изменился более чем на 30 градусов, пересчитываем направление
-    if (angleDifferenceDegrees > 30 || this.isCurrentTargetChanged(foodFields)) {
-      this.vx = directionX * this.Speed;
-      this.vy = directionY * this.Speed;
-      this.lastAngle = currentAngle; // Обновляем сохранённый угол
-    }
-
-    // Обновляем координаты, движение происходит постоянно
-    this.X += this.vx;
-    this.Y += this.vy;
-
-    // Проверка на достижение цели и выбор новой
-    // if (this.isCurrentTargetReached()) {
-    //   this.vx = 0;
-    //   this.vy = 0;
-    //   this.currentTarget = null;
-    // }
-  }
-
-  private isCurrentTargetChanged(foodFields: FoodModel[]): boolean {
-    if (!this.currentTarget) return true;
-
-    for (const food of foodFields) {
-      if (
-        food.X === this.currentTarget.x &&
-        food.Y === this.currentTarget.y &&
-        food.Status === STATUS.ALIVE
-      ) {
-        return false; // Цель не изменилась
-      }
-    }
-    return true; // Цель либо отсутствует, либо больше не существует
-  }
-  Init = (player?: PlayerModel, foodFields?: FoodModel[], enemies?: EnemyPlayerModel[]) => {
-    if (!player || !foodFields || !enemies) {
       return;
     }
 
-    this.chooseNewTarget(player, foodFields, enemies);
+    const angle = Math.atan2(target.Y - this.Y, target.X - this.X);
+    this.X += Math.cos(angle) * this.Speed;
+    this.Y += Math.sin(angle) * this.Speed;
 
-    // Постоянное обновление для движения 60 раз в секунду
-    this.intervalId = setInterval(() => {
-      this.move(player, foodFields, enemies);
-    }, 1000 / 60); // 60 FPS
-  };
+    // Ограничение перемещения по границам карты
+    this.X = Math.max(0, Math.min(MAP_SIZE, this.X));
+    this.Y = Math.max(0, Math.min(MAP_SIZE, this.Y));
+  }
 
-  Destroy = () => {
-    clearInterval(this.intervalId);
-  };
+  /**
+   * Начало бегства от угроз.
+   */
+  private startFleeing(threats: Array<PlayerFeatureModel | EnemyPlayerModel>) {
+    this.isRunningAway = true;
+    this.runningAwayFrom = threats;
+    this.currentTarget = null;
+    this.currentTargetId = undefined;
+    this.fleeCooldown = this.fleeDuration; // 5 секунд
+  }
+
+  /**
+   * Прекращение бегства.
+   */
+  private stopFleeing() {
+    this.isRunningAway = false;
+    this.runningAwayFrom = [];
+    this.closestThreat = null;
+  }
+
+  /**
+   * Логика бегства от ближайшей угрозы.
+   */
+  private flee() {
+    if (this.fleeCooldown <= 0) {
+      this.stopFleeing();
+      return;
+    }
+
+    this.fleeCooldown--;
+
+    let dx = 0;
+    let dy = 0;
+
+    for (const threat of this.runningAwayFrom) {
+      dx += this.X - threat.X;
+      dy += this.Y - threat.Y;
+    }
+
+    const magnitude = Math.sqrt(dx * dx + dy * dy);
+    if (magnitude > 0) {
+      this.X += (dx / magnitude) * this.Speed;
+      this.Y += (dy / magnitude) * this.Speed;
+    }
+
+    this.X = Math.max(0, Math.min(MAP_SIZE, this.X));
+    this.Y = Math.max(0, Math.min(MAP_SIZE, this.Y));
+  }
+
+  private calculateDistance(obj: { X: number; Y: number }): number {
+    const dx = obj.X - this.X;
+    const dy = obj.Y - this.Y;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  public Init = () => {};
+
+  public Destroy = () => {};
 }
