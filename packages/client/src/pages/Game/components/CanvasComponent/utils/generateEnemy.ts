@@ -4,7 +4,6 @@ import { EnemyStatic } from '../models';
 
 import { v4 as uuidv4 } from 'uuid';
 
-/** временный вариант. супер примитивный */
 export function GenerateEnemy({
   width,
   height,

@@ -2,7 +2,6 @@ import { FOOD_COUNT, FOOD_MASS } from '@/constants/game';
 import { FoodModel } from '../models';
 import { v4 as uuidv4 } from 'uuid';
 
-/** временный вариант. супер примитивный */
 export function GenerateFood({
   width,
   height,

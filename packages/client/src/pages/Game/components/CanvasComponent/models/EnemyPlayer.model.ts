@@ -9,7 +9,7 @@ export class EnemyPlayerModel extends PlayerFeatureModel {
   private isRunningAway: boolean = false;
   private runningAwayFrom: Array<PlayerFeatureModel | EnemyPlayerModel> = [];
   private fleeCooldown: number = 0; // Таймер для текущего убегания
-  private readonly fleeDuration: number = 300; // 5 секунд (60 кадров в секунду)
+  private readonly fleeDuration: number = 150; // 5 секунд (60 кадров в секунду)
   private readonly detectionRange: number = 20;
 
   constructor(props: ICircle) {

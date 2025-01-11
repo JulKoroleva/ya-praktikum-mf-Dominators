@@ -43,8 +43,8 @@ export class CanvasController {
   constructor(baseColor: string, imageFill?: HTMLImageElement) {
     this.Player = new PlayerModel({
       id: uuidv4(),
-      X: 2000,
-      Y: 2000,
+      X: 1000,
+      Y: 1000,
       Radius: START_PLAYER_RADIUS,
       ColorFill: baseColor,
       ImageFill: imageFill,
@@ -425,24 +425,21 @@ export class CanvasController {
 
   public AddEnemyOverTime() {
     this.EnemyPlayers = this.filterDeadEnemies();
-    requestIdleCallback(() => {
-      if (this.EnemyPlayers.length < 130) {
-        const newEnemies = generateRandomEnemies(1, this.Player.Player.X, this.Player.Player.Y);
-        this.EnemyPlayers.push(...newEnemies);
-      }
-    });
+
+    if (this.EnemyPlayers.length < 130) {
+      const newEnemies = generateRandomEnemies(1, this.Player.Player.X, this.Player.Player.Y);
+      this.EnemyPlayers.push(...newEnemies);
+    }
   }
 
-  public AddFoodOverTime(minFoodCount: number = 4900, foodToAdd: number = 100) {
-    requestIdleCallback(() => {
-      if (this.FoodFields.length < minFoodCount) {
-        const newFood = GenerateFood({
-          width: MAP_SIZE,
-          height: MAP_SIZE,
-        }).slice(0, foodToAdd);
-        this.FoodFields.push(...newFood);
-      }
-    });
+  public AddFoodOverTime(minFoodCount: number = 3900, foodToAdd: number = 100) {
+    if (this.FoodFields.length < minFoodCount) {
+      const newFood = GenerateFood({
+        width: MAP_SIZE,
+        height: MAP_SIZE,
+      }).slice(0, foodToAdd);
+      this.FoodFields.push(...newFood);
+    }
   }
 
   public DrawAll(ctx: CanvasRenderingContext2D) {
@@ -481,36 +478,6 @@ export class CanvasController {
     }
   }
 
-  public get Result(): Array<TResult> {
-    const field = [this.Player.Player, ...this.EnemyPlayers].sort((a, b) => b.Radius - a.Radius);
-    const topPosition = field.findIndex(player => !(player instanceof EnemyPlayerModel)) + 1;
-
-    return [
-      {
-        id: 1,
-        title: 'Food eating',
-        value: FOOD_COUNT - this.FoodFields.length,
-      },
-      {
-        id: 2,
-        title: 'Score Points',
-        value: this.Player.MyScore,
-      },
-      {
-        id: 3,
-        title: 'Cells eating',
-        value:
-          this.EnemyFields.length -
-          this.EnemyFields.filter(({ Status }) => Status === STATUS.ALIVE).length,
-      },
-      {
-        id: 4,
-        title: 'Top position',
-        value: topPosition,
-      },
-    ];
-  }
-
   public DrawGrid(ctx: CanvasRenderingContext2D) {
     const gridSize = 5;
     const cameraX = this.Camera.X;
@@ -543,5 +510,35 @@ export class CanvasController {
     }
 
     ctx.restore();
+  }
+
+  public get Result(): Array<TResult> {
+    const field = [this.Player.Player, ...this.EnemyPlayers].sort((a, b) => b.Radius - a.Radius);
+    const topPosition = field.findIndex(player => !(player instanceof EnemyPlayerModel)) + 1;
+
+    return [
+      {
+        id: 1,
+        title: 'Food eating',
+        value: FOOD_COUNT - this.FoodFields.length,
+      },
+      {
+        id: 2,
+        title: 'Score Points',
+        value: this.Player.MyScore,
+      },
+      {
+        id: 3,
+        title: 'Cells eating',
+        value:
+          this.EnemyFields.length -
+          this.EnemyFields.filter(({ Status }) => Status === STATUS.ALIVE).length,
+      },
+      {
+        id: 4,
+        title: 'Top position',
+        value: topPosition,
+      },
+    ];
   }
 }

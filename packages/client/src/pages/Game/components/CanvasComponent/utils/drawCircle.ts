@@ -1,7 +1,7 @@
 import { ICircle } from '../interfaces/CanvasComponent.interface';
 
 const jellyDamping = 0.18;
-const numPoints = 34;
+const numPoints = 24;
 const angleStep = (Math.PI * 2) / numPoints;
 
 const calculateDeformedPoints = (
