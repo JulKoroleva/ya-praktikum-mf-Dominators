@@ -3,7 +3,7 @@ import { resolve, join } from 'path';
 import react from '@vitejs/plugin-react';
 import svgr from 'vite-plugin-svgr';
 import dotenv from 'dotenv';
-dotenv.config();
+dotenv.config({ path: resolve(__dirname, '../../.env') });
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -13,8 +13,7 @@ export default defineConfig({
   },
   define: {
     __SERVER_PORT__: process.env.SERVER_PORT,
-    __EXTERNAL_SERVER_URL__: JSON.stringify(process.env.EXTERNAL_SERVER_URL),
-    __INTERNAL_SERVER_URL__: JSON.stringify(process.env.INTERNAL_SERVER_URL),
+    __INTERNAL_SERVER_URL__: JSON.stringify(`http://localhost:${process.env.SERVER_PORT}`),
   },
   css: {
     preprocessorOptions: {

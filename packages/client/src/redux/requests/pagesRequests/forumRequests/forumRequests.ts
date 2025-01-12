@@ -12,7 +12,7 @@ export const fetchForum = createAsyncThunk<
   { rejectValue: string }
 >('forum/fetchForum', async (_, { rejectWithValue }) => {
   const url = `${SERVER_HOST}/forum`;
-
+  console.log(SERVER_HOST);
   return fetch(url)
     .then(res => res.json())
     .catch(err => rejectWithValue(err));
