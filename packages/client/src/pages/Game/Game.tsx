@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react';
-import { Popup, UniversalModal } from '@/components';
-import { EndGame, StartGame, CanvasComponent } from './components';
-import { TResult } from './Game.interface';
-import { MODAL_CONTENT } from './components/CanvasComponent/constants/modal.constants';
 import { useNavigate } from 'react-router-dom';
-import { ROUTES } from '@/constants/routes';
-import { GoBackModalContent } from './components/GoBackModal/GoBackModal';
-import { addLeaderBoardEntry } from '@/redux/requests/pagesRequests/leaderBoardRequest/leaderBoardRequest';
 import { useDispatch, useSelector } from 'react-redux';
+import { Popup, UniversalModal } from '@/components';
+import {
+  EndGame,
+  StartGame,
+  CanvasComponent,
+  GoBackModalContent,
+  MODAL_CONTENT,
+} from './components';
+import { TResult } from './Game.interface';
+import { ROUTES } from '@/constants/routes';
+import { addLeaderBoardEntry } from '@/redux/requests';
 import { RootState, TypeDispatch } from '@/redux/store';
 import { getCookie } from '@/services/cookiesHandler';
 import { useIsAuthorized, usePage } from '@/services/hooks';
@@ -54,6 +58,8 @@ export const Game = () => {
   const handleRepeat = () => {
     setEndedGame(false);
     setIsGameStarted(false);
+    setShowModal(false);
+    setIsPaused(false);
   };
 
   const handleBackButtonClick = () => {
@@ -79,14 +85,9 @@ export const Game = () => {
         <StartGame onComplete={handleStartGame} isGameStarted={isGameStarted} />
       ) : (
         <>
-          <CanvasComponent
-            endGameCallback={handleEndGame}
-            onBackButtonClick={handleBackButtonClick}
-            isPaused={isPaused}
-          />
-
           <UniversalModal
-            show={showModal}
+            //!isEndedGame нужно, чтобы не открывать модалку во время конца игры при окончании захвата мыши
+            show={showModal && !isEndedGame}
             onHide={cancelNavigation}
             title={MODAL_CONTENT.modalTitle}>
             <GoBackModalContent
@@ -95,6 +96,12 @@ export const Game = () => {
               modalContent={MODAL_CONTENT}
             />
           </UniversalModal>
+          <CanvasComponent
+            endGameCallback={handleEndGame}
+            onBackButtonClick={handleBackButtonClick}
+            isPaused={isPaused}
+            isEndedGame={isEndedGame}
+          />
 
           <Popup open={isEndedGame} withOverlay={true}>
             <EndGame results={result[0]} handleRepeat={handleRepeat} />

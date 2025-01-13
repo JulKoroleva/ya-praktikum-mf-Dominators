@@ -1,39 +1,39 @@
 import { useEffect, useRef, useState } from 'react';
 import { useMousePosition } from '@/utils/useMousePosition';
 import { useCanvasResize } from '@/utils/useCanvasResize';
-import { useFullscreen } from './hooks/useFullscreen';
+import { useFullscreenAndPointerLock } from './hooks/useFullscreenAndPointerLock';
 import { useAvatarImage } from './hooks/useAvatar';
 
 import { CanvasController } from './CanvasComponent.controller';
 
 import styles from './CanvasComponent.module.scss';
 import { STATUS } from './interfaces/CanvasComponent.interface';
-import { Button, ProgressBar } from 'react-bootstrap';
+import { ProgressBar } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { TResult } from '../../Game.interface';
-
-import fullScrenIcon from '@/assets/icons/screen-full.svg';
-import normalScrenIcon from '@/assets/icons/screen-normal.svg';
 
 export function CanvasComponent({
   endGameCallback,
   onBackButtonClick,
   isPaused,
+  isEndedGame,
 }: {
   endGameCallback: (result: Array<TResult>) => void;
   onBackButtonClick: () => void;
   isPaused: boolean;
+  isEndedGame: boolean;
 }) {
   const refCanvas = useRef<HTMLCanvasElement>(null);
   const animationFrameRef = useRef<number | null>(null);
-  const mouseCoodrs = useMousePosition();
   const [score, setScore] = useState(0);
   const [progress, setProgress] = useState(0);
+  //должен быть до useMousePosition
+  const toggleFullscreenAndPointerLock = useFullscreenAndPointerLock(refCanvas, onBackButtonClick);
+  const mouseCoodrs = useMousePosition();
 
   useCanvasResize();
 
-  const { isFullscreen, toggleFullscreen } = useFullscreen();
   const controllerRef = useRef<CanvasController | null>(null);
   const baseAvatar = useSelector(
     (state: RootState) => state.global.user.processedAvatar || 'rgb(0, 0, 0)',
@@ -47,6 +47,12 @@ export function CanvasComponent({
   });
 
   useEffect(() => {
+    if (isEndedGame) {
+      toggleFullscreenAndPointerLock(false);
+    }
+  }, [isEndedGame]);
+
+  useEffect(() => {
     if (isPaused) {
       if (animationFrameRef.current !== null) {
         cancelAnimationFrame(animationFrameRef.current);
@@ -56,6 +62,7 @@ export function CanvasComponent({
       if (!animationFrameRef.current) {
         animate();
       }
+      toggleFullscreenAndPointerLock(true);
     }
 
     return () => {
@@ -154,48 +161,27 @@ export function CanvasComponent({
   }, []);
 
   return (
-    <div className={styles['canvas-page']}>
-      <div className={styles['canvas-page__menu']}>
-        <div className={styles['canvas-page__score-block']}>
-          <div className={styles['canvas-page__score-block__name']}>Score: </div>
-          <div className={styles['canvas-page__score-block__points']}>{score}</div>
+    <>
+      <div className={styles['canvas-page']}>
+        <div className={styles['canvas-page__menu']}>
+          <div className={styles['canvas-page__score-block']}>
+            <div className={styles['canvas-page__score-block__name']}>Score: </div>
+            <div className={styles['canvas-page__score-block__points']}>{score}</div>
+          </div>
+          <ProgressBar className={styles['canvas-page__progress']}>
+            <ProgressBar
+              className={
+                progress < 100
+                  ? styles['canvas-page__progress__fill']
+                  : styles['canvas-page__progress__complete']
+              }
+              now={progress}
+              max={100}
+            />
+          </ProgressBar>
         </div>
-        <ProgressBar className={styles['canvas-page__progress']}>
-          <ProgressBar
-            className={
-              progress < 100
-                ? styles['canvas-page__progress__fill']
-                : styles['canvas-page__progress__complete']
-            }
-            now={progress}
-            max={100}
-          />
-        </ProgressBar>
-        <Button
-          className={styles['back-button']}
-          type="button"
-          onClick={() => {
-            const parentElement = refCanvas.current?.parentElement || null;
-            toggleFullscreen(parentElement, false);
-            onBackButtonClick();
-          }}>
-          <img src="/src/assets/icons/back.svg" alt="back arrow" />
-        </Button>
+        <canvas data-testid="canvas" className={styles['canvas']} ref={refCanvas} />
       </div>
-      <Button
-        className={styles['fullscreen-button']}
-        type="button"
-        onClick={() => {
-          const parentElement = refCanvas.current?.parentElement || null;
-          toggleFullscreen(parentElement);
-        }}>
-        <img
-          className={styles['fullscreen-button__icon']}
-          src={isFullscreen ? normalScrenIcon : fullScrenIcon}
-          alt="fullscreen toggle"
-        />
-      </Button>
-      <canvas data-testid="canvas" className={styles['canvas']} ref={refCanvas} />
-    </div>
+    </>
   );
 }
