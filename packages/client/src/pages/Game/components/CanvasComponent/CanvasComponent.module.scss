@@ -42,38 +42,13 @@ canvas {
     height: 15px;
     background: grey;
     margin-top: 10px;
+
     &__fill {
       background: yellow;
     }
+
     &__complete {
       background: green;
     }
-  }
-}
-
-.back-button {
-  @extend %custom-button-outline;
-
-  background-color: $color-green-main;
-  color: $color-white;
-  margin-top: 10px;
-  width: 40px;
-}
-
-.fullscreen-button {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 40px;
-  height: 40px;
-  background-color: transparent;
-  border: none;
-
-  &__icon {
-    width: 100%;
-  }
-
-  &:hover {
-    opacity: 0.5;
   }
 }
