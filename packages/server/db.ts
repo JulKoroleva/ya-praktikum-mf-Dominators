@@ -4,7 +4,7 @@ const { POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB, POSTGRES_PORT, POSTGRES_H
 
 const sequelizeOptions: SequelizeOptions = {
   username: POSTGRES_USER || 'postgres',
-  host: POSTGRES_HOST || 'postgres',
+  host: POSTGRES_HOST || 'localhost',
   database: POSTGRES_DB || 'postgres',
   password: POSTGRES_PASSWORD || 'postgres',
   port: Number(POSTGRES_PORT) || 5432,
@@ -13,7 +13,7 @@ const sequelizeOptions: SequelizeOptions = {
 
 export const sequelize = new Sequelize(sequelizeOptions);
 
-export const createClientAndConnect = async (): Promise<void> => {
+export async function createClientAndConnect(): Promise<void> {
   try {
     await sequelize.authenticate();
     await sequelize.sync();
@@ -21,4 +21,4 @@ export const createClientAndConnect = async (): Promise<void> => {
   } catch (e) {
     console.error(e);
   }
-};
+}

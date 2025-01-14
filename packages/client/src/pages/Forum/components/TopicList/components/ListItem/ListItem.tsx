@@ -18,7 +18,7 @@ export function ListItem({ topic }: IListItemProps) {
       <div className={styles['list-item__header']}>
         <span className={styles['list-item__author']}>{creator}</span>
         <span className={styles['list-item__message-count']}>
-          {messages.length !== 0 && messages.length}
+          {messages?.length !== 0 && messages?.length}
         </span>
       </div>
       <div className={styles['list-item__info']}>

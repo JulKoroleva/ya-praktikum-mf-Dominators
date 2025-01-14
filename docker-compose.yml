@@ -44,3 +44,20 @@ services:
         volumes:
             - ./tmp/pgdata:/var/lib/postgresql/data
         restart: always
+    pgadmin:
+        container_name: pgadmin
+        image: dpage/pgadmin4:4.18
+        restart: always
+        environment:
+            PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+            PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+            PGADMIN_LISTEN_PORT: ${PGADMIN_LISTEN_PORT}
+        ports:
+            - "8080:80"
+        volumes:
+            - pgadmin-data:/var/lib/pgadmin
+        depends_on:
+            - postgres
+
+volumes:
+    pgadmin-data:

@@ -1,6 +1,7 @@
 import { IFieldConfig } from '@/components/FormComponent/components/FormField/FormField.interface';
+import { ICreateTopicDto } from './components/TopicList/TopicList.interface';
 
-export const createNewTopicFields: IFieldConfig[] = [
+export const createNewTopicFields: IFieldConfig<ICreateTopicDto>[] = [
   {
     id: 'title',
     label: 'Topic name',
