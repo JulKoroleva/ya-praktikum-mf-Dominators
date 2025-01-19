@@ -32,10 +32,10 @@ const promises_1 = __importDefault(require("fs/promises"));
 const vite_1 = require("vite");
 const express_1 = __importDefault(require("express"));
 const path_1 = __importDefault(require("path"));
+dotenv_1.default.config({ path: path_1.default.resolve(__dirname, '../../../.env') });
 const port = process.env.CLIENT_PORT || 3000;
 const clientPath = path_1.default.join(__dirname, '..');
 const isDev = process.env.NODE_ENV === 'development';
-dotenv_1.default.config({ path: path_1.default.resolve(__dirname, '../../../.env') });
 async function createServer() {
     const app = (0, express_1.default)();
     let vite;

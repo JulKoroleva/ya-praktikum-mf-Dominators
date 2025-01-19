@@ -1,1 +1,2 @@
-export { Topic } from './topic';
+export { topicModel } from './topic';
+export { topicCommentModel } from './topicComment';
