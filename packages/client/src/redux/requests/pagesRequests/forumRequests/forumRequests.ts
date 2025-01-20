@@ -28,6 +28,7 @@ export const createForum = createAsyncThunk<void, ICreateTopicDto, { rejectValue
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
+      credentials: 'include',
     });
 
     if (!request.ok) {

@@ -5,10 +5,11 @@ import { createServer as createViteServer, ViteDevServer } from 'vite';
 import express, { Request as ExpressRequest } from 'express';
 import path from 'path';
 
+dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
+
 const port = process.env.CLIENT_PORT || 3000;
 const clientPath = path.join(__dirname, '..');
 const isDev = process.env.NODE_ENV === 'development';
-dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 
 async function createServer() {
   const app = express();

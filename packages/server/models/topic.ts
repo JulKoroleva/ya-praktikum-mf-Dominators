@@ -2,27 +2,42 @@ import { DataType, Model } from 'sequelize-typescript';
 import { ModelAttributes } from 'sequelize/types';
 
 export interface ITopic {
-  creator?: string;
+  id: number;
+  creator: string;
+  creatorId: number;
+  comments: number;
   title: string;
-  createdAt?: Date;
-  comments?: number;
   description: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export const topicModel: ModelAttributes<Model, ITopic> = {
+  id: {
+    type: DataType.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
   creator: {
     type: DataType.TEXT,
   },
+  creatorId: {
+    type: DataType.INTEGER,
+  },
+  comments: {
+    type: DataType.INTEGER,
+    defaultValue: 0,
+  },
   title: {
+    type: DataType.TEXT,
+  },
+  description: {
     type: DataType.TEXT,
   },
   createdAt: {
     type: DataType.DATE,
   },
-  comments: {
-    type: DataType.INTEGER,
-  },
-  description: {
-    type: DataType.TEXT,
+  updatedAt: {
+    type: DataType.DATE,
   },
 };
