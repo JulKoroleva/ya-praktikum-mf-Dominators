@@ -33,12 +33,9 @@ export class CanvasController {
 
   public EnemyPlayers;
 
-  public FoodFields = GenerateFood({
-    width: MAP_SIZE,
-    height: MAP_SIZE,
-  });
+  public FoodFields: GameFeatureModel[] = [];
 
-  public EnemyFields: EnemyStatic[] = [...GenerateEnemy({ width: MAP_SIZE, height: MAP_SIZE })];
+  public EnemyFields: EnemyStatic[] = [];
 
   constructor(baseColor: string, imageFill?: HTMLImageElement) {
     this.Player = new PlayerModel({
@@ -50,17 +47,27 @@ export class CanvasController {
       ImageFill: imageFill,
       Speed: 1,
     });
+
+    setTimeout(() => {
+      this.FoodFields = GenerateFood({
+        width: MAP_SIZE,
+        height: MAP_SIZE,
+      });
+
+      this.EnemyFields = [...GenerateEnemy({ width: MAP_SIZE, height: MAP_SIZE })];
+    }, 0);
+
     this.EnemyPlayers = generateRandomEnemies(150, this.Player.Player.X, this.Player.Player.Y);
   }
 
-  public MovePlayer(mouseX: number, mouseY: number) {
-    this.Player.move(this.Camera, mouseX, mouseY);
-    this.Player.moveDivision(this.Camera, mouseX, mouseY);
+  public MovePlayer(mouseX: number, mouseY: number, deltaTime: number) {
+    this.Player.move(this.Camera, mouseX, mouseY, deltaTime);
+    this.Player.moveDivision(this.Camera, mouseX, mouseY, deltaTime);
   }
 
-  public EnemyPlayersMove() {
+  public EnemyPlayersMove(deltaTime: number) {
     for (const enemy of this.EnemyPlayers) {
-      enemy.move(this.Player.Player, this.FoodFields, this.EnemyPlayers);
+      enemy.move(this.Player.Player, this.FoodFields, this.EnemyPlayers, deltaTime);
     }
   }
 
@@ -113,10 +120,6 @@ export class CanvasController {
 
   filterDeadEnemies() {
     return this.EnemyPlayers.filter(el => el.Status !== STATUS.DEAD);
-  }
-
-  isStaticEnemy(enemy: EnemyPlayerModel) {
-    return enemy instanceof EnemyStatic;
   }
 
   calculateCollisionData(

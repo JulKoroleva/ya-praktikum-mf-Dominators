@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { EnemyPlayerModel } from '../models/EnemyPlayer.model';
 
 function getSpeed(radius: number): number {
-  const maxSpeed = 0.8;
+  const maxSpeed = 1;
   const minSpeed = 0.1;
   const minR = 1;
   const maxR = 10;

@@ -31,6 +31,7 @@ export function CanvasComponent({
   //должен быть до useMousePosition
   const toggleFullscreenAndPointerLock = useFullscreenAndPointerLock(refCanvas, onBackButtonClick);
   const mouseCoodrs = useMousePosition();
+  const lastTimeRef = useRef(performance.now());
 
   useCanvasResize();
 
@@ -73,7 +74,7 @@ export function CanvasComponent({
     };
   }, [isPaused]);
 
-  const renderCanvas = (ctx: CanvasRenderingContext2D) => {
+  const renderCanvas = (ctx: CanvasRenderingContext2D, deltaTime: number) => {
     const controller = controllerRef.current;
     if (!controller) return;
 
@@ -87,8 +88,8 @@ export function CanvasComponent({
 
     controller.DrawGrid(ctx);
 
-    controller.MovePlayer(mouseCoodrs.current.X, mouseCoodrs.current.Y);
-    controller.EnemyPlayersMove();
+    controller.MovePlayer(mouseCoodrs.current.X, mouseCoodrs.current.Y, deltaTime);
+    controller.EnemyPlayersMove(deltaTime); // Передаём deltaTime
 
     controller.Camera.focus(canvas, controller.Map, controller.Player.Player);
     ctx.translate(-controller.Camera.X, -controller.Camera.Y);
@@ -109,10 +110,14 @@ export function CanvasComponent({
       return;
     }
 
+    const currentTime = performance.now();
+    const deltaTime = (currentTime - lastTimeRef.current) / 16.67;
+    lastTimeRef.current = currentTime;
+
     setProgress(controller.Player.BoostProgress);
     const ctx = refCanvas.current.getContext('2d');
     if (!ctx) return;
-    renderCanvas(ctx);
+    renderCanvas(ctx, deltaTime);
 
     if (!isPaused) {
       animationFrameRef.current = requestAnimationFrame(animate);

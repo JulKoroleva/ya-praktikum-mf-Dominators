@@ -22,7 +22,12 @@ export class EnemyPlayerModel extends PlayerFeatureModel {
    * @param foodFields
    * @param enemies
    */
-  public move(player?: PlayerFeatureModel, food?: FoodModel[], enemies?: EnemyPlayerModel[]): void {
+  public move(
+    player?: PlayerFeatureModel,
+    food?: FoodModel[],
+    enemies?: EnemyPlayerModel[],
+    deltaTime: number = 1,
+  ): void {
     if (!player || !food || !enemies) {
       return;
     }
@@ -36,29 +41,28 @@ export class EnemyPlayerModel extends PlayerFeatureModel {
     }
 
     if (this.isRunningAway) {
-      this.flee();
+      this.flee(deltaTime);
       return;
     }
-
     if (!this.currentTarget || !this.isValidTarget(this.currentTarget)) {
       this.currentTarget = this.findNearestSmallerObject(player, food, enemies);
       this.currentTargetId = this.currentTarget?.id;
     }
 
     if (this.currentTarget) {
-      this.moveToTarget(this.currentTarget, food, enemies);
+      this.moveToTarget(this.currentTarget, food, enemies, deltaTime);
     } else {
-      this.wanderRandomly();
+      this.wanderRandomly(deltaTime);
     }
   }
 
   /**
    * Для рандомного движения
    */
-  private wanderRandomly(): void {
+  private wanderRandomly(deltaTime: number = 1): void {
     const randomAngle = Math.random() * 2 * Math.PI;
-    this.X += Math.cos(randomAngle) * this.Speed;
-    this.Y += Math.sin(randomAngle) * this.Speed;
+    this.X += Math.cos(randomAngle) * this.Speed * deltaTime;
+    this.Y += Math.sin(randomAngle) * this.Speed * deltaTime;
 
     this.X = Math.max(0, Math.min(MAP_SIZE, this.X));
     this.Y = Math.max(0, Math.min(MAP_SIZE, this.Y));
@@ -135,11 +139,11 @@ export class EnemyPlayerModel extends PlayerFeatureModel {
     target: FoodModel | PlayerFeatureModel | EnemyPlayerModel,
     food?: FoodModel[],
     enemies?: EnemyPlayerModel[],
+    deltaTime: number = 1,
   ) {
     const distance = this.calculateDistance(target);
 
-    // Проверка, достиг ли объект цели: если да, то удаляем съеденый объект
-    if (distance <= this.Speed) {
+    if (distance <= this.Speed * deltaTime) {
       this.X = target.X;
       this.Y = target.Y;
 
@@ -159,15 +163,13 @@ export class EnemyPlayerModel extends PlayerFeatureModel {
 
       this.currentTarget = null;
       this.currentTargetId = undefined;
-
       return;
     }
 
     const angle = Math.atan2(target.Y - this.Y, target.X - this.X);
-    this.X += Math.cos(angle) * this.Speed;
-    this.Y += Math.sin(angle) * this.Speed;
+    this.X += Math.cos(angle) * this.Speed * deltaTime;
+    this.Y += Math.sin(angle) * this.Speed * deltaTime;
 
-    // Ограничение перемещения по границам карты
     this.X = Math.max(0, Math.min(MAP_SIZE, this.X));
     this.Y = Math.max(0, Math.min(MAP_SIZE, this.Y));
   }
@@ -195,7 +197,7 @@ export class EnemyPlayerModel extends PlayerFeatureModel {
   /**
    * Логика бегства от ближайшей угрозы.
    */
-  private flee() {
+  private flee(deltaTime: number = 1) {
     if (this.fleeCooldown <= 0) {
       this.stopFleeing();
       return;
@@ -213,8 +215,8 @@ export class EnemyPlayerModel extends PlayerFeatureModel {
 
     const magnitude = Math.sqrt(dx * dx + dy * dy);
     if (magnitude > 0) {
-      this.X += (dx / magnitude) * this.Speed;
-      this.Y += (dy / magnitude) * this.Speed;
+      this.X += (dx / magnitude) * this.Speed * deltaTime;
+      this.Y += (dy / magnitude) * this.Speed * deltaTime;
     }
 
     this.X = Math.max(0, Math.min(MAP_SIZE, this.X));

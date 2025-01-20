@@ -19,9 +19,6 @@ export class CameraModel implements ICoords {
     this.ViewHeight = window.innerHeight / this.Scale;
   }
 
-  /**
-   * Центрирование камеры на игроке
-   */
   focus(canvas: HTMLCanvasElement, map: MapRegionModel, player: GameFeatureModel) {
     const canvasWidth = canvas.width / this.Scale;
     const canvasHeight = canvas.height / this.Scale;
@@ -30,9 +27,6 @@ export class CameraModel implements ICoords {
     this.Y = this.clamp(player.Y - canvasHeight / 2, 0, map.Height - canvasHeight);
   }
 
-  /**
-   * Ограничение движения камеры в пределах карты
-   */
   clamp(coord: number, min: number, max: number) {
     if (coord < min) {
       return min;
@@ -43,9 +37,6 @@ export class CameraModel implements ICoords {
     return coord;
   }
 
-  /**
-   * Метод для обновления размеров камеры при изменении масштаба
-   */
   updateViewSize() {
     this.ViewWidth = window.innerWidth / this.Scale;
     this.ViewHeight = window.innerHeight / this.Scale;
