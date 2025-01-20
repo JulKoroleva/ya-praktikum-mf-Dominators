@@ -361,7 +361,7 @@ export class CanvasController {
 
   private handleEnemyCollision(enemy: EnemyPlayerModel, element: EnemyStatic) {
     if (enemy.Radius > element.Radius) {
-      const massLossRateEnemy = 0.003;
+      const massLossRateEnemy = 0.005;
       const massLossEnemy = enemy.Radius * massLossRateEnemy;
 
       enemy.Radius -= massLossEnemy;
