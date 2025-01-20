@@ -1,14 +1,14 @@
 import dotenv from 'dotenv';
-dotenv.config();
 import serialize from 'serialize-javascript';
 import fs from 'fs/promises';
 import { createServer as createViteServer, ViteDevServer } from 'vite';
 import express, { Request as ExpressRequest } from 'express';
 import path from 'path';
 
-const port = process.env.PORT || 3000;
+const port = process.env.CLIENT_PORT || 3000;
 const clientPath = path.join(__dirname, '..');
 const isDev = process.env.NODE_ENV === 'development';
+dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 
 async function createServer() {
   const app = express();
@@ -20,6 +20,10 @@ async function createServer() {
       server: { middlewareMode: true },
       root: clientPath,
       appType: 'custom',
+      define: {
+        __SERVER_PORT__: process.env.SERVER_PORT,
+        __INTERNAL_SERVER_URL__: JSON.stringify(`http://localhost:${process.env.SERVER_PORT}`),
+      },
     });
 
     app.use(vite.middlewares);

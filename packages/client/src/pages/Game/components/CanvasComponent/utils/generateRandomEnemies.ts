@@ -39,7 +39,6 @@ export function generateRandomEnemies(
       distance = Math.sqrt(dx * dx + dy * dy);
     } while (distance < minDistance);
 
-    // const randomRadius = 3;
     const randomRadius = 3 + Math.random() * 5;
 
     const randomSpeed = getSpeed(randomRadius);
@@ -53,7 +52,7 @@ export function generateRandomEnemies(
     const darkerGreen = Math.max(0, green - 50);
     const darkerBlue = Math.max(0, blue - 50);
     const strokeColor = `rgba(${darkerRed}, ${darkerGreen}, ${darkerBlue}, 1)`;
-    console.log('speed', randomSpeed);
+
     const enemy = new EnemyPlayerModel({
       X: randomX,
       Y: randomY,

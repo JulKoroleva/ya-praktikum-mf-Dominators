@@ -27,15 +27,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
 const serialize_javascript_1 = __importDefault(require("serialize-javascript"));
 const promises_1 = __importDefault(require("fs/promises"));
 const vite_1 = require("vite");
 const express_1 = __importDefault(require("express"));
 const path_1 = __importDefault(require("path"));
-const port = process.env.PORT || 3000;
+const port = process.env.CLIENT_PORT || 3000;
 const clientPath = path_1.default.join(__dirname, '..');
 const isDev = process.env.NODE_ENV === 'development';
+dotenv_1.default.config({ path: path_1.default.resolve(__dirname, '../../../.env') });
 async function createServer() {
     const app = (0, express_1.default)();
     let vite;
@@ -44,6 +44,10 @@ async function createServer() {
             server: { middlewareMode: true },
             root: clientPath,
             appType: 'custom',
+            define: {
+                __SERVER_PORT__: process.env.SERVER_PORT,
+                __INTERNAL_SERVER_URL__: JSON.stringify(`http://localhost:${process.env.SERVER_PORT}`),
+            },
         });
         app.use(vite.middlewares);
     }

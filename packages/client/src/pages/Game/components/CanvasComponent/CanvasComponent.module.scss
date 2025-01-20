@@ -35,31 +35,20 @@ canvas {
       color: $color-medium-grey;
     }
   }
-}
 
-.back-button {
-  @extend %custom-button-outline;
+  &__progress {
+    display: flex;
+    width: 100px;
+    height: 15px;
+    background: grey;
+    margin-top: 10px;
 
-  background-color: $color-green-main;
-  color: $color-white;
-  margin-top: 10px;
-  width: 40px;
-}
+    &__fill {
+      background: yellow;
+    }
 
-.fullscreen-button {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 40px;
-  height: 40px;
-  background-color: transparent;
-  border: none;
-
-  &__icon {
-    width: 100%;
-  }
-
-  &:hover {
-    opacity: 0.5;
+    &__complete {
+      background: green;
+    }
   }
 }

@@ -1,7 +1,6 @@
 import {
   FOOD_MASS,
   GROW_BY_FOOD_COEFFICIENT,
-  MAX_DIVISIONS,
   SPEED_BOOST_COEFFICIENT,
   SPEED_BOOST_PROGRESS_INTERVAL,
   SPEED_BOOST_TIME,
@@ -16,8 +15,8 @@ import { v4 as uuidv4 } from 'uuid';
 export class PlayerModel {
   public id: string = uuidv4();
   public Player: PlayerFeatureModel;
-  public Speed = 1;
-  public SpeedBoostLastTime = 1;
+  public Speed = 0;
+  public SpeedBoostLastTime = 0;
   public SpeedBoostCoefficient = 1;
   public Way: { x: number; y: number } = { x: 0, y: 0 };
   public Divisions: PlayerFeatureModel[] = [];
@@ -52,10 +51,8 @@ export class PlayerModel {
 
     const angle = Math.atan2(dY, dX);
 
-    this.Player.Y +=
-      ((Math.sin(angle) * 1) / Math.sqrt(this.Player.Radius)) * this.SpeedBoostCoefficient;
-    this.Player.X +=
-      ((Math.cos(angle) * 1) / Math.sqrt(this.Player.Radius)) * this.SpeedBoostCoefficient;
+    this.Player.Y += (Math.sin(angle) * 1) / Math.sqrt(this.Player.Radius);
+    this.Player.X += (Math.cos(angle) * 1) / Math.sqrt(this.Player.Radius);
   }
 
   activateSpeedBooster() {
@@ -67,30 +64,6 @@ export class PlayerModel {
       this.SpeedBoostCoefficient = 1;
     }, SPEED_BOOST_TIME);
     this.resestBoostInterval();
-  }
-
-  cellDivision(camera: CameraModel, mouseX: number, mouseY: number) {
-    if (this.Divisions.length >= MAX_DIVISIONS) {
-      return;
-    }
-
-    this.Player.Radius /= 2;
-
-    /** подумать над доработкой MAX_COUNT + MIN_SIZE */
-    this.Divisions.push(
-      new PlayerFeatureModel({
-        Speed: this.Player.Speed,
-        id: this.Player.id,
-        Y:
-          this.Player.Y +
-          ((mouseY / camera.Scale + camera.Y - this.Player.Y) * 4) / this.Player.Radius,
-        X:
-          this.Player.X +
-          ((mouseX / camera.Scale + camera.X - this.Player.X) * 4) / this.Player.Radius,
-        Radius: this.Player.Radius,
-        ColorFill: 'red',
-      }),
-    );
   }
 
   throwFood(camera: CameraModel, food: Array<GameFeatureModel>, mouseX: number, mouseY: number) {

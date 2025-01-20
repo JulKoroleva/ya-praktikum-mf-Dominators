@@ -24,3 +24,8 @@ export type TPaginationOptions = {
 export interface ITopicListProps {
   topicList: TTopic[];
 }
+
+export interface ICreateTopicDto {
+  title: string;
+  description: string;
+}

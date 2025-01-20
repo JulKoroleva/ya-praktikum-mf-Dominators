@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'react-bootstrap';
 
 import { FormComponent, Navigation, Popup, ErrorNotification } from '@/components';
@@ -19,6 +19,9 @@ import { createNewTopicFields, createNewTopicFieldsInitialValues } from './FormD
 import add from '@/assets/icons/add.svg';
 
 import styles from './Forum.module.scss';
+import { createForum } from '@/redux/requests/pagesRequests/forumRequests/forumRequests';
+import { TypeDispatch } from '@/redux/store';
+import { ICreateTopicDto } from './components/TopicList/TopicList.interface';
 
 export const Forum = () => {
   // /**
@@ -41,9 +44,10 @@ export const Forum = () => {
 
   const topicListFromServer = useSelector(selectTopicList);
   const paginationOptionsFromServer = useSelector(selectPaginationOptions);
+  const dispatch = useDispatch<TypeDispatch>();
 
-  const onSubmit = (data: Record<string, string>) => {
-    return data;
+  const onSubmit = (data: ICreateTopicDto) => {
+    dispatch(createForum(data));
   };
 
   useEffect(() => {
