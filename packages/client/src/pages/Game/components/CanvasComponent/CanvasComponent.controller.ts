@@ -249,8 +249,7 @@ export class CanvasController {
   }
 
   handleAbsorption(element: EnemyPlayerModel, Player: PlayerFeatureModel, playerRadius: number) {
-    const absorptionRate = 0.5;
-    const absorbedRadius = element.Radius * absorptionRate;
+    const absorbedRadius = element.Radius * GROW_BY_FOOD_COEFFICIENT;
 
     if (playerRadius > element.Radius) {
       Player.Radius += absorbedRadius;
@@ -261,8 +260,8 @@ export class CanvasController {
         element.Radius = 0;
       }
     } else {
-      element.Radius += playerRadius * absorptionRate;
-      Player.Radius -= playerRadius * absorptionRate;
+      element.Radius += playerRadius * GROW_BY_FOOD_COEFFICIENT;
+      Player.Radius -= playerRadius * GROW_BY_FOOD_COEFFICIENT;
 
       if (Player.Radius <= element.Radius) {
         animateAbsorption(element, Player);

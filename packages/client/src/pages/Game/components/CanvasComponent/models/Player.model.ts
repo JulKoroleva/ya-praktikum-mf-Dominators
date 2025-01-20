@@ -61,7 +61,7 @@ export class PlayerModel {
 
   getPlayerSpeed(radius: number): number {
     const maxSpeed = 1;
-    const minSpeed = 0.1;
+    const minSpeed = 0.5;
     const minR = 1;
     const maxR = 10;
 
