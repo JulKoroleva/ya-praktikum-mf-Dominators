@@ -16,20 +16,23 @@ class ReactionController {
           creatorId,
         });
         return res.send(reaction);
-      } else if (type === 'comment') {
+      }
+
+      if (type === 'comment') {
         const reaction = await Reaction.create({
           commentId: Number(id),
           emoji,
           creatorId,
         });
         return res.send(reaction);
-      } else {
-        return res.status(400).send({ error: 'Invalid reaction type' });
       }
+
+      return res.status(400).send({ error: 'Invalid reaction type' });
     } catch (err) {
-      next(err);
+      return next(err);
     }
   }
+
   async getReactions(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
@@ -70,9 +73,9 @@ class ReactionController {
         users: data.users,
       }));
 
-      res.send({ reactions: formattedReactions });
+      return res.send({ reactions: formattedReactions });
     } catch (err) {
-      next(err);
+      return next(err);
     }
   }
 
@@ -99,7 +102,7 @@ class ReactionController {
         return res.status(404).send({ error: 'Reaction not found or unauthorized' });
       }
     } catch (err) {
-      next(err);
+      return next(err);
     }
   }
 }

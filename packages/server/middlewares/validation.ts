@@ -44,12 +44,12 @@ class Validation {
     body: Joi.object().keys({
       emoji: Joi.string().required().max(10),
       type: Joi.string().valid('topic', 'comment').required(),
+      creatorId: Joi.number().integer().min(1).required(),
     }),
     params: Joi.object().keys({
       id: Joi.string().required().custom(validateId),
     }),
   });
-
   getReactions = celebrate({
     params: Joi.object().keys({
       id: Joi.string().required().custom(validateId),
@@ -58,11 +58,11 @@ class Validation {
       type: Joi.string().valid('topic', 'comment').required(),
     }),
   });
-
   deleteReaction = celebrate({
     body: Joi.object().keys({
       emoji: Joi.string().required().max(10),
       type: Joi.string().valid('topic', 'comment').required(),
+      creatorId: Joi.number().integer().min(1).required(),
     }),
     params: Joi.object().keys({
       id: Joi.string().required().custom(validateId),
