@@ -10,7 +10,10 @@ import { CameraModel, FoodModel, GameFeatureModel, PlayerFeatureModel } from '.'
 
 import { ICircle } from '../interfaces/CanvasComponent.interface';
 
+import { v4 as uuidv4 } from 'uuid';
+
 export class PlayerModel {
+  public id: string = uuidv4();
   public Player: PlayerFeatureModel;
   public Speed = 0;
   public SpeedBoostLastTime = 0;
@@ -29,43 +32,66 @@ export class PlayerModel {
     return Math.round(this.Player.Radius * 10);
   }
 
-  moveDivision(camera: CameraModel, mouseX: number, mouseY: number) {
+  moveDivision(camera: CameraModel, mouseX: number, mouseY: number, deltaTime: number = 1) {
     for (const division of this.Divisions) {
       const dX = mouseX / camera.Scale + camera.X - division.X;
       const dY = mouseY / camera.Scale + camera.Y - division.Y;
 
       const angle = Math.atan2(dY, dX);
 
-      division.Y += (Math.sin(angle) * 5) / division.Radius;
-      division.X += (Math.cos(angle) * 5) / division.Radius;
+      const speedFactor = deltaTime;
+
+      division.Y += ((Math.sin(angle) * 5) / division.Radius) * speedFactor;
+      division.X += ((Math.cos(angle) * 5) / division.Radius) * speedFactor;
     }
   }
 
   /** движение по нормализованному вектору */
-  move(camera: CameraModel, mouseX: number, mouseY: number) {
+  move(camera: CameraModel, mouseX: number, mouseY: number, deltaTime: number = 1) {
     const dX = mouseX / camera.Scale + camera.X - this.Player.X;
     const dY = mouseY / camera.Scale + camera.Y - this.Player.Y;
-
     const angle = Math.atan2(dY, dX);
 
-    this.Player.Y +=
-      ((Math.sin(angle) * 1) / Math.sqrt(this.Player.Radius)) * this.SpeedBoostCoefficient;
-    this.Player.X +=
-      ((Math.cos(angle) * 1) / Math.sqrt(this.Player.Radius)) * this.SpeedBoostCoefficient;
+    const speed = this.getPlayerSpeed(this.Player.Radius) * this.SpeedBoostCoefficient;
+    const speedFactor = deltaTime * speed;
+
+    this.Player.Y += Math.sin(angle) * speedFactor;
+    this.Player.X += Math.cos(angle) * speedFactor;
+  }
+
+  getPlayerSpeed(radius: number): number {
+    const maxSpeed = 1;
+    const minSpeed = 0.5;
+    const minR = 1;
+    const maxR = 10;
+
+    if (radius <= minR) {
+      return maxSpeed;
+    } else if (radius >= maxR) {
+      return minSpeed;
+    }
+
+    return maxSpeed - ((radius - minR) / (maxR - minR)) * (maxSpeed - minSpeed);
   }
 
   activateSpeedBooster() {
-    if (this.BoostProgress < 100) {
-      return;
-    }
+    if (this.BoostProgress < 100) return;
     this.SpeedBoostCoefficient = SPEED_BOOST_COEFFICIENT;
+
     setTimeout(() => {
       this.SpeedBoostCoefficient = 1;
     }, SPEED_BOOST_TIME);
+
     this.resestBoostInterval();
   }
 
-  throwFood(camera: CameraModel, food: Array<GameFeatureModel>, mouseX: number, mouseY: number) {
+  throwFood(
+    camera: CameraModel,
+    food: Array<GameFeatureModel>,
+    mouseX: number,
+    mouseY: number,
+    deltaTime: number = 1,
+  ) {
     if (this.Player.Radius <= 3) {
       return;
     }
@@ -76,14 +102,19 @@ export class PlayerModel {
     const dY = mouseY / camera.Scale + camera.Y - this.Player.Y;
 
     const angle = Math.atan2(dY, dX);
+    const speedFactor = deltaTime; // Учитываем время между кадрами
 
     const foode = new FoodModel({
-      /** тут делиться на 4, пока рандомно. Надо додумать коэффициент */
+      id: this.Player.id,
       Y: this.Player.Y + (((Math.sin(angle) * this.Player.Radius) / 2) * camera.Scale) / 2,
       X: this.Player.X + (((Math.cos(angle) * this.Player.Radius) / 2) * camera.Scale) / 2,
-      ToY: this.Player.Y + ((Math.sin(angle) * this.Player.Radius) / 2) * camera.Scale * 2,
-      ToX: this.Player.X + ((Math.cos(angle) * this.Player.Radius) / 2) * camera.Scale * 2,
-      Speed: 1,
+      ToY:
+        this.Player.Y +
+        ((Math.sin(angle) * this.Player.Radius) / 2) * camera.Scale * 2 * speedFactor,
+      ToX:
+        this.Player.X +
+        ((Math.cos(angle) * this.Player.Radius) / 2) * camera.Scale * 2 * speedFactor,
+      Speed: 1 * speedFactor, // Корректируем скорость
       Radius: FOOD_MASS,
       ColorFill: 'black',
     });

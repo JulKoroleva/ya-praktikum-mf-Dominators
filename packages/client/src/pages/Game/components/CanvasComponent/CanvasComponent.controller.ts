@@ -21,50 +21,53 @@ import { EnemyPlayerModel } from './models/EnemyPlayer.model';
 import { isCollidedBySquare } from './utils/isCollidedBySquare';
 import { TResult } from '../../Game.interface';
 import { animateAbsorption } from './utils/animateAbsorption';
+import { generateRandomEnemies } from './utils/generateRandomEnemies';
+import { v4 as uuidv4 } from 'uuid';
 
 export class CanvasController {
   public Map = new MapRegionModel();
+
   public Camera = new CameraModel();
+
   public Player;
-  public EnemyPlayers: EnemyPlayerModel[] = [
-    new EnemyPlayerModel({ X: 3000, Y: 3000, Radius: 7, ColorFill: 'rgba(255, 0, 0)' }),
-    new EnemyPlayerModel({ X: 1000, Y: 1000, Radius: 10, ColorFill: 'rgba(0, 98, 255)' }),
-    new EnemyPlayerModel({ X: 3000, Y: 1000, Radius: 20, ColorFill: 'rgba(255, 0, 179)' }),
-    new EnemyPlayerModel({ X: 1000, Y: 3000, Radius: 16, ColorFill: 'rgba(255, 242, 0)' }),
-    new EnemyPlayerModel({ X: 2050, Y: 2050, Radius: 9, ColorFill: 'rgba(252, 186, 3)' }),
-  ];
-  public FoodFields = GenerateFood({
-    width: MAP_SIZE,
-    height: MAP_SIZE,
-  });
-  public EnemyFields: EnemyStatic[] = [...GenerateEnemy({ width: MAP_SIZE, height: MAP_SIZE })];
+
+  public EnemyPlayers;
+
+  public FoodFields: GameFeatureModel[] = [];
+
+  public EnemyFields: EnemyStatic[] = [];
 
   constructor(baseColor: string, imageFill?: HTMLImageElement) {
     this.Player = new PlayerModel({
-      X: 2000,
-      Y: 2000,
+      id: uuidv4(),
+      X: 1000,
+      Y: 1000,
       Radius: START_PLAYER_RADIUS,
       ColorFill: baseColor,
       ImageFill: imageFill,
+      Speed: 1,
     });
+
+    setTimeout(() => {
+      this.FoodFields = GenerateFood({
+        width: MAP_SIZE,
+        height: MAP_SIZE,
+      });
+
+      this.EnemyFields = [...GenerateEnemy({ width: MAP_SIZE, height: MAP_SIZE })];
+    }, 0);
+
+    this.EnemyPlayers = generateRandomEnemies(150, this.Player.Player.X, this.Player.Player.Y);
   }
 
-  public MovePlayer(mouseX: number, mouseY: number) {
-    this.Player.move(this.Camera, mouseX, mouseY);
-    this.Player.moveDivision(this.Camera, mouseX, mouseY);
+  public MovePlayer(mouseX: number, mouseY: number, deltaTime: number) {
+    this.Player.move(this.Camera, mouseX, mouseY, deltaTime);
+    this.Player.moveDivision(this.Camera, mouseX, mouseY, deltaTime);
   }
 
-  public MoveStatics() {
-    for (const staticField of [...this.FoodFields, ...this.EnemyFields].filter(
-      field => field.Movable,
-    )) {
-      staticField.move();
-    }
-  }
-
-  public EnemyPlayersMove() {
-    for (const enemys of this.EnemyPlayers) {
-      enemys.move();
+  public EnemyPlayersMove(deltaTime: number) {
+    for (const enemy of this.EnemyPlayers) {
+      enemy.move(this.Player.Player, this.FoodFields, this.EnemyPlayers, deltaTime);
     }
   }
 
@@ -76,32 +79,47 @@ export class CanvasController {
     const playerY = Player.Y;
 
     this.CollisionEnemyToEnemyDetection();
-
     this.EnemyPlayers = this.filterDeadEnemies();
 
     for (const element of this.EnemyPlayers) {
-      if (this.isStaticEnemy(element)) {
+      if (!this.isVisible(element, this.getViewBoundary())) {
         continue;
       }
 
       const collisionData = this.calculateCollisionData(element, playerX, playerY, playerRadius);
-
       if (!this.shouldProcessCollision(collisionData, playerArea, element, Player)) {
         continue;
       }
-
       this.resolveCollision(element, Player, collisionData, playerRadius);
     }
 
-    this.EnemyPlayers = this.filterDeadEnemies();
+    this.AddFoodOverTime();
+    this.AddEnemyOverTime();
+  }
+
+  private isVisible(
+    item: GameFeatureModel,
+    viewBoundary: { x: number; y: number; width: number; height: number },
+  ) {
+    return !(
+      item.X + item.Radius < viewBoundary.x ||
+      item.X - item.Radius > viewBoundary.x + viewBoundary.width ||
+      item.Y + item.Radius < viewBoundary.y ||
+      item.Y - item.Radius > viewBoundary.y + viewBoundary.height
+    );
+  }
+
+  private getViewBoundary() {
+    return {
+      x: this.Camera.X - this.Camera.ViewWidth / 2,
+      y: this.Camera.Y - this.Camera.ViewHeight / 2,
+      width: this.Camera.ViewWidth,
+      height: this.Camera.ViewHeight,
+    };
   }
 
   filterDeadEnemies() {
     return this.EnemyPlayers.filter(el => el.Status !== STATUS.DEAD);
-  }
-
-  isStaticEnemy(enemy: EnemyPlayerModel) {
-    return enemy instanceof EnemyStatic;
   }
 
   calculateCollisionData(
@@ -183,7 +201,7 @@ export class CanvasController {
   }
 
   handleDeformation(
-    element: { DeformationX: number; DeformationY: number },
+    element: { DeformationX: number; DeformationY: number; X: number; Y: number; Radius: number },
     Player: { DeformationX: number; DeformationY: number },
     dx: number,
     dy: number,
@@ -231,8 +249,7 @@ export class CanvasController {
   }
 
   handleAbsorption(element: EnemyPlayerModel, Player: PlayerFeatureModel, playerRadius: number) {
-    const absorptionRate = 0.5;
-    const absorbedRadius = element.Radius * absorptionRate;
+    const absorbedRadius = element.Radius * GROW_BY_FOOD_COEFFICIENT;
 
     if (playerRadius > element.Radius) {
       Player.Radius += absorbedRadius;
@@ -243,8 +260,8 @@ export class CanvasController {
         element.Radius = 0;
       }
     } else {
-      element.Radius += playerRadius * absorptionRate;
-      Player.Radius -= playerRadius * absorptionRate;
+      element.Radius += playerRadius * GROW_BY_FOOD_COEFFICIENT;
+      Player.Radius -= playerRadius * GROW_BY_FOOD_COEFFICIENT;
 
       if (Player.Radius <= element.Radius) {
         animateAbsorption(element, Player);
@@ -346,7 +363,7 @@ export class CanvasController {
 
   private handleEnemyCollision(enemy: EnemyPlayerModel, element: EnemyStatic) {
     if (enemy.Radius > element.Radius) {
-      const massLossRateEnemy = 0.003;
+      const massLossRateEnemy = 0.005;
       const massLossEnemy = enemy.Radius * massLossRateEnemy;
 
       enemy.Radius -= massLossEnemy;
@@ -401,16 +418,51 @@ export class CanvasController {
         }
       }
     }
+    this.RemoveDeadEnemies();
+  }
+
+  public RemoveDeadEnemies() {
+    this.EnemyPlayers = this.EnemyPlayers.filter(enemy => enemy.Status === STATUS.ALIVE);
+  }
+
+  public AddEnemyOverTime() {
+    this.EnemyPlayers = this.filterDeadEnemies();
+
+    if (this.EnemyPlayers.length < 130) {
+      const newEnemies = generateRandomEnemies(1, this.Player.Player.X, this.Player.Player.Y);
+      this.EnemyPlayers.push(...newEnemies);
+    }
+  }
+
+  public AddFoodOverTime(minFoodCount: number = 3900, foodToAdd: number = 100) {
+    if (this.FoodFields.length < minFoodCount) {
+      const newFood = GenerateFood({
+        width: MAP_SIZE,
+        height: MAP_SIZE,
+      }).slice(0, foodToAdd);
+      this.FoodFields.push(...newFood);
+    }
   }
 
   public DrawAll(ctx: CanvasRenderingContext2D) {
     this.DrawFood(ctx);
-    for (const item of [
+
+    const itemsToDraw = [
+      this.Player.Player,
       ...this.EnemyPlayers,
       ...this.EnemyFields,
       ...this.Player.Divisions,
-      this.Player.Player,
-    ].sort((a, b) => a.Radius - b.Radius)) {
+    ];
+
+    itemsToDraw.sort((a, b) => a.Radius - b.Radius);
+
+    const viewBoundary = this.getViewBoundary();
+
+    for (const item of itemsToDraw) {
+      if (!this.isVisible(item, viewBoundary)) {
+        continue;
+      }
+
       if (item.Status === STATUS.ALIVE) {
         item.draw(ctx);
       }
@@ -419,40 +471,13 @@ export class CanvasController {
 
   public DrawFood(ctx: CanvasRenderingContext2D) {
     for (const food of this.FoodFields) {
+      if (!this.isVisible(food, this.getViewBoundary())) {
+        continue;
+      }
       if (food.Status === STATUS.ALIVE) {
         food.draw(ctx);
       }
     }
-  }
-
-  public get Result(): Array<TResult> {
-    const field = [this.Player.Player, ...this.EnemyPlayers].sort((a, b) => b.Radius - a.Radius);
-    const topPosition = field.findIndex(player => !(player instanceof EnemyPlayerModel)) + 1;
-
-    return [
-      {
-        id: 1,
-        title: 'Food eating',
-        value: FOOD_COUNT - this.FoodFields.length,
-      },
-      {
-        id: 2,
-        title: 'Score Points',
-        value: this.Player.MyScore,
-      },
-      {
-        id: 3,
-        title: 'Cells eating',
-        value:
-          this.EnemyFields.length -
-          this.EnemyFields.filter(({ Status }) => Status === STATUS.ALIVE).length,
-      },
-      {
-        id: 4,
-        title: 'Top position',
-        value: topPosition,
-      },
-    ];
   }
 
   public DrawGrid(ctx: CanvasRenderingContext2D) {
@@ -487,5 +512,35 @@ export class CanvasController {
     }
 
     ctx.restore();
+  }
+
+  public get Result(): Array<TResult> {
+    const field = [this.Player.Player, ...this.EnemyPlayers].sort((a, b) => b.Radius - a.Radius);
+    const topPosition = field.findIndex(player => !(player instanceof EnemyPlayerModel)) + 1;
+
+    return [
+      {
+        id: 1,
+        title: 'Food eating',
+        value: FOOD_COUNT - this.FoodFields.length,
+      },
+      {
+        id: 2,
+        title: 'Score Points',
+        value: this.Player.MyScore,
+      },
+      {
+        id: 3,
+        title: 'Cells eating',
+        value:
+          this.EnemyFields.length -
+          this.EnemyFields.filter(({ Status }) => Status === STATUS.ALIVE).length,
+      },
+      {
+        id: 4,
+        title: 'Top position',
+        value: topPosition,
+      },
+    ];
   }
 }
