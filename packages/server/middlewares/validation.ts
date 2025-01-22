@@ -40,6 +40,34 @@ class Validation {
       id: Joi.string().required().custom(validateId),
     }),
   });
+  addReaction = celebrate({
+    body: Joi.object().keys({
+      emoji: Joi.string().required().max(10),
+      type: Joi.string().valid('topic', 'comment').required(),
+      creatorId: Joi.number().integer().min(1).required(),
+    }),
+    params: Joi.object().keys({
+      id: Joi.string().required().custom(validateId),
+    }),
+  });
+  getReactions = celebrate({
+    params: Joi.object().keys({
+      id: Joi.string().required().custom(validateId),
+    }),
+    query: Joi.object().keys({
+      type: Joi.string().valid('topic', 'comment').required(),
+    }),
+  });
+  deleteReaction = celebrate({
+    body: Joi.object().keys({
+      emoji: Joi.string().required().max(10),
+      type: Joi.string().valid('topic', 'comment').required(),
+      creatorId: Joi.number().integer().min(1).required(),
+    }),
+    params: Joi.object().keys({
+      id: Joi.string().required().custom(validateId),
+    }),
+  });
 }
 
 const validation = new Validation();

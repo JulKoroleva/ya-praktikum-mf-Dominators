@@ -16,9 +16,12 @@ export const sequelize = new Sequelize(sequelizeOptions);
 export async function createClientAndConnect(): Promise<void> {
   try {
     await sequelize.authenticate();
-    await sequelize.sync();
-    console.log('  ➜ 🎸 Connected to the');
+    console.log('✅ Подключение к базе данных установлено.');
+
+    await sequelize.sync({ alter: true });
+
+    console.log('✅ База данных синхронизирована.');
   } catch (e) {
-    console.error(e);
+    console.error('❌ Ошибка подключения к базе данных:', e);
   }
 }
