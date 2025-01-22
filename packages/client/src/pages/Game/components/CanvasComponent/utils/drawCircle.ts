@@ -1,7 +1,7 @@
 import { ICircle } from '../interfaces/CanvasComponent.interface';
 
 const jellyDamping = 0.18;
-const numPoints = 34;
+const numPoints = 24;
 const angleStep = (Math.PI * 2) / numPoints;
 
 const calculateDeformedPoints = (
@@ -11,7 +11,7 @@ const calculateDeformedPoints = (
   deformationX: number,
   deformationY: number,
 ): { x: number; y: number }[] => {
-  const time = Date.now() / 100;
+  const time = 2000;
   const baseDeform = [-deformationX, -deformationY];
 
   return Array.from({ length: numPoints }, (_, i) => {

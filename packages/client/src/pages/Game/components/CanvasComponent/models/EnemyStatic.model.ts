@@ -6,7 +6,6 @@ import { GameFeatureModel } from './GameFeature.model';
 export class EnemyStatic extends GameFeatureModel {
   public ToX = 0;
   public ToY = 0;
-  public Speed = 1;
   public Movable = false;
   public Angle = 0;
 
