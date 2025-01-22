@@ -2,6 +2,11 @@ import { Request, Response, NextFunction } from 'express';
 import { Reaction } from '../init';
 import { IReaction } from '../models/reaction';
 
+const REACTION_TYPES = {
+  TOPIC: 'topic',
+  COMMENT: 'comment',
+};
+
 class ReactionController {
   async addReaction(req: Request, res: Response, next: NextFunction) {
     try {
@@ -9,25 +14,16 @@ class ReactionController {
       const { emoji, type } = req.body;
       const { id: creatorId } = res.locals.user;
 
-      if (type === 'topic') {
-        const reaction = await Reaction.create({
-          topicId: Number(id),
-          emoji,
-          creatorId,
-        });
-        return res.send(reaction);
+      if (![REACTION_TYPES.TOPIC, REACTION_TYPES.COMMENT].includes(type)) {
+        return res.status(400).send({ error: 'Invalid reaction type' });
       }
 
-      if (type === 'comment') {
-        const reaction = await Reaction.create({
-          commentId: Number(id),
-          emoji,
-          creatorId,
-        });
-        return res.send(reaction);
-      }
-
-      return res.status(400).send({ error: 'Invalid reaction type' });
+      const reaction = await Reaction.create({
+        [`${type}Id`]: Number(id),
+        emoji,
+        creatorId,
+      });
+      return res.send(reaction);
     } catch (err) {
       return next(err);
     }
@@ -36,16 +32,13 @@ class ReactionController {
   async getReactions(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const { type } = req.query;
+      const type = req.query.type as string | undefined;
 
-      let reactionFilter = {};
-      if (type === 'topic') {
-        reactionFilter = { topicId: Number(id) };
-      } else if (type === 'comment') {
-        reactionFilter = { commentId: Number(id) };
-      } else {
+      if (!type || ![REACTION_TYPES.TOPIC, REACTION_TYPES.COMMENT].includes(type)) {
         return res.status(400).send({ error: 'Invalid reaction type' });
       }
+
+      const reactionFilter = { [`${type}Id`]: Number(id) };
 
       const reactions = await Reaction.findAll({
         where: reactionFilter,
@@ -73,7 +66,7 @@ class ReactionController {
         users: data.users,
       }));
 
-      return res.send({ reactions: formattedReactions });
+      res.send({ reactions: formattedReactions });
     } catch (err) {
       return next(err);
     }
@@ -85,15 +78,11 @@ class ReactionController {
       const { type, emoji } = req.body;
       const { id: userId } = res.locals.user;
 
-      const reactionFilter = { emoji, creatorId: userId };
-      if (type === 'topic') {
-        Object.assign(reactionFilter, { topicId: Number(id) });
-      } else if (type === 'comment') {
-        Object.assign(reactionFilter, { commentId: Number(id) });
-      } else {
+      if (![REACTION_TYPES.TOPIC, REACTION_TYPES.COMMENT].includes(type)) {
         return res.status(400).send({ error: 'Invalid reaction type' });
       }
 
+      const reactionFilter = { emoji, creatorId: userId, [`${type}Id`]: Number(id) };
       const deletedRows = await Reaction.destroy({ where: reactionFilter });
 
       if (deletedRows > 0) {
