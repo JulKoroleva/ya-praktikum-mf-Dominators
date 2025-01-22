@@ -18,7 +18,6 @@ export async function createClientAndConnect(): Promise<void> {
     await sequelize.authenticate();
     console.log('✅ Подключение к базе данных установлено.');
 
-    // Автоматически создаём таблицы, если их нет
     await sequelize.sync({ alter: true });
 
     console.log('✅ База данных синхронизирована.');

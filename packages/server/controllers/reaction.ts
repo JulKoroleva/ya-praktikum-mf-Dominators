@@ -38,17 +38,17 @@ class ReactionController {
       const { id } = req.params;
       const { type } = req.query;
 
-      let whereClause = {};
+      let reactionFilter = {};
       if (type === 'topic') {
-        whereClause = { topicId: Number(id) };
+        reactionFilter = { topicId: Number(id) };
       } else if (type === 'comment') {
-        whereClause = { commentId: Number(id) };
+        reactionFilter = { commentId: Number(id) };
       } else {
         return res.status(400).send({ error: 'Invalid reaction type' });
       }
 
       const reactions = await Reaction.findAll({
-        where: whereClause,
+        where: reactionFilter,
         attributes: ['emoji', 'creatorId'],
       });
 
@@ -85,16 +85,16 @@ class ReactionController {
       const { type, emoji } = req.body;
       const { id: userId } = res.locals.user;
 
-      const whereClause = { emoji, creatorId: userId };
+      const reactionFilter = { emoji, creatorId: userId };
       if (type === 'topic') {
-        Object.assign(whereClause, { topicId: Number(id) });
+        Object.assign(reactionFilter, { topicId: Number(id) });
       } else if (type === 'comment') {
-        Object.assign(whereClause, { commentId: Number(id) });
+        Object.assign(reactionFilter, { commentId: Number(id) });
       } else {
         return res.status(400).send({ error: 'Invalid reaction type' });
       }
 
-      const deletedRows = await Reaction.destroy({ where: whereClause });
+      const deletedRows = await Reaction.destroy({ where: reactionFilter });
 
       if (deletedRows > 0) {
         return res.send({ success: true, message: 'Reaction deleted successfully' });
