@@ -1,3 +1,5 @@
+import { SERVER_HOST } from './serverHost';
+
 export const MAIN_URL = 'https://ya-praktikum.tech/api/v2';
 export const RESOURCES_URL = `${MAIN_URL}/resources/`;
 
@@ -22,3 +24,6 @@ export const GET_LEADERBOARD_URL = `${MAIN_URL}/leaderboard`;
 //OAUTH
 export const GET_SERVICE_ID = `${MAIN_URL}/oauth/yandex/service-id`;
 export const OAUTH_SIGN_IN_UP = `${MAIN_URL}/oauth/yandex`;
+
+//FORUM
+export const TOPICS_URL = `${SERVER_HOST}/forum`;

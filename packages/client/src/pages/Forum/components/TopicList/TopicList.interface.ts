@@ -1,19 +1,23 @@
 export type TTopicComment = {
   id: number;
-  topicId: number;
-  author: string;
-  createdAt: string;
   message: string;
+  creator: string;
+  creatorId: number;
+  topicId: number;
+  updatedAt: string;
+  createdAt: string;
 };
 
 export type TTopic = {
   id: number;
-  creator: string;
-  comments: number;
   title: string;
-  createdAt: string;
   description: string;
-  messages: TTopicComment[];
+  creator: string;
+  creatorId: number;
+  comments: number;
+  updatedAt: string;
+  createdAt: string;
+  commentsList?: TTopicComment[];
 };
 
 export type TPaginationOptions = {
