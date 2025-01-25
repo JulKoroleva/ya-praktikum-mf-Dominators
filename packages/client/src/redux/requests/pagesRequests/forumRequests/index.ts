@@ -1,1 +1,1 @@
-export { fetchForum } from './forumRequests';
+export { fetchForum, createTopic, addTopicComment, getTopicById } from './forumRequests';

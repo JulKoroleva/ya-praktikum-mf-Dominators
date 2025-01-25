@@ -4,7 +4,7 @@ import styles from './Pagination.module.scss';
 
 export function Pagination({ options, onChange }: IPaginationProps) {
   const isFirstPage = options.page === 1;
-  const isLastPage = options.page === options.total;
+  const isLastPage = options.page === Math.ceil(options.total / 5);
 
   const handleChangePage = (addend: number) => {
     const newOptions = {
@@ -25,7 +25,8 @@ export function Pagination({ options, onChange }: IPaginationProps) {
         ⏪ Prev
       </Button>
       <span className={styles.pagination__view}>
-        {options.page} / {options.total}
+        {/* 5 - кол-во топиков на странице */}
+        {options.page} / {Math.ceil(options.total / 5)}
       </span>
       <Button
         className={styles.pagination__button}

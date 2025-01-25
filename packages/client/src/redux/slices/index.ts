@@ -5,6 +5,8 @@ export {
   clearRegistrationState,
   forumSlice,
   clearForumState,
+  clearTopicCommentStatus,
+  clearTopicById,
 } from './pagesSlices';
 export type {
   IAuthorizationFormSubmit,

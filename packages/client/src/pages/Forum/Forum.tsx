@@ -2,11 +2,26 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'react-bootstrap';
 
-import { FormComponent, Navigation, Popup, ErrorNotification } from '@/components';
+import {
+  FormComponent,
+  Navigation,
+  Popup,
+  ErrorNotification,
+  TModalStatus,
+  IModalConfig,
+  UniversalModal,
+} from '@/components';
 import { TopicList, Pagination, TPaginationOptions, TTopic } from './components';
 
-import { fetchForum } from '@/redux/requests';
-import { selectPaginationOptions, selectTopicList } from '@/redux/selectors';
+import { TypeDispatch } from '@/redux/store';
+import { createTopic, fetchForum } from '@/redux/requests';
+import {
+  selectCreateTopicError,
+  selectCreateTopicStatus,
+  selectPaginationOptions,
+  selectTopicList,
+} from '@/redux/selectors';
+import { clearForumState, clearForumStatus } from '@/redux/slices/pagesSlices/forumSlices';
 
 import { useIsAuthorized, usePage } from '@/services/hooks';
 import { getCookie } from '@/services/cookiesHandler';
@@ -18,10 +33,9 @@ import { createNewTopicFields, createNewTopicFieldsInitialValues } from './FormD
 
 import add from '@/assets/icons/add.svg';
 
-import styles from './Forum.module.scss';
-import { createForum } from '@/redux/requests/pagesRequests/forumRequests/forumRequests';
-import { TypeDispatch } from '@/redux/store';
 import { ICreateTopicDto } from './components/TopicList/TopicList.interface';
+
+import styles from './Forum.module.scss';
 
 export const Forum = () => {
   // /**
@@ -37,6 +51,12 @@ export const Forum = () => {
   const [paginationOptions, setPaginationOptions] = useState<TPaginationOptions>({
     page: 1,
     total: 5,
+    perPage: 5,
+  });
+  const [modalConfig, setModalConfig] = useState<IModalConfig>({
+    show: false,
+    header: '',
+    status: undefined,
   });
   const [isAuthorized, setIsAuthorized] = useIsAuthorized();
 
@@ -44,10 +64,23 @@ export const Forum = () => {
 
   const topicListFromServer = useSelector(selectTopicList);
   const paginationOptionsFromServer = useSelector(selectPaginationOptions);
+  const createTopicListStatus = useSelector(selectCreateTopicStatus);
+  const createTopicListError = useSelector(selectCreateTopicError);
   const dispatch = useDispatch<TypeDispatch>();
 
   const onSubmit = (data: ICreateTopicDto) => {
-    dispatch(createForum(data));
+    dispatch(createTopic(data));
+    setIsOpen(false);
+  };
+
+  const handleCloseModal = () => {
+    dispatch(clearForumStatus());
+    setModalConfig({ show: false, header: '', status: undefined });
+  };
+
+  const handleChangePage = (newOptions: TPaginationOptions) => {
+    setPaginationOptions(newOptions);
+    dispatch(fetchForum({ pageNumber: newOptions.page }));
   };
 
   useEffect(() => {
@@ -59,7 +92,52 @@ export const Forum = () => {
     setPaginationOptions(paginationOptionsFromServer);
   }, [topicListFromServer, paginationOptionsFromServer]);
 
+  useEffect(() => {
+    let header = '';
+    let statusValue: TModalStatus = 'idle';
+    let error: typeof createTopicListError = '';
+    let succeeded = '';
+
+    if (createTopicListStatus !== 'idle') {
+      statusValue = createTopicListStatus;
+      error = createTopicListError;
+      succeeded = 'Topic successfully created';
+    }
+
+    switch (statusValue) {
+      case 'loading':
+        header = 'Loading...';
+        statusValue = 'loading';
+        break;
+      case 'succeeded':
+        header = succeeded;
+        statusValue = 'succeeded';
+        dispatch(fetchForum({ pageNumber: paginationOptions.page }));
+        break;
+      case 'failed':
+        header = error || 'Something went wrong';
+        statusValue = 'failed';
+        break;
+      default:
+        break;
+    }
+
+    if (statusValue) {
+      setModalConfig({
+        show: statusValue !== 'idle',
+        header,
+        status: statusValue,
+      });
+    }
+  }, [createTopicListStatus, createTopicListError]);
+
   usePage({ initPage: initForumPage });
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearForumState());
+    };
+  }, []);
 
   return (
     <div className={`${styles['game-forum']} ${styles['fade-in']}`}>
@@ -75,7 +153,7 @@ export const Forum = () => {
           </Button>
         )}
         <TopicList topicList={topicList} />
-        <Pagination options={paginationOptions} />
+        <Pagination options={paginationOptions} onChange={handleChangePage} />
         <Popup open={isOpen} withOverlay onClose={() => setIsOpen(false)}>
           {isOpen && (
             <FormComponent
@@ -86,15 +164,22 @@ export const Forum = () => {
             />
           )}
         </Popup>
+        <UniversalModal
+          show={modalConfig.show}
+          title={modalConfig.header}
+          status={modalConfig.status}
+          zIndex={2000}
+          onHide={handleCloseModal}
+        />
       </ErrorNotification>
     </div>
   );
 };
 
 export const initForumPage = ({ dispatch, state }: PageInitArgs) => {
-  const queue: Array<Promise<unknown>> = [dispatch(fetchForum())];
+  const queue: Array<Promise<unknown>> = [dispatch(fetchForum({}))];
   if (!selectTopicList(state)) {
-    queue.push(dispatch(fetchForum()));
+    queue.push(dispatch(fetchForum({})));
   }
   return Promise.all(queue);
 };

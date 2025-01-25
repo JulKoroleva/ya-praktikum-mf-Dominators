@@ -2,7 +2,7 @@ import { IFieldConfig } from '@/components/FormComponent/components/FormField/Fo
 
 export const topicPostFormData: IFieldConfig[] = [
   {
-    id: 'comment',
+    id: 'message',
     label: 'Comment text',
     type: 'textarea',
     placeholder: 'Enter topic title',
@@ -19,5 +19,5 @@ export const topicPostFormData: IFieldConfig[] = [
 ];
 
 export const topicPostFormDataInitialValues = {
-  comment: '',
+  message: '',
 };

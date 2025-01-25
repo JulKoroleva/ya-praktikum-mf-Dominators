@@ -6,7 +6,7 @@ import { IListItemProps } from './ListItem.interface';
 import styles from './ListItem.module.scss';
 
 export function ListItem({ topic }: IListItemProps) {
-  const { id, title, createdAt, description, creator, messages } = topic;
+  const { id, title, createdAt, description, creator, commentsList } = topic;
   const navigate = useNavigate();
 
   const handleReadTopic = () => {
@@ -18,7 +18,7 @@ export function ListItem({ topic }: IListItemProps) {
       <div className={styles['list-item__header']}>
         <span className={styles['list-item__author']}>{creator}</span>
         <span className={styles['list-item__message-count']}>
-          {messages?.length !== 0 && messages?.length}
+          {commentsList?.length !== 0 && commentsList?.length}
         </span>
       </div>
       <div className={styles['list-item__info']}>
