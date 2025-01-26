@@ -1,5 +1,4 @@
 import { Sequelize, SequelizeOptions } from 'sequelize-typescript';
-
 const { POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB, POSTGRES_PORT, POSTGRES_HOST } = process.env;
 
 const sequelizeOptions: SequelizeOptions = {
