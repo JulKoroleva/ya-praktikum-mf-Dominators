@@ -1,16 +1,21 @@
 import { Theme } from '../init';
 import { ITheme } from '../models';
 
-export async function getTheme(userId: ITheme['userId']) {
+export async function getTheme(userId: ITheme['userId']): Promise<ITheme['darkTheme']> {
   const result = await Theme.findOne({ where: { userId }, attributes: ['darkTheme'] });
 
   return Boolean(result);
 }
 
-export async function setTheme(userId: ITheme['userId'], darkTheme: ITheme['darkTheme']) {
+export async function setTheme(
+  userId: ITheme['userId'],
+  darkTheme: ITheme['darkTheme'],
+): Promise<ITheme> {
   const [result] = await Theme.findOrCreate({ where: { userId } });
 
   result.darkTheme = darkTheme;
 
   await result.save();
+
+  return result;
 }

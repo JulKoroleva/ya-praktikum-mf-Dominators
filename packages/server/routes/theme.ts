@@ -6,4 +6,4 @@ export const themeRouter = Router();
 
 themeRouter.get('/theme/:id', validation.idParams, themeController.getTheme);
 
-themeRouter.patch('/theme/:id', validation.idParams, themeController.updateTheme);
+themeRouter.patch('/theme/:id', validation.updateTheme, themeController.updateTheme);

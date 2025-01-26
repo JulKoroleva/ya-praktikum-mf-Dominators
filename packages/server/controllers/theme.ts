@@ -16,7 +16,8 @@ class ThemeController {
     try {
       const { id } = req.params;
       const { darkTheme } = req.body;
-      await setTheme(Number(id), darkTheme);
+      const theme = await setTheme(Number(id), darkTheme);
+      res.send(theme);
     } catch (err) {
       next(err);
     }
