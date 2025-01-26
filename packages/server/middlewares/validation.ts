@@ -68,6 +68,14 @@ class Validation {
       id: Joi.string().required().custom(validateId),
     }),
   });
+  updateTheme = celebrate({
+    params: Joi.object().keys({
+      id: Joi.string().required().custom(validateId),
+    }),
+    body: Joi.object().keys({
+      darkTheme: Joi.boolean().required(),
+    }),
+  });
 }
 
 const validation = new Validation();

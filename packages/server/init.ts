@@ -1,12 +1,11 @@
-import { topicModel } from './models/topic';
-import { topicCommentModel } from './models/topicComment';
-import { reactionModel } from './models/reaction';
+import { topicModel, topicCommentModel, reactionModel, themeModel } from './models';
 import { sequelize } from './db';
 
 // Инициализируем модели
 const Topic = sequelize.define('Topic', topicModel);
 const TopicComment = sequelize.define('TopicComment', topicCommentModel);
 const Reaction = sequelize.define('Reaction', reactionModel);
+const Theme = sequelize.define('Theme', themeModel);
 
 // Настройка ассоциаций
 Topic.hasMany(TopicComment, { foreignKey: 'topicId', as: 'commentsList' });
@@ -19,4 +18,4 @@ TopicComment.hasMany(Reaction, { foreignKey: 'commentId', as: 'commentReactionLi
 Reaction.belongsTo(Topic, { foreignKey: 'topicId', as: 'topic' });
 Reaction.belongsTo(TopicComment, { foreignKey: 'commentId', as: 'comment' });
 
-export { Topic, TopicComment, Reaction };
+export { Topic, TopicComment, Reaction, Theme };
