@@ -192,7 +192,7 @@ export const Profile = () => {
 
   return (
     <>
-      {!userInfo?.id ? (
+      {!userInfo?.id == null ? (
         <Loader />
       ) : (
         <div className={styles['profile-page']}>

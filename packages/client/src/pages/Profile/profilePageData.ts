@@ -3,10 +3,10 @@ import { IUserInfo, IUserPassword } from '@/redux/slices';
 import { validateEmail } from '@/services/validationUtils';
 
 export const settingsFields: IFieldConfig<IUserInfo>[] = [
-  {
-    id: 'avatar',
-    type: 'avatar',
-  },
+  // {
+  //   id: 'avatar',
+  //   type: 'file',
+  // },
   {
     id: 'email',
     label: 'Email',
