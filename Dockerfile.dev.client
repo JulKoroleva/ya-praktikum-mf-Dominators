@@ -1,0 +1,17 @@
+ARG NODE_VERSION=18
+ARG CLIENT_PORT=3434
+ARG SERVER_PORT=8000
+
+FROM node:$NODE_VERSION-buster as base
+
+WORKDIR /app
+
+FROM base as builder
+
+COPY . .
+
+RUN yarn install --frozen-lockfile
+RUN yarn lerna bootstrap
+
+EXPOSE $CLIENT_PORT
+EXPOSE $SERVER_PORT

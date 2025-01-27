@@ -1,0 +1,58 @@
+services:
+    client-dev:
+        container_name: dominators-client-dev
+        image: dominators-client-dev
+        build:
+            context: .
+            dockerfile: Dockerfile.dev.client
+            args:
+                CLIENT_PORT: ${CLIENT_PORT}
+                SERVER_PORT: ${SERVER_PORT}
+        restart: always
+        depends_on:
+            - postgres
+        ports:
+            - "${CLIENT_PORT}:${CLIENT_PORT}"
+            - "${SERVER_PORT}:${SERVER_PORT}"
+        environment:
+            - INTERNAL_SERVER_URL=${INTERNAL_SERVER_URL}
+            - EXTERNAL_SERVER_URL=${EXTERNAL_SERVER_URL}
+            - NODE_ENV=development
+        env_file:
+            - .env 
+        networks:
+            - awesome
+        command: yarn dev
+
+    postgres:
+        image: postgres:14
+        ports:
+            - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+        env_file:
+            - .env 
+        volumes:
+            - postgresdata:/var/lib/postgresql/data
+        restart: always
+        networks:
+            - awesome
+    pgadmin:
+        container_name: pgadmin
+        image: dpage/pgadmin4:4.18
+        restart: always
+        env_file:
+            - .env
+        ports:
+            - "8080:80"
+        volumes:
+            - pgadmin-data:/var/lib/pgadmin
+        depends_on:
+            - postgres
+        networks:
+            - awesome
+
+volumes:
+    postgresdata:
+    pgadmin-data:
+networks:
+    awesome:
+        driver: bridge 
