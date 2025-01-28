@@ -1,40 +1,28 @@
 services:
-    client:
-        container_name: dominators-client
-        image: dominators-client
+    client-dev:
+        container_name: dominators-client-dev
+        image: dominators-client-dev
         build:
             context: .
-            dockerfile: Dockerfile.client
+            dockerfile: Dockerfile.dev.client
             args:
                 CLIENT_PORT: ${CLIENT_PORT}
                 SERVER_PORT: ${SERVER_PORT}
         restart: always
-        ports:
-            - "${CLIENT_PORT}:${CLIENT_PORT}"
-        environment:
-            - INTERNAL_SERVER_URL=${INTERNAL_SERVER_URL}
-            - EXTERNAL_SERVER_URL=${EXTERNAL_SERVER_URL}
-        env_file:
-            - .env 
-        networks:
-            - awesome
-
-    server:
-        container_name: dominators-server
-        image: dominators-server
-        build:
-            context: .
-            dockerfile: Dockerfile.server
-            args:
-                SERVER_PORT: ${SERVER_PORT}
         depends_on:
             - postgres
         ports:
+            - "${CLIENT_PORT}:${CLIENT_PORT}"
             - "${SERVER_PORT}:${SERVER_PORT}"
+        environment:
+            - INTERNAL_SERVER_URL=${INTERNAL_SERVER_URL}
+            - EXTERNAL_SERVER_URL=${EXTERNAL_SERVER_URL}
+            - NODE_ENV=development
         env_file:
             - .env 
         networks:
             - awesome
+        command: yarn dev
 
     postgres:
         image: postgres:14
