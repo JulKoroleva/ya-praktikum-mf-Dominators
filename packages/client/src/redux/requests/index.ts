@@ -6,6 +6,9 @@ export {
   avatarRequests,
   passwordRequests,
   fetchForum,
+  createTopic,
+  addTopicComment,
+  getTopicById,
   addLeaderBoardEntry,
 } from './pagesRequests';
 export { getUserInfoRequest } from './globalRequests';

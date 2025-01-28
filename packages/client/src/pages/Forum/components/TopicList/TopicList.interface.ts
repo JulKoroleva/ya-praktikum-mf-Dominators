@@ -1,20 +1,24 @@
 export type TTopicComment = {
   id: number;
-  topicId: number;
-  author: string;
-  createdAt: string;
   message: string;
+  creator: string;
+  creatorId: number;
+  topicId: number;
+  updatedAt: string;
+  createdAt: string;
   reactions: any
 };
 
 export type TTopic = {
   id: number;
-  creator: string;
-  comments: number;
   title: string;
-  createdAt: string;
   description: string;
-  messages: TTopicComment[];
+  creator: string;
+  creatorId: number;
+  comments: number;
+  updatedAt: string;
+  createdAt: string;
+  commentsList?: TTopicComment[];
   [key: string]: any;
 };
 

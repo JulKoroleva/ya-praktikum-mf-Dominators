@@ -1,11 +1,24 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { Comment } from './components';
-import { FormComponent, Navigation } from '@/components';
+import {
+  FormComponent,
+  IModalConfig,
+  Navigation,
+  TModalStatus,
+  UniversalModal,
+} from '@/components';
 
-import { selectTopicList } from '@/redux/selectors';
+import { TypeDispatch } from '@/redux/store';
+import { addTopicComment, getTopicById } from '@/redux/requests';
+import {
+  selectGetTopicByIdError,
+  selectTopicById,
+  selectTopicCommentError,
+  selectTopicCommentStatus,
+} from '@/redux/selectors';
 
 import { usePage } from '@/services/hooks';
 
@@ -22,25 +35,89 @@ import { Reactions } from '@/components/EmojiReactions/EmojiReactions';
 
 export function TopicPost({ id }: ITopicPostProps) {
   const navigate = useNavigate();
+  const dispatch = useDispatch<TypeDispatch>();
 
   const [topicData, setTopicData] = useState<TTopic | null>(null);
+  const [modalConfig, setModalConfig] = useState<IModalConfig>({
+    show: false,
+    header: '',
+    status: undefined,
+  });
+  const [localTopicPostFormDataInitialValues, setLocalTopicPostFormDataInitialValues] = useState(
+    topicPostFormDataInitialValues,
+  );
 
-  const topicListFromServer = useSelector(selectTopicList);
+  const topicDataFromServer = useSelector(selectTopicById);
+  const getTopicByIdError = useSelector(selectGetTopicByIdError);
+
+  const addTopicCommentStatus = useSelector(selectTopicCommentStatus);
+  const addTopicCommentError = useSelector(selectTopicCommentError);
+
+  const onSubmit = (data: Record<string, string>) => {
+    const id = topicData?.id;
+    if (id) {
+      dispatch(addTopicComment({ topicId: id, message: data.message }));
+    }
+    setLocalTopicPostFormDataInitialValues({ message: '' });
+  };
+
+  const handleCloseModal = () => {
+    setModalConfig({ show: false, header: '', status: undefined });
+  };
+
+  useEffect(() => {
+    dispatch(getTopicById({ id }));
+  }, []);
 
   const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
-    const res = topicListFromServer.find(topic => topic.id === id);
-    if (res) {
-      setTopicData(res);
-    } else {
+    if (topicDataFromServer) {
+      setTopicData(topicDataFromServer);
+    }
+    if (getTopicByIdError) {
       navigate('/error404');
     }
-  }, [id, topicListFromServer]);
+  }, [topicDataFromServer, getTopicByIdError]);
 
-  const onSubmit = (data: Record<string, string>) => {
-    return data;
-  };
+  useEffect(() => {
+    let header = '';
+    let statusValue: TModalStatus = 'idle';
+    let error: typeof addTopicCommentError = '';
+    let succeeded = '';
+
+    if (addTopicCommentStatus !== 'idle') {
+      statusValue = addTopicCommentStatus;
+      error = addTopicCommentError;
+      succeeded = 'Comment added successfully';
+    }
+
+    switch (statusValue) {
+      case 'loading':
+        header = 'Loading...';
+        statusValue = 'loading';
+        break;
+      case 'succeeded':
+        header = succeeded;
+        statusValue = 'succeeded';
+        dispatch(getTopicById({ id }));
+        break;
+      case 'failed':
+        header = error || 'Something went wrong';
+        statusValue = 'failed';
+        break;
+      default:
+        break;
+    }
+
+    if (statusValue) {
+      setModalConfig({
+        show: statusValue !== 'idle',
+        header,
+        status: statusValue,
+      });
+    }
+  }, [addTopicCommentStatus, addTopicCommentError]);
 
   usePage({ initPage: initForumPage });
 
@@ -68,20 +145,28 @@ export function TopicPost({ id }: ITopicPostProps) {
           </div>
         )}
       </div>
-      <div className={styles['topic-post__container']}>
-        {topicData?.messages.map(comment => (
-          <Comment comment={comment} key={comment.id} />
-        ))}
-      </div>
+      {topicData?.commentsList && topicData?.commentsList?.length !== 0 && (
+        <div className={styles['topic-post__container']}>
+          {topicData?.commentsList?.map(message => <Comment comment={message} key={message.id} />)}
+        </div>
+      )}
+
       <div
         className={`${styles['topic-post__comment-wrapper']} ${styles['topic-post__container']}`}>
         <FormComponent
           fields={topicPostFormData}
           onSubmit={onSubmit}
-          initialValues={topicPostFormDataInitialValues}
+          initialValues={localTopicPostFormDataInitialValues}
           submitButtonText="Publish"
         />
       </div>
+      <UniversalModal
+        show={modalConfig.show}
+        title={modalConfig.header}
+        status={modalConfig.status}
+        zIndex={2000}
+        onHide={handleCloseModal}
+      />
     </div>
   );
 }

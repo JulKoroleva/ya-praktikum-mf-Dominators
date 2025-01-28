@@ -6,6 +6,7 @@ import { Button } from 'react-bootstrap';
 import { IFormComponentProps } from './FormComponent.interface';
 
 import styles from './FormComponent.module.scss';
+import { useEffect } from 'react';
 
 export const FormComponent = <T extends FieldValues>({
   fields,
@@ -13,9 +14,15 @@ export const FormComponent = <T extends FieldValues>({
   onSubmit,
   submitButtonText,
 }: IFormComponentProps<T>) => {
-  const { control, handleSubmit, getValues, trigger, clearErrors } = useForm<T>({
+  const { control, handleSubmit, getValues, trigger, clearErrors, reset } = useForm<T>({
     defaultValues: initialValues as DefaultValues<T>,
   });
+
+  useEffect(() => {
+    if (initialValues) {
+      reset(initialValues);
+    }
+  }, [initialValues, reset]);
 
   return (
     <form className={styles['form-component']} onSubmit={handleSubmit(onSubmit)}>

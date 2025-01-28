@@ -1,10 +1,11 @@
 import { Reactions } from '@/components/EmojiReactions/EmojiReactions';
 import { IComment } from './Comment.interface';
+
 import styles from './Comment.module.scss';
 import { useState } from 'react';
 
 export function Comment({ comment }: IComment) {
-  const { id, author, createdAt, message, reactions } = comment;
+  const { id, creator, createdAt, message, reactions } = comment;
   const [showPopup, setShowPopup] = useState(false);
   return (
     <div
@@ -12,7 +13,7 @@ export function Comment({ comment }: IComment) {
       onMouseEnter={() => setShowPopup(true)}
       onMouseLeave={() => setShowPopup(false)}>
       <div className={styles.comment__info}>
-        <span className={styles.comment__author}>{author}</span>
+        <span className={styles.comment__author}>{creator}</span>
         <span className={styles.comment__date}>
           {createdAt.includes('-') ? new Date(createdAt).toDateString() : createdAt}
         </span>
