@@ -72,3 +72,55 @@ export const addTopicComment = createAsyncThunk<
 
   return request.json();
 });
+
+export const addReaction = createAsyncThunk<
+  void,
+  { id: number; type: 'topic' | 'comment'; emoji: string; creatorId: string },
+  { rejectValue: string }
+>('forum/addReaction', async ({ id, type, emoji, creatorId }, { rejectWithValue }) => {
+  const request = await fetch(
+    `${TOPICS_URL}/${type === 'comment' ? 'comment/' : 'topic/'}${id}/reactions`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ emoji, type, creatorId }),
+      credentials: 'include',
+    },
+  );
+
+  if (!request.ok) {
+    const response = await request.json();
+    const rejectReason = response.reason ? response.reason : 'Unknown error';
+    return rejectWithValue(rejectReason);
+  }
+
+  return request.json();
+});
+
+export const deleteReaction = createAsyncThunk<
+  void,
+  { id: number; type: 'topic' | 'comment'; emoji: string; creatorId: string },
+  { rejectValue: string }
+>('forum/deleteReaction', async ({ id, type, emoji, creatorId }, { rejectWithValue }) => {
+  const request = await fetch(
+    `${TOPICS_URL}/${type === 'comment' ? 'comment/' : 'topic/'}${id}/reactions`,
+    {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ emoji, type, creatorId }),
+      credentials: 'include',
+    },
+  );
+
+  if (!request.ok) {
+    const response = await request.json();
+    const rejectReason = response.reason ? response.reason : 'Unknown error';
+    return rejectWithValue(rejectReason);
+  }
+
+  return request.json();
+});
