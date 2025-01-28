@@ -1,0 +1,63 @@
+.reactions-list {
+  margin-top: 5px;
+  display: flex;
+  justify-content: end;
+
+}
+
+.comment{
+  font-size: 10px;
+}
+
+.reaction-item {
+  border-radius: 20px;
+  padding: 5px;
+  margin-left: 10px;
+  border: 1px solid #e7e7e7;
+  background-color: #f1f1f1;
+  font-family: 'Noto Color Emoji', sans-serif;
+  &:hover {
+    background-color: #d0e8c4;
+  }
+
+  .active-reaction {
+    background-color: #196d3c;
+  }
+}
+
+.reaction-popup {
+  position: absolute;
+  right: -230px;
+  bottom: 0px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: -7px 5px 20px -1px rgba(0, 0, 0, 0.25);
+  padding: 8px;
+  display: flex;
+  gap: 8px;
+  z-index: 1000;
+}
+
+.reaction-popup::before {
+  content: '';
+  position: absolute;
+  left: -19px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent white transparent transparent;
+}
+
+.reaction-button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 5px;
+  font-family: 'Noto Color Emoji', sans-serif;
+}
+
+.reaction-button:hover {
+  transform: scale(1.1);
+}

@@ -1,16 +1,19 @@
 .comment {
-    padding-bottom: 10px;
+    position: relative;
     margin-bottom: 10px;
-    border-bottom: 1px solid $color-border-green;
+    padding: 10px;
+    border-radius: 20px;
+    background: #f5f5f5;
 
     &:last-child {
         border: none;
         margin-bottom: 0;
-        padding-bottom: 0;
     }
 
     &__info {
+        position: absolute;
         display: flex;
+        right: 0;
         margin-bottom: 6px;
         align-items: center;
         justify-content: space-between;
@@ -35,6 +38,7 @@
         font-size: 12px;
         line-height: 14px;
         opacity: .6;
+        width: 90%;
     }
 
 }

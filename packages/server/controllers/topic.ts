@@ -1,7 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import { createComment, createTopic, getAllTopics, getTopic } from '../handlers/topic';
+import { getReactionsForEntity } from '../handlers/reaction';
 import { ForeignKeyConstraintError } from 'sequelize';
 import { NotFound } from '../errors';
+import { ITopicComment } from '../models/topicComment';
 
 const PAGE_SIZE = 5;
 
@@ -20,21 +22,28 @@ class TopicController {
         page: validPage,
       };
 
-      const dbResponce = await getAllTopics(paginationOptions);
+      const dbResponse = await getAllTopics(paginationOptions);
+
+      const topicIds = dbResponse.topicList.map(topic => topic.id);
+      const reactionsMap = await getReactionsForEntity(topicIds, 'topic');
+
+      const topicsWithReactions = dbResponse.topicList.map(topic => ({
+        ...topic.toJSON(),
+        reactions: reactionsMap[topic.id] || [],
+      }));
 
       res.send({
-        topicList: dbResponce.topicList,
+        topicList: topicsWithReactions,
         paginationOptions: {
-          ...dbResponce.paginationOptions,
+          ...dbResponse.paginationOptions,
           page: validPage,
         },
       });
     } catch (err) {
       next(err);
     }
-
-    return res;
   }
+
   async createTopic(req: Request, res: Response, next: NextFunction) {
     try {
       const { title, description } = req.body;
@@ -56,6 +65,7 @@ class TopicController {
       next(err);
     }
   }
+
   async getTopic(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
@@ -66,11 +76,26 @@ class TopicController {
         return next(new NotFound(`Topic with id: ${id} - not found`));
       }
 
-      res.send(topic);
+      const topicReactions = await getReactionsForEntity([Number(id)], 'topic');
+
+      const commentIds = topic.commentsList.map((comment: ITopicComment) => comment.id);
+      const commentReactions = await getReactionsForEntity(commentIds, 'comment');
+
+      const commentsWithReactions = topic.commentsList.map((comment: ITopicComment) => ({
+        ...comment,
+        reactions: commentReactions[comment.id] || [],
+      }));
+
+      res.send({
+        ...topic,
+        reactions: topicReactions[Number(id)] || [],
+        commentsList: commentsWithReactions,
+      });
     } catch (err) {
       next(err);
     }
   }
+
   async createComment(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;

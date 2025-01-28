@@ -4,6 +4,7 @@ export type TTopicComment = {
   author: string;
   createdAt: string;
   message: string;
+  reactions: any
 };
 
 export type TTopic = {
@@ -14,6 +15,7 @@ export type TTopic = {
   createdAt: string;
   description: string;
   messages: TTopicComment[];
+  [key: string]: any;
 };
 
 export type TPaginationOptions = {

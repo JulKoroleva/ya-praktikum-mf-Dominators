@@ -5,7 +5,7 @@ import { checkAuthMiddleware, validation } from '../middlewares';
 const reactionRouter = Router();
 
 reactionRouter.post(
-  '/forum/:id/reactions',
+  '/forum/topic/:id/reactions',
   checkAuthMiddleware,
   validation.addReaction,
   reactionController.addReaction,
@@ -18,7 +18,7 @@ reactionRouter.post(
 );
 
 reactionRouter.get(
-  '/forum/:id/reactions',
+  '/forum/topic/:id/reactions',
   validation.getReactions,
   reactionController.getReactions,
 );
@@ -29,11 +29,12 @@ reactionRouter.get(
 );
 
 reactionRouter.delete(
-  '/forum/:id/reactions',
+  '/forum/topic/:id/reactions',
   checkAuthMiddleware,
   validation.deleteReaction,
   reactionController.deleteReaction,
 );
+
 reactionRouter.delete(
   '/forum/comment/:id/reactions',
   checkAuthMiddleware,
