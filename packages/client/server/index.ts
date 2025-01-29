@@ -29,7 +29,7 @@ async function createServer() {
 
     app.use(vite.middlewares);
   } else {
-    app.use(express.static(path.join(clientPath, 'dist/client'), { index: false }));
+    app.use(express.static(path.join(clientPath, 'dist/client')));
   }
 
   app.get('*', async (req, res, next) => {
