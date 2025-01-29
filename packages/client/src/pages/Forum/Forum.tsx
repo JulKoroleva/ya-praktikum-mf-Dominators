@@ -27,7 +27,7 @@ import { useIsAuthorized, usePage } from '@/services/hooks';
 import { getCookie } from '@/services/cookiesHandler';
 
 import { ROUTES } from '@/constants/routes';
-import { PageInitArgs } from '@/routes';
+import { PageInitArgs, initPage } from '@/routes';
 import { HEADERS } from '@/constants/headers';
 import { createNewTopicFields, createNewTopicFieldsInitialValues } from './FormData';
 
@@ -176,10 +176,9 @@ export const Forum = () => {
   );
 };
 
-export const initForumPage = ({ dispatch, state }: PageInitArgs) => {
+export const initForumPage = async ({ dispatch, state }: PageInitArgs) => {
+  await initPage({ dispatch, state });
+
   const queue: Array<Promise<unknown>> = [dispatch(fetchForum({}))];
-  if (!selectTopicList(state)) {
-    queue.push(dispatch(fetchForum({})));
-  }
   return Promise.all(queue);
 };

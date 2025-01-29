@@ -1,12 +1,18 @@
 import { IFieldConfig } from '@/components/FormComponent/components/FormField/FormField.interface';
-import { IUserInfo, IUserPassword } from '@/redux/slices';
+import { IUserPassword } from '@/redux/slices';
 import { validateEmail } from '@/services/validationUtils';
+import { IData } from './Profile.interface';
 
-export const settingsFields: IFieldConfig<IUserInfo>[] = [
-  // {
-  //   id: 'avatar',
-  //   type: 'file',
-  // },
+export const settingsFields: IFieldConfig<IData>[] = [
+  {
+    id: 'avatar',
+    type: 'avatar',
+  },
+  {
+    id: 'theme',
+    type: 'checkbox',
+    label: 'Dark theme',
+  },
   {
     id: 'email',
     label: 'Email',

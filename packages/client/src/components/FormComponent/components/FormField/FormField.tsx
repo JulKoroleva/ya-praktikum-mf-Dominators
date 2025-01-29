@@ -4,13 +4,12 @@ import classNames from 'classnames';
 
 import { Form } from 'react-bootstrap';
 
-// import CloseIcon from '@/assets/icons/close.svg?react';
+import { CrossedEyeIcon, EyeIcon } from '@/components/Icons';
 import { REQUIRED_FIELD_ERROR } from '@/constants/letters';
-
+import { CirclePickerField } from './components';
 import { IFieldConfig, IFormFieldProps } from './FormField.interface';
 
 import styles from './FormField.module.scss';
-import { CirclePickerField } from '../CirclePickerField';
 
 export const FormField = <T extends FieldValues>({
   field,
@@ -86,18 +85,6 @@ export const FormField = <T extends FieldValues>({
                   {fieldData.value && (
                     <div className={styles['file-name']}>
                       <span>{fieldData.value?.name}</span>
-                      {/* <CloseIcon
-                        className={styles['clear-file-icon']}
-                        onClick={() => {
-                          const inputElem = document.querySelector(
-                            `input[name="${field.id}"]`,
-                          ) as HTMLInputElement;
-                          if (inputElem.files?.length) {
-                            inputElem.value = '';
-                          }
-                          fieldData.onChange(null);
-                        }}
-                      /> */}
                     </div>
                   )}
 
@@ -171,18 +158,16 @@ export const FormField = <T extends FieldValues>({
                       onFieldBlur(fieldData);
                     }}
                   />
-                  <button
-                    className={classNames(styles['invisible-button'], {
-                      [styles['eye-icon']]: isEyeVisible,
-                      [styles['crossed-eye-icon']]: !isEyeVisible,
-                    })}
+                  <div
+                    className={styles['invisible-button']}
                     onMouseDown={handleMouseDown}
                     onMouseUp={handleMouseUp}
                     onMouseLeave={handleMouseUp}
                     onTouchStart={handleMouseDown}
                     onTouchEnd={handleMouseUp}
-                    onTouchCancel={handleMouseUp}
-                    type="button"></button>
+                    onTouchCancel={handleMouseUp}>
+                    {isEyeVisible ? <CrossedEyeIcon /> : <EyeIcon />}
+                  </div>
                   <Form.Control.Feedback type="invalid" className={styles['error-message']}>
                     {error?.message}
                   </Form.Control.Feedback>
@@ -235,6 +220,28 @@ export const FormField = <T extends FieldValues>({
         )}
         {field.type === 'avatar' && (
           <CirclePickerField name={field.id as Path<T>} control={control} />
+        )}
+        {field.type === 'checkbox' && (
+          <Controller
+            name={field.id as Path<T>}
+            control={control}
+            rules={validationRules}
+            render={({ field: fieldData, fieldState: { error } }) => {
+              return (
+                <>
+                  <Form.Check
+                    inline
+                    {...fieldData}
+                    className={styles['checkbox']}
+                    checked={fieldData.value}
+                  />
+                  <Form.Control.Feedback type="invalid" className={styles['error-message']}>
+                    {error?.message}
+                  </Form.Control.Feedback>
+                </>
+              );
+            }}
+          />
         )}
       </div>
     </Form.Group>
