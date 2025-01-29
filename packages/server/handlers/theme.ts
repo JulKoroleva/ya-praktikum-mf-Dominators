@@ -7,15 +7,14 @@ export async function getTheme(userId: ITheme['userId']): Promise<ITheme['darkTh
   return Boolean(result);
 }
 
-export async function setTheme(
-  userId: ITheme['userId'],
-  darkTheme: ITheme['darkTheme'],
-): Promise<ITheme> {
+export async function setTheme(userId: ITheme['userId'], darkTheme: ITheme['darkTheme']) {
   const [result] = await Theme.findOrCreate({ where: { userId } });
 
-  result.darkTheme = darkTheme;
+  if ('darkTheme' in result) {
+    result.darkTheme = darkTheme;
 
-  await result.save();
+    await result.save();
+  }
 
   return result;
 }
