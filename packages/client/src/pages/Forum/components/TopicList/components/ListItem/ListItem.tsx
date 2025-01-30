@@ -7,7 +7,7 @@ import styles from './ListItem.module.scss';
 import { Reactions } from '@/components/EmojiReactions/EmojiReactions';
 
 export function ListItem({ topic }: IListItemProps) {
-  const { id, title, createdAt, description, creator, commentsList, reactions } = topic;
+  const { id, title, createdAt, description, creator, comments, reactions } = topic;
   const navigate = useNavigate();
 
   const [showPopup, setShowPopup] = useState(false);
@@ -21,9 +21,7 @@ export function ListItem({ topic }: IListItemProps) {
       <div className={styles['list-item__container']} onMouseEnter={() => setShowPopup(true)}>
         <div className={styles['list-item__header']}>
           <span className={styles['list-item__author']}>{creator}</span>
-          <span className={styles['list-item__message-count']}>
-            {commentsList?.length !== 0 && commentsList?.length}
-          </span>
+          {comments !== 0 && <span className={styles['list-item__message-count']}>{comments}</span>}
         </div>
         <div className={styles['list-item__info']}>
           <span className={styles['list-item__id']}>#{id}</span>
