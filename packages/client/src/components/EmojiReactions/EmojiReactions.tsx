@@ -45,7 +45,7 @@ export function Reactions({ id, type, reactions = [] }: ReactionProps) {
       if (location.pathname === '/forum') {
         dispatch(fetchForum({ pageNumber: 1 }));
       } else if (/^\/forum\/\d+$/.test(location.pathname)) {
-        console.log('urlId', urlId)
+        console.log('urlId', urlId);
         dispatch(getTopicById({ id: Number(urlId) }));
       }
     }

@@ -6,7 +6,7 @@ export type TTopicComment = {
   topicId: number;
   updatedAt: string;
   createdAt: string;
-  reactions: any
+  reactions: any;
 };
 
 export type TTopic = {

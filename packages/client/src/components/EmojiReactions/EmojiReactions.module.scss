@@ -16,6 +16,7 @@
   border: 1px solid #e7e7e7;
   background-color: #f1f1f1;
   font-family: 'Noto Color Emoji', sans-serif;
+
   &:hover {
     background-color: #d0e8c4;
   }
@@ -28,10 +29,10 @@
 .reaction-popup {
   position: absolute;
   right: -230px;
-  bottom: 0px;
+  bottom: 0;
   background: white;
   border-radius: 8px;
-  box-shadow: -7px 5px 20px -1px rgba(0, 0, 0, 0.25);
+  box-shadow: -7px 5px 20px -1px rgb(0 0 0 / 25%);
   padding: 8px;
   display: flex;
   gap: 8px;
