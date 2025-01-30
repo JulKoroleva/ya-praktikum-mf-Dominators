@@ -46,9 +46,11 @@ class TopicController {
 
   async createTopic(req: Request, res: Response, next: NextFunction) {
     try {
-      const { title, description } = req.body;
+      const { title, description, creatorId, creator } = req.body;
 
-      const { id: creatorId, login: creator } = res.locals.user;
+      // if (!creatorId || !creator) {
+      //   return res.status(400).json({ error: '"creatorId" and "creator" are required' });
+      // }
 
       const data = {
         title,
@@ -99,10 +101,11 @@ class TopicController {
   async createComment(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
+      const { message, creator, creatorId } = req.body;
 
-      const { message } = req.body;
-
-      const { login: creator, id: creatorId } = res.locals.user;
+      if (!creatorId || !creator) {
+        return res.status(400).json({ error: '"creatorId" and "creator" are required' });
+      }
 
       const data = {
         message,

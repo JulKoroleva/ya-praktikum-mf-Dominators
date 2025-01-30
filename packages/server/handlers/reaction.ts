@@ -30,7 +30,9 @@ export async function getReactionsForEntity(ids: number[], type: 'topic' | 'comm
       const existingReaction = acc[entityId].find(r => r.emoji === reactionData.emoji);
       if (existingReaction) {
         existingReaction.count += 1;
-        existingReaction.users.push(reactionData.creatorId);
+        if (!existingReaction.users.includes(reactionData.creatorId)) {
+          existingReaction.users.push(reactionData.creatorId);
+        }
       } else {
         acc[entityId].push({
           emoji: reactionData.emoji,

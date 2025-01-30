@@ -11,8 +11,7 @@ class ReactionController {
   async addReaction(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const { emoji, type } = req.body;
-      const { id: creatorId } = res.locals.user;
+      const { emoji, type, creatorId } = req.body;
 
       if (![REACTION_TYPES.TOPIC, REACTION_TYPES.COMMENT].includes(type)) {
         return res.status(400).send({ error: 'Invalid reaction type' });
@@ -75,14 +74,13 @@ class ReactionController {
   async deleteReaction(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const { type, emoji } = req.body;
-      const { id: userId } = res.locals.user;
+      const { type, emoji, creatorId } = req.body;
 
       if (![REACTION_TYPES.TOPIC, REACTION_TYPES.COMMENT].includes(type)) {
         return res.status(400).send({ error: 'Invalid reaction type' });
       }
 
-      const reactionFilter = { emoji, creatorId: userId, [`${type}Id`]: Number(id) };
+      const reactionFilter = { emoji, creatorId, [`${type}Id`]: Number(id) };
       const deletedRows = await Reaction.destroy({ where: reactionFilter });
 
       if (deletedRows > 0) {

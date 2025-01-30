@@ -22,7 +22,7 @@ export function Comment({ comment }: IComment) {
       <Reactions id={id} type="comment" reactions={reactions} />
       {showPopup && (
         <div className={styles['reaction-popup']} onClick={() => setShowPopup(false)}>
-          <Reactions id={id} type="topic" />
+          <Reactions id={id} type="comment" />
         </div>
       )}
     </div>

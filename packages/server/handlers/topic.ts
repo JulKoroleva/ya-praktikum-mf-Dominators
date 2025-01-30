@@ -10,7 +10,13 @@ interface IPaginationOptions {
 
 // Создание топика
 export async function createTopic(args: Partial<ITopic>) {
-  return Topic.create({ ...args });
+  return Topic.create({
+    creatorId: args.creatorId, // 🔥 Добавляем creatorId
+    creator: args.creator,
+    title: args.title,
+    description: args.description,
+    comments: 0,
+  });
 }
 
 // Получить список всех топиков
@@ -69,5 +75,10 @@ export async function getTopic(topicId: number) {
 
 // Создать комментарий к топику
 export async function createComment(args: Partial<ITopicComment>) {
-  return await TopicComment.create({ ...args });
+  return TopicComment.create({
+    topicId: args.topicId,
+    creatorId: args.creatorId,
+    creator: args.creator,
+    message: args.message,
+  });
 }

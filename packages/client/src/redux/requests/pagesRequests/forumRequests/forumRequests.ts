@@ -1,7 +1,10 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { TTopic, TPaginationOptions } from '@/pages/Forum/components';
 
-import { ICreateTopicDto } from '@/pages/Forum/components/TopicList/TopicList.interface';
+import {
+  ICreateTopicDto,
+  TTopicComment,
+} from '@/pages/Forum/components/TopicList/TopicList.interface';
 import { TOPICS_URL } from '@/constants/apiUrls';
 
 export const fetchForum = createAsyncThunk<
@@ -14,9 +17,15 @@ export const fetchForum = createAsyncThunk<
 >('forum/fetchForum', async (data, { rejectWithValue }) => {
   const url = `${TOPICS_URL}${data.pageNumber ? `?page=${data.pageNumber}` : ''}`;
 
-  return fetch(url)
-    .then(res => res.json())
-    .catch(err => rejectWithValue(err));
+  const request = await fetch(url);
+
+  if (!request.ok) {
+    const response = await request.json();
+    const rejectReason = response.message ? response.message : 'Unknown error';
+    return rejectWithValue(rejectReason);
+  }
+
+  return request.json();
 });
 
 export const getTopicById = createAsyncThunk<TTopic, { id: number }, { rejectValue: string }>(
@@ -51,33 +60,38 @@ export const createTopic = createAsyncThunk<TTopic, ICreateTopicDto, { rejectVal
 );
 
 export const addTopicComment = createAsyncThunk<
-  TTopic,
-  { topicId: number; message: string },
+  TTopicComment,
+  { topicId: number; message: string; creator: string; creatorId: number },
   { rejectValue: string }
->('forum/addTopicComment', async (data, { rejectWithValue }) => {
-  const request = await fetch(`${TOPICS_URL}/${data.topicId}`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ message: data.message }),
-    credentials: 'include',
-  });
+>(
+  'forum/addTopicComment',
+  async ({ topicId, message, creator, creatorId }, { rejectWithValue }) => {
+    const request = await fetch(`${TOPICS_URL}/${topicId}/comments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ message, creator, creatorId }),
+      credentials: 'include',
+    });
 
-  if (!request.ok) {
-    const response = await request.json();
-    const rejectReason = response.reason ? response.reason : 'Unknown error';
-    return rejectWithValue(rejectReason);
-  }
+    if (!request.ok) {
+      const response = await request.json();
+      const rejectReason = response.reason ? response.reason : 'Unknown error';
+      return rejectWithValue(rejectReason);
+    }
 
-  return request.json();
-});
+    return request.json();
+  },
+);
 
 export const addReaction = createAsyncThunk<
   void,
-  { id: number; type: 'topic' | 'comment'; emoji: string; creatorId: string },
+  { id: number; type: 'topic' | 'comment'; emoji: string; creatorId: number },
   { rejectValue: string }
 >('forum/addReaction', async ({ id, type, emoji, creatorId }, { rejectWithValue }) => {
+  console.log(`Sending reaction: ${emoji}, user: ${creatorId}`);
+
   const request = await fetch(
     `${TOPICS_URL}/${type === 'comment' ? 'comment/' : 'topic/'}${id}/reactions`,
     {
@@ -96,12 +110,14 @@ export const addReaction = createAsyncThunk<
     return rejectWithValue(rejectReason);
   }
 
+  console.log('Reaction successfully sent to server');
+
   return request.json();
 });
 
 export const deleteReaction = createAsyncThunk<
   void,
-  { id: number; type: 'topic' | 'comment'; emoji: string; creatorId: string },
+  { id: number; type: 'topic' | 'comment'; emoji: string; creatorId: number },
   { rejectValue: string }
 >('forum/deleteReaction', async ({ id, type, emoji, creatorId }, { rejectWithValue }) => {
   const request = await fetch(

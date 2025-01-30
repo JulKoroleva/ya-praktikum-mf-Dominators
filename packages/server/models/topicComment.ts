@@ -25,9 +25,11 @@ export const topicCommentModel: ModelAttributes<Model, ITopicComment> = {
   },
   creator: {
     type: DataType.TEXT,
+    allowNull: false,
   },
   creatorId: {
     type: DataType.INTEGER,
+    allowNull: false,
   },
   message: {
     type: DataType.STRING,

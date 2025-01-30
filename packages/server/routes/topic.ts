@@ -13,8 +13,8 @@ topicRouter.post(
   topicController.createTopic,
 );
 topicRouter.get('/forum/:id', validation.idParams, topicController.getTopic);
-topicRouter.patch(
-  '/forum/:id',
+topicRouter.post(
+  '/forum/:id/comments',
   checkAuthMiddleware,
   validation.createCommentInfo,
   topicController.createComment,

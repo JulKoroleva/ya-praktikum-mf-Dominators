@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,6 +18,7 @@ import {
   selectTopicById,
   selectTopicCommentError,
   selectTopicCommentStatus,
+  selectUser,
 } from '@/redux/selectors';
 
 import { usePage } from '@/services/hooks';
@@ -53,10 +54,21 @@ export function TopicPost({ id }: ITopicPostProps) {
   const addTopicCommentStatus = useSelector(selectTopicCommentStatus);
   const addTopicCommentError = useSelector(selectTopicCommentError);
 
+  const userInfo = useSelector(selectUser);
+
   const onSubmit = (data: Record<string, string>) => {
     const id = topicData?.id;
     if (id) {
-      dispatch(addTopicComment({ topicId: id, message: data.message }));
+      dispatch(
+        addTopicComment({
+          topicId: id,
+          message: data.message,
+          creator: userInfo.login,
+          creatorId: userInfo.id,
+        }),
+      ).then(() => {
+        dispatch(getTopicById({ id }));
+      });
     }
     setLocalTopicPostFormDataInitialValues({ message: '' });
   };
@@ -119,6 +131,9 @@ export function TopicPost({ id }: ITopicPostProps) {
     }
   }, [addTopicCommentStatus, addTopicCommentError]);
 
+  const handleMouseEnter = useCallback(() => setShowPopup(true), []);
+  const handleMouseLeave = useCallback(() => setShowPopup(false), []);
+
   usePage({ initPage: initForumPage });
 
   return (
@@ -126,14 +141,17 @@ export function TopicPost({ id }: ITopicPostProps) {
       <Navigation title={`Discussion #${id}`} to={ROUTES.forum()} />
       <div
         className={styles['topic-post__container']}
-        onMouseEnter={() => setShowPopup(true)}
-        onMouseLeave={() => setShowPopup(false)}>
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onMouseOver={handleMouseEnter}>
         <div className={styles['topic-post__info']}>
           <span className={styles['topic-post__topic-author']}>{topicData?.creator}</span>
           <span className={styles['topic-post__topic-date']}>
-            {topicData?.createdAt.includes('-')
-              ? new Date(topicData?.createdAt).toDateString()
-              : topicData?.createdAt}
+            {topicData?.createdAt &&
+            typeof topicData.createdAt === 'string' &&
+            topicData.createdAt.includes('-')
+              ? new Date(topicData.createdAt).toDateString()
+              : (topicData?.createdAt ?? '-')}
           </span>
         </div>
         <span className={styles['topic-post__topic-title']}>{topicData?.title}</span>

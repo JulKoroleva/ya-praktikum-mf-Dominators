@@ -32,6 +32,8 @@ export interface ITopicListProps {
 }
 
 export interface ICreateTopicDto {
+  creatorId?: number;
+  creator?: string;
   title: string;
   description: string;
 }

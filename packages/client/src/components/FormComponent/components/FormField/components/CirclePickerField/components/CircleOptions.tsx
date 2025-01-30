@@ -1,23 +1,20 @@
 import React from 'react';
-import { HueSlider } from 'react-slider-color-picker';
+import { SliderPicker, ColorChangeHandler } from 'react-color';
 import styles from '../../CirclePickerField/CirclePickerField.module.scss';
-import { Color } from 'react-slider-color-picker/dist/interfaces';
+import { RGBColor } from 'react-color';
 
 export const CircleOptions = ({
   handleChangeColor,
   handleImageUpload,
   color,
 }: {
-  handleChangeColor: (newColor: Color) => void;
+  handleChangeColor: ColorChangeHandler;
   handleImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  color: Color | null;
+  color: RGBColor | null;
 }) => (
   <div className={styles['options']}>
     <div className={styles['circle-slider']}>
-      <HueSlider
-        handleChangeColor={handleChangeColor}
-        color={color || { h: 0, s: 0, l: 100, a: 1 }}
-      />
+      <SliderPicker color={color || '#FFFFFF'} onChangeComplete={handleChangeColor} />
     </div>
     <div className={styles['upload-option']}>
       <label htmlFor="image-upload" className={styles['upload-label']}>
