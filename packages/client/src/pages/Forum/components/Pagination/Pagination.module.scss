@@ -21,8 +21,13 @@
         }
     }
     
-    &__buttonIcon {
+    &__button-icon {
+        width: 20px;
         margin-right: 9px;
+    
+        &.previous{
+            transform: rotate(180deg);
+        }
     }
 
     &__view {

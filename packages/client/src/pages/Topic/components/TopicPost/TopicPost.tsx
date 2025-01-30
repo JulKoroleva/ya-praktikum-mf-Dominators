@@ -33,11 +33,13 @@ import { TTopic } from '@/pages/Forum/components';
 
 import styles from './TopicPost.module.scss';
 import { Reactions } from '@/components/EmojiReactions/EmojiReactions';
+import { useEmojiPopupVisibility } from '@/hooks/useEmojiPopupVisibility.hook';
 
 export function TopicPost({ id }: ITopicPostProps) {
   const navigate = useNavigate();
   const dispatch = useDispatch<TypeDispatch>();
 
+  const { showPopup, handleMouseEnter, handleMouseLeave } = useEmojiPopupVisibility(0);
   const [topicData, setTopicData] = useState<TTopic | null>(null);
   const [modalConfig, setModalConfig] = useState<IModalConfig>({
     show: false,
@@ -80,8 +82,6 @@ export function TopicPost({ id }: ITopicPostProps) {
   useEffect(() => {
     dispatch(getTopicById({ id }));
   }, []);
-
-  const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
     if (topicDataFromServer) {
@@ -131,9 +131,6 @@ export function TopicPost({ id }: ITopicPostProps) {
     }
   }, [addTopicCommentStatus, addTopicCommentError]);
 
-  const handleMouseEnter = useCallback(() => setShowPopup(true), []);
-  const handleMouseLeave = useCallback(() => setShowPopup(false), []);
-
   usePage({ initPage: initForumPage });
 
   return (
@@ -142,8 +139,7 @@ export function TopicPost({ id }: ITopicPostProps) {
       <div
         className={styles['topic-post__container']}
         onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        onMouseOver={handleMouseEnter}>
+        onMouseLeave={handleMouseLeave}>
         <div className={styles['topic-post__info']}>
           <span className={styles['topic-post__topic-author']}>{topicData?.creator}</span>
           <span className={styles['topic-post__topic-date']}>
@@ -157,11 +153,10 @@ export function TopicPost({ id }: ITopicPostProps) {
         <span className={styles['topic-post__topic-title']}>{topicData?.title}</span>
         <span className={styles['topic-post__topic-text']}>{topicData?.description}</span>
         {topicData !== null && <Reactions id={id} type="topic" reactions={topicData.reactions} />}
-        {showPopup && (
-          <div className={styles['reaction-popup']} onClick={() => setShowPopup(false)}>
-            <Reactions id={id} type="topic" />
-          </div>
-        )}
+
+        <div className={styles['reaction-popup']}>
+          <Reactions id={id} type="topic" showPopup={showPopup} />
+        </div>
       </div>
       {topicData?.commentsList && topicData?.commentsList?.length !== 0 && (
         <div className={styles['topic-post__container']}>

@@ -16,6 +16,17 @@ class ReactionController {
       if (![REACTION_TYPES.TOPIC, REACTION_TYPES.COMMENT].includes(type)) {
         return res.status(400).send({ error: 'Invalid reaction type' });
       }
+      const existingReaction = await Reaction.findOne({
+        where: {
+          [`${type}Id`]: Number(id),
+          emoji,
+          creatorId,
+        },
+      });
+
+      if (existingReaction) {
+        return res.status(400).send({ error: 'User has already reacted with this emoji' });
+      }
 
       const reaction = await Reaction.create({
         [`${type}Id`]: Number(id),

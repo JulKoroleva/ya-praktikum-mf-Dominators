@@ -13,24 +13,25 @@
   border-radius: 20px;
   padding: 5px;
   margin-left: 10px;
-  border: 1px solid #e7e7e7;
-  background-color: #f1f1f1;
+  border: 1px solid $color-green-main;
+  background-color: $color-light-green;
   font-family: 'Noto Color Emoji', sans-serif;
+  color: $color-black;
 
   &:hover {
-    background-color: #d0e8c4;
+    background-color: $color-hover-emoji;
   }
 }
 
 .active-reaction {
-  background-color: #d9d9d9;
+  background-color: $color-active-emoji;
 }
 
 .reaction-popup {
   position: absolute;
   right: -230px;
   bottom: 0;
-  background: white;
+  background: $color-white;
   border-radius: 8px;
   box-shadow: -7px 5px 20px -1px rgb(0 0 0 / 25%);
   padding: 8px;
@@ -47,7 +48,7 @@
   transform: translateY(-50%);
   border-width: 10px;
   border-style: solid;
-  border-color: transparent white transparent transparent;
+  border-color: transparent $color-white transparent transparent;
 }
 
 .reaction-button {

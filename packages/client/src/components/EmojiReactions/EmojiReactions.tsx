@@ -15,13 +15,14 @@ interface ReactionProps {
   id: number;
   type: 'topic' | 'comment';
   reactions?: { emoji: string; count: number; users?: number[] }[];
+  showPopup?: boolean
 }
 
-export function Reactions({ id, type, reactions = [] }: ReactionProps) {
+export function Reactions({ id, type, reactions = [], showPopup }: ReactionProps) {
   const dispatch = useDispatch<TypeDispatch>();
   const userInfo = useSelector(selectUser);
   const { id: urlId } = useParams();
-  const [showPopup, setShowPopup] = useState(reactions === undefined);
+  // const [showPopup, setShowPopup] = useState(reactions.length === 0);
 
   const handleReactionClick = async (event: React.MouseEvent, emoji: string) => {
     event.stopPropagation();
@@ -62,7 +63,7 @@ export function Reactions({ id, type, reactions = [] }: ReactionProps) {
             <span
               key={emoji}
               className={`${styles['reaction-item']} ${
-                reactions.find(r => r.emoji === emoji)?.users.includes(userInfo.id)
+                (reactions.find(r => r.emoji === emoji)?.users ?? []).includes(userInfo.id)
                   ? styles['active-reaction']
                   : ''
               }`}
@@ -74,7 +75,7 @@ export function Reactions({ id, type, reactions = [] }: ReactionProps) {
       )}
 
       {showPopup && (
-        <div className={styles['reaction-popup']} onClick={() => setShowPopup(false)}>
+        <div className={styles['reaction-popup']}>
           {['👍', '❤️', '😂', '🔥', '😢'].map(emoji => (
             <button
               key={emoji}

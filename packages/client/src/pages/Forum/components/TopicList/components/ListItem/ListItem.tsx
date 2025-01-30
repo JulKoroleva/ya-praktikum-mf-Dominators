@@ -1,16 +1,15 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import { IListItemProps } from './ListItem.interface';
 import styles from './ListItem.module.scss';
 
 import { Reactions } from '@/components/EmojiReactions/EmojiReactions';
+import { useEmojiPopupVisibility } from '@/hooks/useEmojiPopupVisibility.hook';
 
 export function ListItem({ topic }: IListItemProps) {
   const { id, title, createdAt, description, creator, comments, reactions } = topic;
+  const { showPopup, handleMouseEnter } = useEmojiPopupVisibility();
   const navigate = useNavigate();
-
-  const [showPopup, setShowPopup] = useState(false);
 
   const handleReadTopic = () => {
     navigate(ROUTES.topic(id));
@@ -18,13 +17,12 @@ export function ListItem({ topic }: IListItemProps) {
 
   return (
     <div className={styles['list-item']} onClick={handleReadTopic}>
-      <div className={styles['list-item__container']} onMouseEnter={() => setShowPopup(true)}>
+      <div className={styles['list-item__container']} onMouseEnter={handleMouseEnter}>
         <div className={styles['list-item__header']}>
           <span className={styles['list-item__author']}>{creator}</span>
           {comments !== 0 && <span className={styles['list-item__message-count']}>{comments}</span>}
         </div>
         <div className={styles['list-item__info']}>
-          <span className={styles['list-item__id']}>#{id}</span>
           <span className={styles['list-item__date']}>
             {createdAt.includes('-') ? new Date(createdAt).toDateString() : createdAt}
           </span>
@@ -35,11 +33,9 @@ export function ListItem({ topic }: IListItemProps) {
         <Reactions id={id} type="topic" reactions={reactions} />
       </div>
 
-      {showPopup && (
-        <div className={styles['reaction-popup']} onClick={() => setShowPopup(false)}>
-          <Reactions id={id} type="topic" />
-        </div>
-      )}
+      <div className={styles['reaction-popup']}>
+        <Reactions id={id} type="topic" showPopup={showPopup} />
+      </div>
     </div>
   );
 }
