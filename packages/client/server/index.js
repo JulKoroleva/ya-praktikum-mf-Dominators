@@ -39,7 +39,7 @@ const isDev = process.env.NODE_ENV === 'development';
 async function createServer() {
     const app = (0, express_1.default)();
     let vite;
-    if (isDev) {
+    if (!isDev) {
         vite = await (0, vite_1.createServer)({
             server: { middlewareMode: true },
             root: clientPath,
@@ -52,7 +52,7 @@ async function createServer() {
         app.use(vite.middlewares);
     }
     else {
-        app.use(express_1.default.static(path_1.default.join(clientPath, 'dist/client'), { index: false }));
+        app.use(express_1.default.static(path_1.default.join(clientPath, 'dist')));
     }
     app.get('*', async (req, res, next) => {
         var _a;

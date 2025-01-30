@@ -16,7 +16,7 @@ async function createServer() {
 
   let vite: ViteDevServer | undefined;
 
-  if (isDev) {
+  if (!isDev) {
     vite = await createViteServer({
       server: { middlewareMode: true },
       root: clientPath,
@@ -29,7 +29,7 @@ async function createServer() {
 
     app.use(vite.middlewares);
   } else {
-    app.use(express.static(path.join(clientPath, 'dist/client')));
+    app.use(express.static(path.join(clientPath, 'dist')));
   }
 
   app.get('*', async (req, res, next) => {
