@@ -1,5 +1,5 @@
 import { IPopupProps } from './Popup.interface';
-import closeIcon from '@/assets/icons/close.svg';
+import { CloseIcon } from '@/components/Icons';
 import styles from './Popup.module.scss';
 
 export function Popup({ open, withOverlay = false, children, onClose }: IPopupProps) {
@@ -15,9 +15,7 @@ export function Popup({ open, withOverlay = false, children, onClose }: IPopupPr
       )}
       <div className={`${styles.popup} ${open ? styles.popup_active : ''}`}>
         <div className="popup-content">{children}</div>
-        {onClose && (
-          <img src={closeIcon} alt="close" className={styles.popup__close} onMouseUp={onClose} />
-        )}
+        {onClose && <CloseIcon className={styles.popup__close} onMouseUp={onClose} />}
       </div>
     </>
   );

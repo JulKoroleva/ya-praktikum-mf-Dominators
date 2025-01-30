@@ -4,7 +4,6 @@
 canvas {
   width: 100%;
   height: 100%;
-  border: 1px solid $color-danger;
 }
 
 .canvas-page {
@@ -12,7 +11,7 @@ canvas {
   height: 100vh;
   position: relative;
   overflow: hidden;
-  background-color: $default-bg-color;
+  background-color: var(--bg-color);
 
   &__menu {
     position: absolute;
@@ -22,7 +21,7 @@ canvas {
 
   &__score-block {
     display: flex;
-    background-color: $default-bg-color;
+    background-color: var(--menu-bg-color);
     border-radius: 10px;
     padding: 10px;
     box-shadow: $box-shadow;

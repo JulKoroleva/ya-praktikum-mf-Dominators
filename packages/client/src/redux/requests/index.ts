@@ -2,7 +2,7 @@ export {
   authorizationRequest,
   registrationRequest,
   logoutRequest,
-  profileRequests,
+  profileRequest,
   avatarRequests,
   passwordRequests,
   fetchForum,
@@ -10,5 +10,6 @@ export {
   addTopicComment,
   getTopicById,
   addLeaderBoardEntry,
+  setThemeRequest,
 } from './pagesRequests';
-export { getUserInfoRequest } from './globalRequests';
+export { getUserInfoRequest, getTheme } from './globalRequests';

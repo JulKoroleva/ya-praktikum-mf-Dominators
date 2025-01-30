@@ -1,10 +1,23 @@
 @use 'fonts';
+@use 'variables';
 
 body {
-  background-image: linear-gradient(to right, $app-cell-color 1px, transparent 1px),
-    linear-gradient(to bottom, $app-cell-color 1px, transparent 1px);
+  background-color: var(--bg-color);
+  background-image: linear-gradient(to right, var(--cell-color) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--cell-color) 1px, transparent 1px);
   background-size: $app-cell-size $app-cell-size;
-  color: $color-black;
+  color: var(--font-color);
+}
+
+:root {
+  --bg-color: #{$default-bg-color};
+  --font-color: #{$color-black};
+  --font-secondary-color: #{$secondary-color};
+  --menu-bg-color: #{$default-bg-color};
+  --cell-color: #{$app-cell-color};
+  --error-color: #{$color-danger};
+  --form-label-color: #{$text-color-grayish-blue};
+  --form-input-bg: #{$default-bg-color};
 }
 
 * {
@@ -12,4 +25,15 @@ body {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+}
+
+.dark-theme {
+  --bg-color: #282A2E;
+  --font-color: #fff;
+  --menu-bg-color: #444;
+  --cell-color: #555;
+  --font-secondary-color: #bbb;
+  --error-color:#FF9E9E;
+  --form-label-color:#bbb;
+  --form-input-bg: #666;
 }

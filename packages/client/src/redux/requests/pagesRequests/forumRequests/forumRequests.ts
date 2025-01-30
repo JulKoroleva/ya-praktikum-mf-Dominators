@@ -14,9 +14,15 @@ export const fetchForum = createAsyncThunk<
 >('forum/fetchForum', async (data, { rejectWithValue }) => {
   const url = `${TOPICS_URL}${data.pageNumber ? `?page=${data.pageNumber}` : ''}`;
 
-  return fetch(url)
-    .then(res => res.json())
-    .catch(err => rejectWithValue(err));
+  const request = await fetch(url);
+
+  if (!request.ok) {
+    const response = await request.json();
+    const rejectReason = response.message ? response.message : 'Unknown error';
+    return rejectWithValue(rejectReason);
+  }
+
+  return request.json();
 });
 
 export const getTopicById = createAsyncThunk<TTopic, { id: number }, { rejectValue: string }>(

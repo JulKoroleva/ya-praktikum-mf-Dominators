@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import {
   getUserInfoRequest,
-  profileRequests,
+  profileRequest,
   avatarRequests,
   passwordRequests,
 } from '@/redux/requests';
@@ -59,15 +59,15 @@ export const userSlice = createSlice({
         state.getUserStatus = 'failed';
         state.getUserError = action.payload as string;
       })
-      .addCase(profileRequests.pending, state => {
+      .addCase(profileRequest.pending, state => {
         state.changeUserStatus = 'loading';
       })
-      .addCase(profileRequests.fulfilled, (state, action) => {
+      .addCase(profileRequest.fulfilled, (state, action) => {
         state.changeUserStatus = 'succeeded';
         state.changeUserError = '';
         state.userInfo = action.payload;
       })
-      .addCase(profileRequests.rejected, (state, action) => {
+      .addCase(profileRequest.rejected, (state, action) => {
         state.changeUserStatus = 'failed';
         state.changeUserError = action.payload as string;
       })

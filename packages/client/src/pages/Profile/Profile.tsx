@@ -13,13 +13,14 @@ import {
 } from '@/components';
 
 import {
-  profileRequests,
+  profileRequest,
   passwordRequests,
   avatarRequests,
   getUserInfoRequest,
+  setThemeRequest,
 } from '@/redux/requests';
 import { clearChangeUserState, IUserInfo, IUserPassword } from '@/redux/slices';
-import { selectUser, selectUserError, selectUserStatus } from '@/redux/selectors';
+import { selectUser, selectUserError, selectUserStatus, selectTheme } from '@/redux/selectors';
 
 import { settingsFields, changePasswordFields } from './profilePageData';
 import { HEADERS } from '@/constants/headers';
@@ -33,7 +34,8 @@ import { useIsAuthorized, usePage } from '@/services/hooks';
 import { getCookie } from '@/services/cookiesHandler';
 
 import { ROUTES } from '@/constants/routes';
-import { initPageWithoutData } from '@/routes';
+import { initPage } from '@/routes';
+import { IData } from './Profile.interface';
 
 import styles from './profile.module.scss';
 
@@ -43,6 +45,7 @@ export const Profile = () => {
   const [isAuthorized, setIsAuthorized] = useIsAuthorized();
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const userInfo = useSelector(selectUser);
+  const theme = useSelector(selectTheme);
   const userStatus = useSelector(selectUserStatus);
   const userError = useSelector(selectUserError);
 
@@ -54,7 +57,7 @@ export const Profile = () => {
 
   const authCookie = getCookie('auth');
 
-  const onSubmit = async (data: IUserInfo | IUserPassword) => {
+  const onSubmit = async (data: IData | IUserPassword) => {
     if (isChangingPassword) {
       dispatch(
         passwordRequests({
@@ -63,24 +66,24 @@ export const Profile = () => {
         }),
       );
     } else {
-      const userInfo = data as IUserInfo;
+      const newUserInfo = data as IData;
 
-      const isRgbColor = userInfo.avatar?.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+      const isRgbColor = newUserInfo.avatar?.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
 
-      let avatarUrl = userInfo.avatar;
+      let avatarUrl = newUserInfo.avatar;
 
       if (isRgbColor) {
         try {
-          const generatedImage = await createImageFile(100, 100, userInfo.avatar as string);
-          const colorFile = await embedTextInImage(generatedImage, userInfo.avatar);
+          const generatedImage = await createImageFile(100, 100, newUserInfo.avatar as string);
+          const colorFile = await embedTextInImage(generatedImage, newUserInfo.avatar);
           const response = await dispatch(avatarRequests(colorFile));
           avatarUrl = response.payload as string;
         } catch (error) {
           return;
         }
-      } else if (userInfo.avatar.startsWith('data:image/')) {
+      } else if (newUserInfo.avatar.startsWith('data:image/')) {
         try {
-          const file = base64ToFile(userInfo.avatar, 'avatar.jpg');
+          const file = base64ToFile(newUserInfo.avatar, 'avatar.jpg');
           const response = await dispatch(avatarRequests(file));
           avatarUrl = response.payload as string;
         } catch (error) {
@@ -88,8 +91,14 @@ export const Profile = () => {
         }
       }
 
-      const updatedData: IUserInfo = { ...userInfo, avatar: avatarUrl };
-      await dispatch(profileRequests(updatedData));
+      if (typeof newUserInfo.theme === 'boolean' && theme !== newUserInfo.theme) {
+        await dispatch(setThemeRequest({ userId: userInfo.id, darkTheme: newUserInfo.theme }));
+      }
+
+      delete newUserInfo.theme;
+
+      const updatedData: IUserInfo = { ...newUserInfo, avatar: avatarUrl };
+      await dispatch(profileRequest(updatedData));
       dispatch(getUserInfoRequest());
     }
   };
@@ -140,7 +149,9 @@ export const Profile = () => {
     }
   }, [userStatus, userError]);
 
-  usePage({ initPage: initPageWithoutData });
+  usePage({ initPage });
+
+  const formInitialValues = userInfo ? { ...userInfo, theme } : undefined;
 
   const settings = (
     <>
@@ -148,7 +159,7 @@ export const Profile = () => {
       <FormComponent
         fields={settingsFields}
         onSubmit={onSubmit}
-        initialValues={userInfo || undefined}
+        initialValues={formInitialValues}
         submitButtonText="Save"
       />
       <Button

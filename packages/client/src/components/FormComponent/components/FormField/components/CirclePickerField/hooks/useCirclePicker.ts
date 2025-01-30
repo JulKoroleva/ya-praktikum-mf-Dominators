@@ -1,32 +1,30 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { Color } from 'react-slider-color-picker/dist/interfaces';
-import { hslToRgb } from '../utils/hslToRgb';
-import { rgbStringToHsl } from '../utils/rgbStringToHsl';
+import { RGBColor } from 'react-color';
 
 export const useCirclePicker = () => {
   const [isPickerVisible, setPickerVisible] = useState(false);
   const [localImage, setLocalImage] = useState<string | null>(null);
-  const [color, setLocalColor] = useState<Color | null>({ h: 180, s: 100, l: 50, a: 1 });
+  const [color, setLocalColor] = useState<RGBColor | null>({ r: 85, g: 255, b: 0, a: 1 });
   const pickerRef = useRef<HTMLDivElement | null>(null);
   const processedAvatar = useSelector((state: RootState) => state.global.user.processedAvatar);
 
   useEffect(() => {
-    const isRgbColor = processedAvatar?.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-    if (isRgbColor) {
-      setLocalColor(rgbStringToHsl(processedAvatar));
+    const rgbColor = processedAvatar?.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+    if (rgbColor) {
+      const [, r, g, b] = rgbColor.map(Number);
+      setLocalColor({ r, g, b, a: 1 });
       setLocalImage(null);
     } else {
       setLocalImage(processedAvatar);
     }
   }, []);
 
-  const handleChangeColor = async (newColor: Color, onChange: (value: string) => void) => {
-    const colorString = hslToRgb(newColor.h, newColor.s, newColor.l);
+  const handleChangeColor = async (newColor: RGBColor, onChange: (value: string) => void) => {
     setLocalColor(newColor);
     setLocalImage(null);
-    onChange(colorString);
+    onChange(`rgb(${newColor.r}, ${newColor.g}, ${newColor.b})`);
   };
 
   const handleImageUpload = (file: File, onChange: (value: string) => void) => {

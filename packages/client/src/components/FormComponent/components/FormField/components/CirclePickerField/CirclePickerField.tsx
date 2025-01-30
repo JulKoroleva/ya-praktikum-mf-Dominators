@@ -11,7 +11,6 @@ export const CirclePickerField = <T extends FieldValues>({
   control,
 }: CirclePickerFieldProps<T>) => {
   const {
-    // avatar,
     isPickerVisible,
     setPickerVisible,
     localImage,
@@ -35,7 +34,7 @@ export const CirclePickerField = <T extends FieldValues>({
           />
           {isPickerVisible && (
             <CircleOptions
-              handleChangeColor={newColor => handleChangeColor(newColor, field.onChange)}
+              handleChangeColor={({ rgb }) => handleChangeColor(rgb, field.onChange)}
               handleImageUpload={e =>
                 e.target.files && handleImageUpload(e.target.files[0], field.onChange)
               }
