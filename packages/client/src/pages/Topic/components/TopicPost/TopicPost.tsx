@@ -35,6 +35,9 @@ import styles from './TopicPost.module.scss';
 import { Reactions } from '@/components/EmojiReactions/EmojiReactions';
 import { useEmojiPopupVisibility } from '@/hooks/useEmojiPopupVisibility.hook';
 
+import trashButton from '@/assets/icons/trash.svg';
+import { useDeleteEntity } from '@/hooks/useDeleteForumEntity';
+
 export function TopicPost({ id }: ITopicPostProps) {
   const navigate = useNavigate();
   const dispatch = useDispatch<TypeDispatch>();
@@ -58,6 +61,8 @@ export function TopicPost({ id }: ITopicPostProps) {
   const addTopicCommentError = useSelector(selectTopicCommentError);
 
   const userInfo = useSelector(selectUser);
+
+  const handleDelete = useDeleteEntity();
 
   const onSubmit = (data: Record<string, string>) => {
     const id = topicData?.id;
@@ -144,13 +149,22 @@ export function TopicPost({ id }: ITopicPostProps) {
         ref={emojiRef}>
         <div className={styles['topic-post__info']}>
           <span className={styles['topic-post__topic-author']}>{topicData?.creator}</span>
-          <span className={styles['topic-post__topic-date']}>
-            {topicData?.createdAt &&
-            typeof topicData.createdAt === 'string' &&
-            topicData.createdAt.includes('-')
-              ? new Date(topicData.createdAt).toDateString()
-              : (topicData?.createdAt ?? '-')}
-          </span>
+          <div>
+            {showPopup && userInfo.login === topicData?.creator && (
+              <button
+                onClick={e => handleDelete(id, 'topic', e)}
+                className={styles['topic-post__delete-btn']}>
+                <img src={trashButton} alt="delete" />
+              </button>
+            )}
+            <span className={styles['topic-post__topic-date']}>
+              {topicData?.createdAt &&
+              typeof topicData.createdAt === 'string' &&
+              topicData.createdAt.includes('-')
+                ? new Date(topicData.createdAt).toDateString()
+                : (topicData?.createdAt ?? '-')}
+            </span>
+          </div>
         </div>
         <span className={styles['topic-post__topic-title']}>{topicData?.title}</span>
         <span className={styles['topic-post__topic-text']}>{topicData?.description}</span>

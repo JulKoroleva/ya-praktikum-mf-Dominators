@@ -40,7 +40,6 @@ export const getTopicById = createAsyncThunk<TTopic, { id: number }, { rejectVal
 export const createTopic = createAsyncThunk<TTopic, ICreateTopicDto, { rejectValue: string }>(
   'forum/createTopic',
   async (data, { rejectWithValue }) => {
-    console.log('data', data)
     const request = await fetch(TOPICS_URL, {
       method: 'POST',
       headers: {

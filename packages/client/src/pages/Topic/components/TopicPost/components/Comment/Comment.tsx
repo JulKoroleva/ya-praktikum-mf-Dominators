@@ -4,11 +4,17 @@ import { IComment } from './Comment.interface';
 import styles from './Comment.module.scss';
 import { useEmojiPopupVisibility } from '@/hooks/useEmojiPopupVisibility.hook';
 import { useRef } from 'react';
+import { useDeleteEntity } from '@/hooks/useDeleteForumEntity';
+import { selectUser } from '@/redux/selectors';
+import { useSelector } from 'react-redux';
+import trashButton from '@/assets/icons/trash.svg';
 
 export function Comment({ comment }: IComment) {
   const { id, creator, createdAt, message, reactions } = comment;
   const { showPopup, handleMouseEnter, handleMouseLeave } = useEmojiPopupVisibility(0);
   const emojiRef = useRef<HTMLDivElement | null>(null);
+  const userInfo = useSelector(selectUser);
+  const handleDelete = useDeleteEntity();
 
   return (
     <div
@@ -18,9 +24,18 @@ export function Comment({ comment }: IComment) {
       ref={emojiRef}>
       <div className={styles.comment__info}>
         <span className={styles.comment__author}>{creator}</span>
-        <span className={styles.comment__date}>
-          {createdAt.includes('-') ? new Date(createdAt).toDateString() : createdAt}
-        </span>
+        <div>
+          {showPopup && userInfo.login === creator && (
+            <button
+              onClick={e => handleDelete(id, 'topic', e)}
+              className={styles['comment__delete-btn']}>
+              <img src={trashButton} alt="delete" />
+            </button>
+          )}
+          <span className={styles.comment__date}>
+            {createdAt.includes('-') ? new Date(createdAt).toDateString() : createdAt}
+          </span>
+        </div>
       </div>
       <p className={styles.comment__text}>{message}</p>
       <Reactions id={id} type="comment" reactions={reactions} />

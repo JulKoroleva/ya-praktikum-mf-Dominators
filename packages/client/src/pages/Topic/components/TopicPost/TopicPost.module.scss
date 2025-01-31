@@ -32,6 +32,21 @@
     flex-wrap: wrap;
   }
 
+  &__delete-btn {
+    background-color: transparent;
+    border: none;
+    object-fit: cover;
+    margin: 5px 10px 0 0;
+
+    img {
+      width: 20px;
+    }
+
+    &:hover{
+      opacity: 0.5;
+    }
+  }
+
   &__topic-author {
     font-size: 18px;
     font-weight: 500;

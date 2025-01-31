@@ -1,8 +1,13 @@
-import React from 'react';
 import { ProgressBar } from 'react-bootstrap';
 import styles from './TimerProgressBar.module.scss';
+import { TimerProgressBarProps } from './TimerProgressBarProps.interface';
 
-export function TimerProgressBar({ progress, isWaitingForTap, remainingTime, onTap }) {
+export function TimerProgressBar({
+  progress,
+  isWaitingForTap,
+  remainingTime,
+  onTap,
+}: TimerProgressBarProps) {
   return (
     <div className={styles['progress-container']}>
       <ProgressBar className={styles['progress-bar']}>

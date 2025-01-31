@@ -28,6 +28,21 @@
     line-height: 16px;
   }
 
+  &__delete-btn {
+    background-color: transparent;
+    border: none;
+    object-fit: cover;
+    margin: 5px 10px 0 0;
+
+    img {
+      width: 20px;
+    }
+
+    &:hover{
+      opacity: 0.5;
+    }
+  }
+  
   &__date {
     font-size: 8px;
     line-height: 12px;

@@ -11,14 +11,7 @@ import styles from './EmojiReactions.module.scss';
 import { useParams } from 'react-router-dom';
 import EmojiPicker, { Emoji } from 'emoji-picker-react';
 import { useMemo } from 'react';
-
-interface ReactionProps {
-  id: number;
-  type: 'topic' | 'comment';
-  reactions?: { emoji: string; count: number; users?: number[] }[];
-  showPopup?: boolean;
-  emojiRef?: React.RefObject<HTMLDivElement>;
-}
+import { ReactionProps } from './EmojiReactions.interface';
 
 export function Reactions({ id, type, reactions = [], showPopup, emojiRef }: ReactionProps) {
   const dispatch = useDispatch<TypeDispatch>();

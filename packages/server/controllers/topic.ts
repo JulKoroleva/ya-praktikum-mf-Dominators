@@ -55,10 +55,6 @@ class TopicController {
     try {
       const { title, description, creatorId, creator } = req.body;
 
-      // if (!creatorId || !creator) {
-      //   return res.status(400).json({ error: '"creatorId" and "creator" are required' });
-      // }
-
       const data = {
         title,
         description,

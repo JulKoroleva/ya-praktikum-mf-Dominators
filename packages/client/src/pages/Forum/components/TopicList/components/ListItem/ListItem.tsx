@@ -6,24 +6,22 @@ import styles from './ListItem.module.scss';
 import { Reactions } from '@/components/EmojiReactions/EmojiReactions';
 import { useEmojiPopupVisibility } from '@/hooks/useEmojiPopupVisibility.hook';
 import { useRef } from 'react';
-import { useDispatch } from 'react-redux';
-import { TypeDispatch } from '@/redux/store';
-import { deleteTopic } from '@/redux/requests/pagesRequests/forumRequests/forumRequests';
+import { useDeleteEntity } from '@/hooks/useDeleteForumEntity';
+import trashButton from '@/assets/icons/trash.svg';
+import { useSelector } from 'react-redux';
+import { selectUser } from '@/redux/selectors';
 
 export function ListItem({ topic }: IListItemProps) {
   const { id, title, createdAt, description, creator, comments, reactions } = topic;
   const { showPopup, handleMouseEnter, handleMouseLeave } = useEmojiPopupVisibility();
-  const dispatch = useDispatch<TypeDispatch>();
   const emojiRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
+  const userInfo = useSelector(selectUser);
+
+  const handleDelete = useDeleteEntity();
 
   const handleReadTopic = () => {
     navigate(ROUTES.topic(id));
-  };
-
-  const handleDelete = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    dispatch(deleteTopic({ id }));
   };
 
   return (
@@ -31,11 +29,18 @@ export function ListItem({ topic }: IListItemProps) {
       <div
         className={styles['list-item__container']}
         onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
         ref={emojiRef}>
         <div className={styles['list-item__header']}>
           <span className={styles['list-item__author']}>{creator}</span>
-          <div>
-            {showPopup && <button onClick={handleDelete}>Delete</button>}
+          <div className={styles['list-item__params']}>
+            {showPopup && userInfo.login === creator && (
+              <button
+                onClick={e => handleDelete(id, 'topic', e)}
+                className={styles['list-item__delete-btn']}>
+                <img src={trashButton} alt="delete" />
+              </button>
+            )}
             {comments !== 0 && (
               <span className={styles['list-item__message-count']}>{comments}</span>
             )}

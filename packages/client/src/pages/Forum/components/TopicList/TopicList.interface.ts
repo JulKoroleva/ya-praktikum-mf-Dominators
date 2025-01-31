@@ -1,3 +1,13 @@
+export interface TTopicReaction {
+  id: number;
+  topicId?: number;
+  commentId?: number;
+  emoji: string;
+  creatorId: number;
+  createdAt?: Date;
+  count: number;
+}
+
 export type TTopicComment = {
   id: number;
   message: string;
@@ -6,7 +16,7 @@ export type TTopicComment = {
   topicId: number;
   updatedAt: string;
   createdAt: string;
-  reactions: any;
+  reactions?: TTopicReaction[];
 };
 
 export type TTopic = {
@@ -19,7 +29,7 @@ export type TTopic = {
   updatedAt: string;
   createdAt: string;
   commentsList?: TTopicComment[];
-  [key: string]: any;
+  reactions?: TTopicReaction[];
 };
 
 export type TPaginationOptions = {
