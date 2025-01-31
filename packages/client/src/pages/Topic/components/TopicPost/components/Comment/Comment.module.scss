@@ -5,7 +5,7 @@
   margin-bottom: 10px;
   padding: 10px;
   border-radius: 20px;
-  background: #f5f5f5;
+  background: var(--color-comment-bg);
 
   &:last-child {
     border: none;

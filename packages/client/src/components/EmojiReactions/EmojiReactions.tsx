@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   addReaction,
@@ -10,43 +9,43 @@ import { selectUser } from '@/redux/selectors';
 import { TypeDispatch } from '@/redux/store';
 import styles from './EmojiReactions.module.scss';
 import { useParams } from 'react-router-dom';
+import EmojiPicker, { Emoji } from 'emoji-picker-react';
 
 interface ReactionProps {
   id: number;
   type: 'topic' | 'comment';
   reactions?: { emoji: string; count: number; users?: number[] }[];
-  showPopup?: boolean
+  showPopup?: boolean;
 }
 
 export function Reactions({ id, type, reactions = [], showPopup }: ReactionProps) {
   const dispatch = useDispatch<TypeDispatch>();
   const userInfo = useSelector(selectUser);
   const { id: urlId } = useParams();
-  // const [showPopup, setShowPopup] = useState(reactions.length === 0);
 
-  const handleReactionClick = async (event: React.MouseEvent, emoji: string) => {
+  const handleReactionClick = async (event: React.MouseEvent, emojiId: string) => {
+    event.preventDefault();
     event.stopPropagation();
 
     if (!userInfo.id) return;
 
-    const reaction = reactions?.find(r => r.emoji === emoji);
+    const reaction = reactions?.find(r => r.emoji === emojiId);
     const hasReacted = reaction?.users?.includes(userInfo.id) ?? false;
-
-    console.log('Current reactions:', reactions);
 
     try {
       if (hasReacted) {
-        await dispatch(deleteReaction({ id, type, emoji, creatorId: userInfo.id })).unwrap();
+        await dispatch(
+          deleteReaction({ id, type, emoji: emojiId, creatorId: userInfo.id }),
+        ).unwrap();
       } else {
-        await dispatch(addReaction({ id, type, emoji, creatorId: userInfo.id })).unwrap();
+        await dispatch(addReaction({ id, type, emoji: emojiId, creatorId: userInfo.id })).unwrap();
       }
     } catch (error) {
-      console.error('Failed to update reaction', error);
+      /* empty */
     } finally {
       if (location.pathname === '/forum') {
         dispatch(fetchForum({ pageNumber: 1 }));
       } else if (/^\/forum\/\d+$/.test(location.pathname)) {
-        console.log('urlId', urlId);
         dispatch(getTopicById({ id: Number(urlId) }));
       }
     }
@@ -54,13 +53,13 @@ export function Reactions({ id, type, reactions = [], showPopup }: ReactionProps
 
   return (
     <div className={styles['reactions-container']}>
-      {reactions && reactions.length > 0 && (
+      {reactions.length > 0 && (
         <div
           className={`${styles['reactions-list']} ${
             type === 'comment' ? styles['comment'] : 'topic'
           }`}>
           {reactions.map(({ emoji, count }) => (
-            <span
+            <div
               key={emoji}
               className={`${styles['reaction-item']} ${
                 (reactions.find(r => r.emoji === emoji)?.users ?? []).includes(userInfo.id)
@@ -68,22 +67,23 @@ export function Reactions({ id, type, reactions = [], showPopup }: ReactionProps
                   : ''
               }`}
               onClick={event => handleReactionClick(event, emoji)}>
-              {emoji} {count}
-            </span>
+              <Emoji unified={emoji} size={20} />
+              <span className={styles['count']}>{count}</span>
+            </div>
           ))}
         </div>
       )}
 
       {showPopup && (
         <div className={styles['reaction-popup']}>
-          {['👍', '❤️', '😂', '🔥', '😢'].map(emoji => (
-            <button
-              key={emoji}
-              className={styles['reaction-button']}
-              onClick={event => handleReactionClick(event, emoji)}>
-              {emoji}
-            </button>
-          ))}
+          <EmojiPicker
+            reactionsDefaultOpen={showPopup}
+            allowExpandReactions={false}
+            onEmojiClick={(emoji, event) => {
+              if (!event) return;
+              handleReactionClick(event as unknown as React.MouseEvent, emoji.unified);
+            }}
+          />
         </div>
       )}
     </div>

@@ -17,7 +17,8 @@ body {
   --cell-color: #{$app-cell-color};
   --error-color: #{$color-danger};
   --form-label-color: #{$text-color-grayish-blue};
-  --form-input-bg: #{$default-bg-color};
+  --color-border-green: #{$color-border-green};
+  --color-comment-bg: #{$color-comment-bg};
 }
 
 * {
@@ -36,4 +37,6 @@ body {
   --error-color:#FF9E9E;
   --form-label-color:#bbb;
   --form-input-bg: #666;
+  --color-border-green: #8f8f8f;
+  --color-comment-bg: #666
 }

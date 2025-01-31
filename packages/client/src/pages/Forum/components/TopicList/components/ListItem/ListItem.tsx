@@ -8,7 +8,7 @@ import { useEmojiPopupVisibility } from '@/hooks/useEmojiPopupVisibility.hook';
 
 export function ListItem({ topic }: IListItemProps) {
   const { id, title, createdAt, description, creator, comments, reactions } = topic;
-  const { showPopup, handleMouseEnter } = useEmojiPopupVisibility();
+  const { showPopup, handleMouseEnter, handleMouseLeave } = useEmojiPopupVisibility();
   const navigate = useNavigate();
 
   const handleReadTopic = () => {
@@ -33,9 +33,11 @@ export function ListItem({ topic }: IListItemProps) {
         <Reactions id={id} type="topic" reactions={reactions} />
       </div>
 
-      <div className={styles['reaction-popup']}>
-        <Reactions id={id} type="topic" showPopup={showPopup} />
-      </div>
+      {showPopup && (
+        <div className={styles['reaction-popup']} onMouseLeave={handleMouseLeave}>
+          <Reactions id={id} type="topic" showPopup={showPopup} />
+        </div>
+      )}
     </div>
   );
 }

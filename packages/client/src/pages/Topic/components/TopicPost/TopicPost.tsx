@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -154,9 +154,11 @@ export function TopicPost({ id }: ITopicPostProps) {
         <span className={styles['topic-post__topic-text']}>{topicData?.description}</span>
         {topicData !== null && <Reactions id={id} type="topic" reactions={topicData.reactions} />}
 
-        <div className={styles['reaction-popup']}>
-          <Reactions id={id} type="topic" showPopup={showPopup} />
-        </div>
+        {showPopup && (
+          <div className={styles['reaction-popup']}>
+            <Reactions id={id} type="topic" showPopup={showPopup} />
+          </div>
+        )}
       </div>
       {topicData?.commentsList && topicData?.commentsList?.length !== 0 && (
         <div className={styles['topic-post__container']}>
