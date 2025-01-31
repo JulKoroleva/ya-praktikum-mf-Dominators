@@ -19,7 +19,6 @@ export function Reactions({ id, type, reactions = [], showPopup, emojiRef }: Rea
   const { id: urlId } = useParams();
 
   const handleReactionClick = async (event: React.MouseEvent, emojiId: string) => {
-    event.preventDefault();
     event.stopPropagation();
 
     if (!userInfo.id) return;

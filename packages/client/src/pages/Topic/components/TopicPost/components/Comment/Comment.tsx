@@ -4,17 +4,17 @@ import { IComment } from './Comment.interface';
 import styles from './Comment.module.scss';
 import { useEmojiPopupVisibility } from '@/hooks/useEmojiPopupVisibility.hook';
 import { useRef } from 'react';
-import { useDeleteEntity } from '@/hooks/useDeleteForumEntity';
+import { useDeleteForumEntity } from '@/hooks/useDeleteForumEntity';
 import { selectUser } from '@/redux/selectors';
 import { useSelector } from 'react-redux';
 import trashButton from '@/assets/icons/trash.svg';
 
-export function Comment({ comment }: IComment) {
+export function Comment({ comment, topicId }: IComment) {
   const { id, creator, createdAt, message, reactions } = comment;
   const { showPopup, handleMouseEnter, handleMouseLeave } = useEmojiPopupVisibility(0);
   const emojiRef = useRef<HTMLDivElement | null>(null);
   const userInfo = useSelector(selectUser);
-  const handleDelete = useDeleteEntity();
+  const handleDelete = useDeleteForumEntity();
 
   return (
     <div
@@ -27,7 +27,7 @@ export function Comment({ comment }: IComment) {
         <div>
           {showPopup && userInfo.login === creator && (
             <button
-              onClick={e => handleDelete(id, 'topic', e)}
+              onClick={e => handleDelete(id, 'comment', e, topicId)}
               className={styles['comment__delete-btn']}>
               <img src={trashButton} alt="delete" />
             </button>

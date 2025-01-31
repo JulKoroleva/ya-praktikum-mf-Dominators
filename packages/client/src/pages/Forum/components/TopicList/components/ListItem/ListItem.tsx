@@ -6,7 +6,7 @@ import styles from './ListItem.module.scss';
 import { Reactions } from '@/components/EmojiReactions/EmojiReactions';
 import { useEmojiPopupVisibility } from '@/hooks/useEmojiPopupVisibility.hook';
 import { useRef } from 'react';
-import { useDeleteEntity } from '@/hooks/useDeleteForumEntity';
+import { useDeleteForumEntity } from '@/hooks/useDeleteForumEntity';
 import trashButton from '@/assets/icons/trash.svg';
 import { useSelector } from 'react-redux';
 import { selectUser } from '@/redux/selectors';
@@ -18,7 +18,7 @@ export function ListItem({ topic }: IListItemProps) {
   const navigate = useNavigate();
   const userInfo = useSelector(selectUser);
 
-  const handleDelete = useDeleteEntity();
+  const handleDelete = useDeleteForumEntity();
 
   const handleReadTopic = () => {
     navigate(ROUTES.topic(id));

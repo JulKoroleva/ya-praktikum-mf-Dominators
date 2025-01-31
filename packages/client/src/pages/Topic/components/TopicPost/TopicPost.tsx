@@ -36,7 +36,7 @@ import { Reactions } from '@/components/EmojiReactions/EmojiReactions';
 import { useEmojiPopupVisibility } from '@/hooks/useEmojiPopupVisibility.hook';
 
 import trashButton from '@/assets/icons/trash.svg';
-import { useDeleteEntity } from '@/hooks/useDeleteForumEntity';
+import { useDeleteForumEntity } from '@/hooks/useDeleteForumEntity';
 
 export function TopicPost({ id }: ITopicPostProps) {
   const navigate = useNavigate();
@@ -62,7 +62,7 @@ export function TopicPost({ id }: ITopicPostProps) {
 
   const userInfo = useSelector(selectUser);
 
-  const handleDelete = useDeleteEntity();
+  const handleDelete = useDeleteForumEntity();
 
   const onSubmit = (data: Record<string, string>) => {
     const id = topicData?.id;
@@ -178,7 +178,9 @@ export function TopicPost({ id }: ITopicPostProps) {
       </div>
       {topicData?.commentsList && topicData?.commentsList?.length !== 0 && (
         <div className={styles['topic-post__container']}>
-          {topicData?.commentsList?.map(message => <Comment comment={message} key={message.id} />)}
+          {topicData?.commentsList?.map(message => (
+            <Comment comment={message} key={message.id} topicId={topicData.id} />
+          ))}
         </div>
       )}
 

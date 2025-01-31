@@ -4,16 +4,22 @@ import {
   deleteTopic,
   deleteComment,
   fetchForum,
+  getTopicById,
 } from '@/redux/requests/pagesRequests/forumRequests/forumRequests';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 
-export function useDeleteEntity() {
+export function useDeleteForumEntity() {
   const dispatch = useDispatch<TypeDispatch>();
-  const location = useLocation();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  return async (id: number, type: 'topic' | 'comment', event?: React.MouseEvent) => {
+  return async (
+    id: number,
+    type: 'topic' | 'comment',
+    event?: React.MouseEvent,
+    topicId?: number,
+  ) => {
     event?.stopPropagation();
 
     if (type === 'topic') {
@@ -25,7 +31,11 @@ export function useDeleteEntity() {
     if (location.pathname === '/forum') {
       dispatch(fetchForum({ pageNumber: 1 }));
     } else if (/^\/forum\/\d+$/.test(location.pathname)) {
-      navigate(ROUTES.forum());
+      if (type === 'comment' && topicId) {
+        dispatch(getTopicById({ id: Number(topicId) }));
+      } else {
+        navigate(ROUTES.forum());
+      }
     }
   };
 }
