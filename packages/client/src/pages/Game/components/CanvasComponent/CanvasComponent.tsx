@@ -12,6 +12,7 @@ import { ProgressBar } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { TResult } from '../../Game.interface';
+import { TimerProgressBar } from '@/components/TimerProgressBar/TimerProgressBar';
 
 export function CanvasComponent({
   endGameCallback,
@@ -28,6 +29,9 @@ export function CanvasComponent({
   const animationFrameRef = useRef<number | null>(null);
   const [score, setScore] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [timerProgress, setTimerProgress] = useState(0);
+  const [remainingTime, setRemainingTime] = useState(60);
+  const [isWaitingForTap, setIsWaitingForTap] = useState(false);
   //должен быть до useMousePosition
   const toggleFullscreenAndPointerLock = useFullscreenAndPointerLock(refCanvas, onBackButtonClick);
   const mouseCoodrs = useMousePosition();
@@ -73,6 +77,37 @@ export function CanvasComponent({
       }
     };
   }, [isPaused]);
+
+  useEffect(() => {
+    if (isPaused || isWaitingForTap) return;
+
+    const interval = setInterval(() => {
+      setTimerProgress(prev => {
+        if (prev >= 100) {
+          setIsWaitingForTap(true);
+          clearInterval(interval);
+          return 100;
+        }
+        setRemainingTime(t => t - 1);
+        return prev + 100 / 60;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isPaused, isWaitingForTap]);
+
+  const resetTimer = () => {
+    setTimerProgress(0);
+    setRemainingTime(60);
+    setIsWaitingForTap(false);
+  };
+
+  const handleTap = () => {
+    if (!isWaitingForTap) return;
+
+    setIsWaitingForTap(false);
+    setTimerProgress(prev => Math.max(0, prev - 20));
+  };
 
   const renderCanvas = (ctx: CanvasRenderingContext2D, deltaTime: number) => {
     const controller = controllerRef.current;
@@ -156,6 +191,9 @@ export function CanvasComponent({
     const cb = (event: KeyboardEvent) => {
       if (event.code === 'Space') {
         controller.Player.activateSpeedBooster();
+        if (progress === 100) {
+          resetTimer();
+        }
         return;
       }
       if (event.code === 'KeyW') {
@@ -182,17 +220,25 @@ export function CanvasComponent({
             <div className={styles['canvas-page__score-block__name']}>Score: </div>
             <div className={styles['canvas-page__score-block__points']}>{score}</div>
           </div>
-          <ProgressBar className={styles['canvas-page__progress']}>
-            <ProgressBar
-              className={
-                progress < 100
-                  ? styles['canvas-page__progress__fill']
-                  : styles['canvas-page__progress__complete']
-              }
-              now={progress}
-              max={100}
-            />
-          </ProgressBar>
+          <div className={styles['canvas-page__progress-block']}>
+            <ProgressBar className={styles['canvas-page__progress']}>
+              <ProgressBar
+                className={
+                  progress < 100
+                    ? styles['canvas-page__progress__fill']
+                    : styles['canvas-page__progress__complete']
+                }
+                now={progress}
+                max={100}
+              />
+              <TimerProgressBar
+                progress={timerProgress}
+                isWaitingForTap={isWaitingForTap}
+                remainingTime={remainingTime}
+                onTap={handleTap}
+              />
+            </ProgressBar>
+          </div>
         </div>
         <canvas data-testid="canvas" className={styles['canvas']} ref={refCanvas} />
       </div>

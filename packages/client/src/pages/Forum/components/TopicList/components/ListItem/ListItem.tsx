@@ -5,10 +5,12 @@ import styles from './ListItem.module.scss';
 
 import { Reactions } from '@/components/EmojiReactions/EmojiReactions';
 import { useEmojiPopupVisibility } from '@/hooks/useEmojiPopupVisibility.hook';
+import { useRef } from 'react';
 
 export function ListItem({ topic }: IListItemProps) {
   const { id, title, createdAt, description, creator, comments, reactions } = topic;
   const { showPopup, handleMouseEnter, handleMouseLeave } = useEmojiPopupVisibility();
+  const emojiRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
 
   const handleReadTopic = () => {
@@ -17,7 +19,10 @@ export function ListItem({ topic }: IListItemProps) {
 
   return (
     <div className={styles['list-item']} onClick={handleReadTopic}>
-      <div className={styles['list-item__container']} onMouseEnter={handleMouseEnter}>
+      <div
+        className={styles['list-item__container']}
+        onMouseEnter={handleMouseEnter}
+        ref={emojiRef}>
         <div className={styles['list-item__header']}>
           <span className={styles['list-item__author']}>{creator}</span>
           {comments !== 0 && <span className={styles['list-item__message-count']}>{comments}</span>}
@@ -34,8 +39,12 @@ export function ListItem({ topic }: IListItemProps) {
       </div>
 
       {showPopup && (
-        <div className={styles['reaction-popup']} onMouseLeave={handleMouseLeave}>
-          <Reactions id={id} type="topic" showPopup={showPopup} />
+        <div
+          id="reaction-popup"
+          className={styles['reaction-popup']}
+          ref={emojiRef}
+          onMouseLeave={handleMouseLeave}>
+          <Reactions id={id} type="topic" showPopup={showPopup} emojiRef={emojiRef} />
         </div>
       )}
     </div>

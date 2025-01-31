@@ -3,13 +3,19 @@ import { IComment } from './Comment.interface';
 
 import styles from './Comment.module.scss';
 import { useEmojiPopupVisibility } from '@/hooks/useEmojiPopupVisibility.hook';
+import { useRef } from 'react';
 
 export function Comment({ comment }: IComment) {
   const { id, creator, createdAt, message, reactions } = comment;
   const { showPopup, handleMouseEnter, handleMouseLeave } = useEmojiPopupVisibility(0);
+  const emojiRef = useRef<HTMLDivElement | null>(null);
 
   return (
-    <div className={styles.comment} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+    <div
+      className={styles.comment}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      ref={emojiRef}>
       <div className={styles.comment__info}>
         <span className={styles.comment__author}>{creator}</span>
         <span className={styles.comment__date}>
@@ -19,9 +25,11 @@ export function Comment({ comment }: IComment) {
       <p className={styles.comment__text}>{message}</p>
       <Reactions id={id} type="comment" reactions={reactions} />
 
-      <div className={styles['reaction-popup']}>
-        <Reactions id={id} type="comment" showPopup={showPopup} />
-      </div>
+      {showPopup && (
+        <div id="reaction-popup" className={styles['reaction-popup']} ref={emojiRef}>
+          <Reactions id={id} type="comment" showPopup={showPopup} emojiRef={emojiRef} />
+        </div>
+      )}
     </div>
   );
 }

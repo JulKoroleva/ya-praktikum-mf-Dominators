@@ -10,15 +10,17 @@ import { TypeDispatch } from '@/redux/store';
 import styles from './EmojiReactions.module.scss';
 import { useParams } from 'react-router-dom';
 import EmojiPicker, { Emoji } from 'emoji-picker-react';
+import { useMemo } from 'react';
 
 interface ReactionProps {
   id: number;
   type: 'topic' | 'comment';
   reactions?: { emoji: string; count: number; users?: number[] }[];
   showPopup?: boolean;
+  emojiRef?: React.RefObject<HTMLDivElement>;
 }
 
-export function Reactions({ id, type, reactions = [], showPopup }: ReactionProps) {
+export function Reactions({ id, type, reactions = [], showPopup, emojiRef }: ReactionProps) {
   const dispatch = useDispatch<TypeDispatch>();
   const userInfo = useSelector(selectUser);
   const { id: urlId } = useParams();
@@ -51,26 +53,32 @@ export function Reactions({ id, type, reactions = [], showPopup }: ReactionProps
     }
   };
 
+  const memoizedReactions = useMemo(
+    () =>
+      reactions.map(({ emoji, count }) => (
+        <div
+          key={emoji}
+          className={`${styles['reaction-item']} ${
+            (reactions.find(r => r.emoji === emoji)?.users ?? []).includes(userInfo.id)
+              ? styles['active-reaction']
+              : ''
+          }`}
+          onClick={event => handleReactionClick(event, emoji)}>
+          <Emoji unified={emoji} size={20} />
+          <span className={styles['count']}>{count}</span>
+        </div>
+      )),
+    [reactions, userInfo.id],
+  );
+
   return (
-    <div className={styles['reactions-container']}>
-      {reactions.length > 0 && (
+    <div className={styles['reactions-container']} ref={emojiRef}>
+      {memoizedReactions.length > 0 && (
         <div
           className={`${styles['reactions-list']} ${
             type === 'comment' ? styles['comment'] : 'topic'
           }`}>
-          {reactions.map(({ emoji, count }) => (
-            <div
-              key={emoji}
-              className={`${styles['reaction-item']} ${
-                (reactions.find(r => r.emoji === emoji)?.users ?? []).includes(userInfo.id)
-                  ? styles['active-reaction']
-                  : ''
-              }`}
-              onClick={event => handleReactionClick(event, emoji)}>
-              <Emoji unified={emoji} size={20} />
-              <span className={styles['count']}>{count}</span>
-            </div>
-          ))}
+          {memoizedReactions}
         </div>
       )}
 

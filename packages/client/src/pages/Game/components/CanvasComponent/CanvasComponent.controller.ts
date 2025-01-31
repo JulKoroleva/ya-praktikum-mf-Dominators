@@ -532,9 +532,7 @@ export class CanvasController {
       {
         id: 3,
         title: 'Cells eating',
-        value:
-          this.EnemyFields.length -
-          this.EnemyFields.filter(({ Status }) => Status === STATUS.ALIVE).length,
+        value: this.Player.MyScore,
       },
       {
         id: 4,

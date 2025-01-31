@@ -7,6 +7,7 @@ body {
     linear-gradient(to bottom, var(--cell-color) 1px, transparent 1px);
   background-size: $app-cell-size $app-cell-size;
   color: var(--font-color);
+  overflow-x: hidden;
 }
 
 :root {

@@ -6,7 +6,6 @@ const defaulUserData = {
   id: 0,
   first_name: 'Local',
   second_name: 'User',
-  display_name: 'Local User',
   login: 'LocalUser',
   avatar: '',
   email: '',

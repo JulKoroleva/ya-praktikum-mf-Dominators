@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -38,6 +38,7 @@ import { useEmojiPopupVisibility } from '@/hooks/useEmojiPopupVisibility.hook';
 export function TopicPost({ id }: ITopicPostProps) {
   const navigate = useNavigate();
   const dispatch = useDispatch<TypeDispatch>();
+  const emojiRef = useRef<HTMLDivElement | null>(null);
 
   const { showPopup, handleMouseEnter, handleMouseLeave } = useEmojiPopupVisibility(0);
   const [topicData, setTopicData] = useState<TTopic | null>(null);
@@ -139,7 +140,8 @@ export function TopicPost({ id }: ITopicPostProps) {
       <div
         className={styles['topic-post__container']}
         onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}>
+        onMouseLeave={handleMouseLeave}
+        ref={emojiRef}>
         <div className={styles['topic-post__info']}>
           <span className={styles['topic-post__topic-author']}>{topicData?.creator}</span>
           <span className={styles['topic-post__topic-date']}>
@@ -155,8 +157,8 @@ export function TopicPost({ id }: ITopicPostProps) {
         {topicData !== null && <Reactions id={id} type="topic" reactions={topicData.reactions} />}
 
         {showPopup && (
-          <div className={styles['reaction-popup']}>
-            <Reactions id={id} type="topic" showPopup={showPopup} />
+          <div className={styles['reaction-popup']} ref={emojiRef}>
+            <Reactions id={id} type="topic" showPopup={showPopup} emojiRef={emojiRef} />
           </div>
         )}
       </div>

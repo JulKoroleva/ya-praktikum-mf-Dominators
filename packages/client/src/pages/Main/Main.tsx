@@ -162,9 +162,7 @@ export const Main = () => {
         )}
         <h1 className={styles['main-page__title']}>{HEADERS.main}</h1>
         <div className={styles['main-page__menu']}>
-          <h3 className={styles['main-page__menu_greetings']}>
-            Hi, {userInfo?.login || 'Guest'}!
-          </h3>
+          <h3 className={styles['main-page__menu_greetings']}>Hi, {userInfo?.login || 'Guest'}!</h3>
           <p className={styles['main-page__menu_description']}>{description}</p>
           <div className={styles['main-page__menu_buttons']}>
             {buttons

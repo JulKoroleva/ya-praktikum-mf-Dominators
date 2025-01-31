@@ -26,6 +26,21 @@ export const settingsFields: IFieldConfig<IData>[] = [
     }),
   },
   {
+    id: 'login',
+    label: 'Login',
+    type: 'text',
+    placeholder: 'Enter your login',
+    isRequired: true,
+    validation: () => ({
+      validate: value => {
+        if (!/^[A-ZА-ЯЁ][a-zа-яё]*(?:-[A-Za-zА-Яа-яё]*)?$/.test(value)) {
+          return 'Enter a valid name';
+        }
+        return true;
+      },
+    }),
+  },
+  {
     id: 'first_name',
     label: 'First name',
     type: 'text',
