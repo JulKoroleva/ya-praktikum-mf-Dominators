@@ -82,3 +82,20 @@ export async function createComment(args: Partial<ITopicComment>) {
     message: args.message,
   });
 }
+
+export async function deleteTopic(topicId: number) {
+  await TopicComment.destroy({
+    where: { topicId },
+  });
+
+  await Topic.destroy({
+    where: { id: topicId },
+  });
+}
+
+// Удаление комментария
+export async function deleteComment(commentId: number) {
+  await TopicComment.destroy({
+    where: { id: commentId },
+  });
+}

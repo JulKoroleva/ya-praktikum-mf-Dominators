@@ -1,5 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
-import { createComment, createTopic, getAllTopics, getTopic } from '../handlers/topic';
+import {
+  createComment,
+  createTopic,
+  deleteComment,
+  deleteTopic,
+  getAllTopics,
+  getTopic,
+} from '../handlers/topic';
 import { getReactionsForEntity } from '../handlers/reaction';
 import { ForeignKeyConstraintError } from 'sequelize';
 import { NotFound } from '../errors';
@@ -122,6 +129,26 @@ class TopicController {
         return next(new NotFound(`Topic not found`));
       }
 
+      next(err);
+    }
+  }
+
+  async deleteTopic(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      await deleteTopic(Number(id));
+      res.status(204).send();
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async deleteComment(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      await deleteComment(Number(id));
+      res.status(204).send();
+    } catch (err) {
       next(err);
     }
   }

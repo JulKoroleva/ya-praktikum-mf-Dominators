@@ -6,15 +6,24 @@ import styles from './ListItem.module.scss';
 import { Reactions } from '@/components/EmojiReactions/EmojiReactions';
 import { useEmojiPopupVisibility } from '@/hooks/useEmojiPopupVisibility.hook';
 import { useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import { TypeDispatch } from '@/redux/store';
+import { deleteTopic } from '@/redux/requests/pagesRequests/forumRequests/forumRequests';
 
 export function ListItem({ topic }: IListItemProps) {
   const { id, title, createdAt, description, creator, comments, reactions } = topic;
   const { showPopup, handleMouseEnter, handleMouseLeave } = useEmojiPopupVisibility();
+  const dispatch = useDispatch<TypeDispatch>();
   const emojiRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
 
   const handleReadTopic = () => {
     navigate(ROUTES.topic(id));
+  };
+
+  const handleDelete = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    dispatch(deleteTopic({ id }));
   };
 
   return (
@@ -25,7 +34,12 @@ export function ListItem({ topic }: IListItemProps) {
         ref={emojiRef}>
         <div className={styles['list-item__header']}>
           <span className={styles['list-item__author']}>{creator}</span>
-          {comments !== 0 && <span className={styles['list-item__message-count']}>{comments}</span>}
+          <div>
+            {showPopup && <button onClick={handleDelete}>Delete</button>}
+            {comments !== 0 && (
+              <span className={styles['list-item__message-count']}>{comments}</span>
+            )}
+          </div>
         </div>
         <div className={styles['list-item__info']}>
           <span className={styles['list-item__date']}>

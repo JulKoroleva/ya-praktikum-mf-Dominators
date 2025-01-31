@@ -44,6 +44,16 @@ class Validation {
       id: Joi.string().required().custom(validateId),
     }),
   });
+  deleteTopic = celebrate({
+    params: Joi.object().keys({
+      id: Joi.string().required().custom(validateId),
+    }),
+  });
+  deleteComment = celebrate({
+    params: Joi.object().keys({
+      id: Joi.string().required().custom(validateId),
+    }),
+  });
   addReaction = celebrate({
     body: Joi.object().keys({
       emoji: Joi.string().required().max(10),

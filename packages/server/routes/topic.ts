@@ -19,3 +19,6 @@ topicRouter.post(
   validation.createCommentInfo,
   topicController.createComment,
 );
+
+topicRouter.delete('/forum/:id', validation.deleteTopic, topicController.deleteTopic);
+topicRouter.delete('/forum/:id/comments', validation.deleteComment, topicController.deleteComment);

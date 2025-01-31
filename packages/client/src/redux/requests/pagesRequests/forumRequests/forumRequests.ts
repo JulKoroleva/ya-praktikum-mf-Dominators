@@ -40,6 +40,7 @@ export const getTopicById = createAsyncThunk<TTopic, { id: number }, { rejectVal
 export const createTopic = createAsyncThunk<TTopic, ICreateTopicDto, { rejectValue: string }>(
   'forum/createTopic',
   async (data, { rejectWithValue }) => {
+    console.log('data', data)
     const request = await fetch(TOPICS_URL, {
       method: 'POST',
       headers: {
@@ -90,8 +91,6 @@ export const addReaction = createAsyncThunk<
   { id: number; type: 'topic' | 'comment'; emoji: string; creatorId: number },
   { rejectValue: string }
 >('forum/addReaction', async ({ id, type, emoji, creatorId }, { rejectWithValue }) => {
-  console.log(`Sending reaction: ${emoji}, user: ${creatorId}`);
-
   const request = await fetch(
     `${TOPICS_URL}/${type === 'comment' ? 'comment/' : 'topic/'}${id}/reactions`,
     {
@@ -109,8 +108,6 @@ export const addReaction = createAsyncThunk<
     const rejectReason = response.reason ? response.reason : 'Unknown error';
     return rejectWithValue(rejectReason);
   }
-
-  console.log('Reaction successfully sent to server');
 
   return request.json();
 });
@@ -140,3 +137,45 @@ export const deleteReaction = createAsyncThunk<
 
   return request.json();
 });
+
+export const deleteTopic = createAsyncThunk<void, { id: number }, { rejectValue: string }>(
+  'forum/deleteTopic',
+  async ({ id }, { rejectWithValue }) => {
+    const request = await fetch(`${TOPICS_URL}/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    if (!request.ok) {
+      const response = await request.json();
+      const rejectReason = response.reason ? response.reason : 'Unknown error';
+      return rejectWithValue(rejectReason);
+    }
+
+    return request.json();
+  },
+);
+
+export const deleteComment = createAsyncThunk<void, { id: number }, { rejectValue: string }>(
+  'forum/deleteComment',
+  async ({ id }, { rejectWithValue }) => {
+    const request = await fetch(`${TOPICS_URL}/${id}/comments`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    if (!request.ok) {
+      const response = await request.json();
+      const rejectReason = response.reason ? response.reason : 'Unknown error';
+      return rejectWithValue(rejectReason);
+    }
+
+    return request.json();
+  },
+);
