@@ -45,7 +45,7 @@ export const Game = () => {
     const scorePoints = result.find(res => res.title === 'Score Points')?.value || 0;
 
     const leaderboardData = {
-      username: playerInfo?.display_name || playerInfo?.first_name || 'Guest',
+      username: playerInfo?.login || playerInfo?.first_name || 'Guest',
       scoredominators: scorePoints,
       id: playerInfo?.id || 0,
     };

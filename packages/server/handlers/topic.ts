@@ -8,12 +8,16 @@ interface IPaginationOptions {
   offset: number;
 }
 
-// Создание топика
 export async function createTopic(args: Partial<ITopic>) {
-  return Topic.create({ ...args });
+  return Topic.create({
+    creatorId: args.creatorId,
+    creator: args.creator,
+    title: args.title,
+    description: args.description,
+    comments: 0,
+  });
 }
 
-// Получить список всех топиков
 export async function getAllTopics(paginationOptions: IPaginationOptions) {
   const topicList = await Topic.findAll({
     ...paginationOptions,
@@ -41,7 +45,6 @@ export async function getAllTopics(paginationOptions: IPaginationOptions) {
   };
 }
 
-// Получить топик
 export async function getTopic(topicId: number) {
   const topic = await Topic.findByPk(topicId, {
     include: [
@@ -67,7 +70,27 @@ export async function getTopic(topicId: number) {
   return topic ? topic.toJSON() : null;
 }
 
-// Создать комментарий к топику
 export async function createComment(args: Partial<ITopicComment>) {
-  return await TopicComment.create({ ...args });
+  return TopicComment.create({
+    topicId: args.topicId,
+    creatorId: args.creatorId,
+    creator: args.creator,
+    message: args.message,
+  });
+}
+
+export async function deleteTopic(topicId: number) {
+  await TopicComment.destroy({
+    where: { topicId },
+  });
+
+  await Topic.destroy({
+    where: { id: topicId },
+  });
+}
+
+export async function deleteComment(commentId: number) {
+  await TopicComment.destroy({
+    where: { id: commentId },
+  });
 }

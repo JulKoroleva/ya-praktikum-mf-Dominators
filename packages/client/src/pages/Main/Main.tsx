@@ -45,7 +45,7 @@ export const Main = () => {
   const userInfo = useSelector(selectUser);
 
   const description =
-    'Сражайся, поглощай и становись сильнее! Уничтожай соперников в динамичной битве за выживание.';
+    'Fight, consume and become stronger! Destroy rivals in a dynamic battle for survival.';
 
   const buttons: IButtonConfig[] = [
     { href: ROUTES.game(), text: 'Start Game!', className: styles[`main-button`] },
@@ -162,9 +162,7 @@ export const Main = () => {
         )}
         <h1 className={styles['main-page__title']}>{HEADERS.main}</h1>
         <div className={styles['main-page__menu']}>
-          <h3 className={styles['main-page__menu_greetings']}>
-            Привет, {userInfo?.login || 'Guest'}!
-          </h3>
+          <h3 className={styles['main-page__menu_greetings']}>Hi, {userInfo?.login || 'Guest'}!</h3>
           <p className={styles['main-page__menu_description']}>{description}</p>
           <div className={styles['main-page__menu_buttons']}>
             {buttons

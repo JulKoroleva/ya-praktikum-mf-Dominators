@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,6 +18,7 @@ import {
   selectTopicById,
   selectTopicCommentError,
   selectTopicCommentStatus,
+  selectUser,
 } from '@/redux/selectors';
 
 import { usePage } from '@/services/hooks';
@@ -31,11 +32,18 @@ import { ITopicPostProps } from './TopicPost.interface';
 import { TTopic } from '@/pages/Forum/components';
 
 import styles from './TopicPost.module.scss';
+import { Reactions } from '@/components/EmojiReactions/EmojiReactions';
+import { useEmojiPopupVisibility } from '@/hooks/useEmojiPopupVisibility.hook';
+
+import trashButton from '@/assets/icons/trash.svg';
+import { useDeleteForumEntity } from '@/hooks/useDeleteForumEntity';
 
 export function TopicPost({ id }: ITopicPostProps) {
   const navigate = useNavigate();
   const dispatch = useDispatch<TypeDispatch>();
+  const emojiRef = useRef<HTMLDivElement | null>(null);
 
+  const { showPopup, handleMouseEnter, handleMouseLeave } = useEmojiPopupVisibility(0);
   const [topicData, setTopicData] = useState<TTopic | null>(null);
   const [modalConfig, setModalConfig] = useState<IModalConfig>({
     show: false,
@@ -52,10 +60,23 @@ export function TopicPost({ id }: ITopicPostProps) {
   const addTopicCommentStatus = useSelector(selectTopicCommentStatus);
   const addTopicCommentError = useSelector(selectTopicCommentError);
 
+  const userInfo = useSelector(selectUser);
+
+  const handleDelete = useDeleteForumEntity();
+
   const onSubmit = (data: Record<string, string>) => {
     const id = topicData?.id;
     if (id) {
-      dispatch(addTopicComment({ topicId: id, message: data.message }));
+      dispatch(
+        addTopicComment({
+          topicId: id,
+          message: data.message,
+          creator: userInfo.login,
+          creatorId: userInfo.id,
+        }),
+      ).then(() => {
+        dispatch(getTopicById({ id }));
+      });
     }
     setLocalTopicPostFormDataInitialValues({ message: '' });
   };
@@ -121,21 +142,45 @@ export function TopicPost({ id }: ITopicPostProps) {
   return (
     <div className={`${styles['topic-post']} ${styles['fade-in']}`}>
       <Navigation title={`Discussion #${id}`} to={ROUTES.forum()} />
-      <div className={styles['topic-post__container']}>
+      <div
+        className={styles['topic-post__container']}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        ref={emojiRef}>
         <div className={styles['topic-post__info']}>
           <span className={styles['topic-post__topic-author']}>{topicData?.creator}</span>
-          <span className={styles['topic-post__topic-date']}>
-            {topicData?.createdAt.includes('-')
-              ? new Date(topicData?.createdAt).toDateString()
-              : topicData?.createdAt}
-          </span>
+          <div>
+            {showPopup && userInfo.login === topicData?.creator && (
+              <button
+                onClick={e => handleDelete(id, 'topic', e)}
+                className={styles['topic-post__delete-btn']}>
+                <img src={trashButton} alt="delete" />
+              </button>
+            )}
+            <span className={styles['topic-post__topic-date']}>
+              {topicData?.createdAt &&
+              typeof topicData.createdAt === 'string' &&
+              topicData.createdAt.includes('-')
+                ? new Date(topicData.createdAt).toDateString()
+                : (topicData?.createdAt ?? '-')}
+            </span>
+          </div>
         </div>
         <span className={styles['topic-post__topic-title']}>{topicData?.title}</span>
         <span className={styles['topic-post__topic-text']}>{topicData?.description}</span>
+        {topicData !== null && <Reactions id={id} type="topic" reactions={topicData.reactions} />}
+
+        {showPopup && (
+          <div className={styles['reaction-popup']} ref={emojiRef}>
+            <Reactions id={id} type="topic" showPopup={showPopup} emojiRef={emojiRef} />
+          </div>
+        )}
       </div>
       {topicData?.commentsList && topicData?.commentsList?.length !== 0 && (
         <div className={styles['topic-post__container']}>
-          {topicData?.commentsList?.map(message => <Comment comment={message} key={message.id} />)}
+          {topicData?.commentsList?.map(message => (
+            <Comment comment={message} key={message.id} topicId={topicData.id} />
+          ))}
         </div>
       )}
 

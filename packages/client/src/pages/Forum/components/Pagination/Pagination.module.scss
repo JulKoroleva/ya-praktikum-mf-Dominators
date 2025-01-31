@@ -1,35 +1,43 @@
 @use 'src/styles/buttons' as *;
 
 .pagination {
-    margin-top: 7px;
-    display: flex;
-    justify-content: space-between;
+  margin-top: 7px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 10px;
+
+  &__button {
+    @extend %custom-button;
+
     width: 100%;
-    gap: 10px;
+    border-radius: 10px;
+    padding: 25px 0;
 
-    &__button {
-        @extend %custom-button;
-
-        width: 100%;
-        border-radius: 10px;
-        padding: 25px 0;
-
-        &_transparent {
-            background-color: transparent;
-            border: 1px solid $color-green-main;
-            color: $color-green-main;
-        }
-    }
-    
-    &__buttonIcon {
-        margin-right: 9px;
+    &_transparent {
+      background-color: transparent;
+      border: 1px solid $color-green-main;
+      color: $color-green-main;
     }
 
-    &__view {
-        display: flex;
-        width: 100px;
-        align-items: center;
-        height: auto;
-        
+    &:hover {
+      background-color: $text-color-grayish-blue;
     }
+  }
+
+  &__button-icon {
+    width: 20px;
+    margin-right: 9px;
+
+    &.previous {
+      transform: rotate(180deg);
+    }
+  }
+
+  &__view {
+    display: flex;
+    width: 100px;
+    align-items: center;
+    height: auto;
+  }
 }

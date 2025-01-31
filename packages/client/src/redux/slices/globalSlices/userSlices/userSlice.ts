@@ -18,7 +18,6 @@ const initialState: IUserSlice = {
     id: 0,
     first_name: '',
     second_name: '',
-    display_name: '',
     login: '',
     avatar: 'rgb(0, 224, 255)',
     email: '',

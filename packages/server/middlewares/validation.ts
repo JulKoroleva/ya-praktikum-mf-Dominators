@@ -25,17 +25,31 @@ class Validation {
     body: Joi.object().keys({
       title: Joi.string().required().min(3).max(30),
       description: Joi.string().required().min(20).max(500),
+      creator: Joi.string().required(),
+      creatorId: Joi.number().integer().required(),
     }),
   });
   createCommentInfo = celebrate({
     body: Joi.object().keys({
       message: Joi.string().required().min(20).max(500),
+      creator: Joi.string().required(),
+      creatorId: Joi.number().integer().required(),
     }),
     params: Joi.object().keys({
       id: Joi.string().required().custom(validateId),
     }),
   });
   idParams = celebrate({
+    params: Joi.object().keys({
+      id: Joi.string().required().custom(validateId),
+    }),
+  });
+  deleteTopic = celebrate({
+    params: Joi.object().keys({
+      id: Joi.string().required().custom(validateId),
+    }),
+  });
+  deleteComment = celebrate({
     params: Joi.object().keys({
       id: Joi.string().required().custom(validateId),
     }),

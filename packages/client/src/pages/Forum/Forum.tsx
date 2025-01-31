@@ -20,6 +20,7 @@ import {
   selectCreateTopicStatus,
   selectPaginationOptions,
   selectTopicList,
+  selectUser,
 } from '@/redux/selectors';
 import { clearForumState, clearForumStatus } from '@/redux/slices/pagesSlices/forumSlices';
 
@@ -67,9 +68,16 @@ export const Forum = () => {
   const createTopicListStatus = useSelector(selectCreateTopicStatus);
   const createTopicListError = useSelector(selectCreateTopicError);
   const dispatch = useDispatch<TypeDispatch>();
+  const userInfo = useSelector(selectUser);
 
   const onSubmit = (data: ICreateTopicDto) => {
-    dispatch(createTopic(data));
+    const topicDataWithUser = {
+      ...data,
+      creatorId: userInfo.id,
+      creator: userInfo.login,
+    };
+
+    dispatch(createTopic(topicDataWithUser));
     setIsOpen(false);
   };
 

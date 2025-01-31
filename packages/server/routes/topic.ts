@@ -13,9 +13,12 @@ topicRouter.post(
   topicController.createTopic,
 );
 topicRouter.get('/forum/:id', validation.idParams, topicController.getTopic);
-topicRouter.patch(
-  '/forum/:id',
+topicRouter.post(
+  '/forum/:id/comments',
   checkAuthMiddleware,
   validation.createCommentInfo,
   topicController.createComment,
 );
+
+topicRouter.delete('/forum/:id', validation.deleteTopic, topicController.deleteTopic);
+topicRouter.delete('/forum/:id/comments', validation.deleteComment, topicController.deleteComment);

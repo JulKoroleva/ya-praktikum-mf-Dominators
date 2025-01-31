@@ -20,9 +20,11 @@ export const topicModel: ModelAttributes<Model, ITopic> = {
   },
   creator: {
     type: DataType.TEXT,
+    allowNull: false,
   },
   creatorId: {
     type: DataType.INTEGER,
+    allowNull: false,
   },
   comments: {
     type: DataType.INTEGER,
