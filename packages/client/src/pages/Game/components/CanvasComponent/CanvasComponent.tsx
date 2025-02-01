@@ -215,31 +215,33 @@ export function CanvasComponent({
   return (
     <>
       <div className={styles['canvas-page']}>
-        <div className={styles['canvas-page__menu']}>
-          <div className={styles['canvas-page__score-block']}>
-            <div className={styles['canvas-page__score-block__name']}>Score: </div>
-            <div className={styles['canvas-page__score-block__points']}>{score}</div>
+        {!isEndedGame && (
+          <div className={styles['canvas-page__menu']}>
+            <div className={styles['canvas-page__score-block']}>
+              <div className={styles['canvas-page__score-block__name']}>Score: </div>
+              <div className={styles['canvas-page__score-block__points']}>{score}</div>
+            </div>
+            <div className={styles['canvas-page__progress-block']}>
+              <ProgressBar className={styles['canvas-page__progress']}>
+                <ProgressBar
+                  className={
+                    progress < 100
+                      ? styles['canvas-page__progress__fill']
+                      : styles['canvas-page__progress__complete']
+                  }
+                  now={progress}
+                  max={100}
+                />
+                <TimerProgressBar
+                  progress={timerProgress}
+                  isWaitingForTap={isWaitingForTap}
+                  remainingTime={remainingTime}
+                  onTap={handleTap}
+                />
+              </ProgressBar>
+            </div>
           </div>
-          <div className={styles['canvas-page__progress-block']}>
-            <ProgressBar className={styles['canvas-page__progress']}>
-              <ProgressBar
-                className={
-                  progress < 100
-                    ? styles['canvas-page__progress__fill']
-                    : styles['canvas-page__progress__complete']
-                }
-                now={progress}
-                max={100}
-              />
-              <TimerProgressBar
-                progress={timerProgress}
-                isWaitingForTap={isWaitingForTap}
-                remainingTime={remainingTime}
-                onTap={handleTap}
-              />
-            </ProgressBar>
-          </div>
-        </div>
+        )}
         <canvas data-testid="canvas" className={styles['canvas']} ref={refCanvas} />
       </div>
     </>
