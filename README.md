@@ -139,3 +139,28 @@ https://disk.yandex.ru/i/Ab5oxhYAhM4bZw
 
 Если вам понадобится только один сервис, просто уточните какой в команде
 `docker compose up {sevice_name}`, например `docker compose up server`
+
+## Development окружение в докере
+
+- `docker-compose -f docker-compose.dev.yml build` - собирает все необходимое окружение
+- `docker-compose -f docker-compose.dev.yml up` - запускает все необходимое окружение
+
+## Первый запуск
+
+- Клиен: http://localhost:${CLIENT_PORT}
+- Сервер: http://localhost:${SERVER_PORT}
+- Postgres: http://localhost:${POSTGRES_PORT}
+
+После того как окружение в докере будет запущено, для инициализации бд необходимо зайти на http://localhost:${POSTGRES_PORT}.
+![PgAdmin](pg_admin.png)
+В полях авторизиации необходимо ввести:
+- login: PGADMIN_DEFAULT_EMAIL
+- password: PGADMIN_DEFAULT_PASSWORD
+
+Далее необходимо поднять новый сервер: 
+![CreateServer](server.png)
+- Host name/address: POSTGRES_HOST
+- Port: POSTGRES_PORT
+- Maintenance database: POSTGRES_DB
+- Username: POSTGRES_USER
+- Password: POSTGRES_PASSWORD
