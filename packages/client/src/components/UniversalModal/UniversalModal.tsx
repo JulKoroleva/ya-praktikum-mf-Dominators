@@ -77,6 +77,7 @@ export const UniversalModal: React.FC<IUniversalModalProps> = ({
             </div>
             <div className={classNames(styles['modal-body'], modalColorClass)}>
               {status ? statusBodyMap[status as Exclude<TModalStatus, 'idle'>] : children}
+              {children}
             </div>
           </div>
         </>

@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import { Comment } from './components';
 import {
@@ -35,7 +37,6 @@ import styles from './TopicPost.module.scss';
 import { Reactions } from '@/components/EmojiReactions/EmojiReactions';
 import { useEmojiPopupVisibility } from '@/hooks/useEmojiPopupVisibility.hook';
 
-import trashButton from '@/assets/icons/trash.svg';
 import { useDeleteForumEntity } from '@/hooks/useDeleteForumEntity';
 
 export function TopicPost({ id }: ITopicPostProps) {
@@ -49,6 +50,7 @@ export function TopicPost({ id }: ITopicPostProps) {
     show: false,
     header: '',
     status: undefined,
+    children: undefined,
   });
   const [localTopicPostFormDataInitialValues, setLocalTopicPostFormDataInitialValues] = useState(
     topicPostFormDataInitialValues,
@@ -62,7 +64,36 @@ export function TopicPost({ id }: ITopicPostProps) {
 
   const userInfo = useSelector(selectUser);
 
-  const handleDelete = useDeleteForumEntity();
+  const deleteTopic = useDeleteForumEntity();
+
+  const handleDelete = () => {
+    setModalConfig({
+      children: (
+        <div className={styles['topic-post__modal__content']}>
+          <p className={styles['topic-post__modal__content_text']}>
+            Are you sure you want to delete this topic?
+          </p>
+          <div className={styles['topic-post__modal__content_buttons']}>
+            <Button onClick={handleCloseModal} className={styles['close-button']}>
+              Cancel
+            </Button>
+            <Button
+              onClick={e => {
+                deleteTopic(topicData!.id, 'topic', e);
+                handleCloseModal();
+                navigate(ROUTES.forum());
+              }}
+              className={styles['delete-button']}>
+              Delete
+            </Button>
+          </div>
+        </div>
+      ),
+      show: true,
+      header: 'Delete topic',
+      status: 'failed',
+    });
+  };
 
   const onSubmit = (data: Record<string, string>) => {
     const id = topicData?.id;
@@ -82,7 +113,7 @@ export function TopicPost({ id }: ITopicPostProps) {
   };
 
   const handleCloseModal = () => {
-    setModalConfig({ show: false, header: '', status: undefined });
+    setModalConfig({ show: false, header: '', status: undefined, children: undefined });
   };
 
   useEffect(() => {
@@ -148,15 +179,13 @@ export function TopicPost({ id }: ITopicPostProps) {
         onMouseLeave={handleMouseLeave}
         ref={emojiRef}>
         <div className={styles['topic-post__info']}>
-          <span className={styles['topic-post__topic-author']}>{topicData?.creator}</span>
-          <div>
-            {showPopup && userInfo.login === topicData?.creator && (
-              <button
-                onClick={e => handleDelete(id, 'topic', e)}
-                className={styles['topic-post__delete-btn']}>
-                <img src={trashButton} alt="delete" />
-              </button>
+          <span className={styles['topic-post__topic-author']}>
+            {topicData?.creator}
+            {userInfo.login === topicData?.creator && (
+              <span className={styles['topic-post__topic-author_self']}>{` (author)`}</span>
             )}
+          </span>
+          <div>
             <span className={styles['topic-post__topic-date']}>
               {topicData?.createdAt &&
               typeof topicData.createdAt === 'string' &&
@@ -178,25 +207,49 @@ export function TopicPost({ id }: ITopicPostProps) {
       </div>
       {topicData?.commentsList && topicData?.commentsList?.length !== 0 && (
         <div className={styles['topic-post__container']}>
-          {topicData?.commentsList?.map(message => (
-            <Comment comment={message} key={message.id} topicId={topicData.id} />
-          ))}
+          <AnimatePresence>
+            {topicData?.commentsList?.map(message => (
+              <motion.div
+                key={message.id}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.4 }}>
+                <Comment comment={message} topicId={topicData.id} />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
+      )}
+      {userInfo.login && (
+        <div
+          className={`${styles['topic-post__comment-wrapper']} ${styles['topic-post__container']}`}>
+          <FormComponent
+            fields={topicPostFormData}
+            onSubmit={onSubmit}
+            initialValues={localTopicPostFormDataInitialValues}
+            submitButtonText="Publish"
+          />
         </div>
       )}
 
-      <div
-        className={`${styles['topic-post__comment-wrapper']} ${styles['topic-post__container']}`}>
-        <FormComponent
-          fields={topicPostFormData}
-          onSubmit={onSubmit}
-          initialValues={localTopicPostFormDataInitialValues}
-          submitButtonText="Publish"
-        />
-      </div>
+      {userInfo.login === topicData?.creator && (
+        <Button
+          className={styles['delete-button']}
+          type="button"
+          variant="outline"
+          onClick={() => handleDelete()}>
+          {'Delete topic'}
+        </Button>
+      )}
+
       <UniversalModal
         show={modalConfig.show}
         title={modalConfig.header}
         status={modalConfig.status}
+        children={
+          modalConfig.status === 'failed' && modalConfig.children ? modalConfig.children : null
+        }
         zIndex={2000}
         onHide={handleCloseModal}
       />

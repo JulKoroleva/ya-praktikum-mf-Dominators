@@ -15,4 +15,5 @@ export interface IModalConfig {
   show: boolean;
   header: string;
   status?: TModalStatus;
+  children?: ReactNode;
 }

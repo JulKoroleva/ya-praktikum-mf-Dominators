@@ -6,8 +6,6 @@ import styles from './ListItem.module.scss';
 import { Reactions } from '@/components/EmojiReactions/EmojiReactions';
 import { useEmojiPopupVisibility } from '@/hooks/useEmojiPopupVisibility.hook';
 import { useRef } from 'react';
-import { useDeleteForumEntity } from '@/hooks/useDeleteForumEntity';
-import trashButton from '@/assets/icons/trash.svg';
 import { useSelector } from 'react-redux';
 import { selectUser } from '@/redux/selectors';
 
@@ -17,8 +15,6 @@ export function ListItem({ topic }: IListItemProps) {
   const emojiRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
   const userInfo = useSelector(selectUser);
-
-  const handleDelete = useDeleteForumEntity();
 
   const handleReadTopic = () => {
     navigate(ROUTES.topic(id));
@@ -32,15 +28,13 @@ export function ListItem({ topic }: IListItemProps) {
         onMouseLeave={handleMouseLeave}
         ref={emojiRef}>
         <div className={styles['list-item__header']}>
-          <span className={styles['list-item__author']}>{creator}</span>
-          <div className={styles['list-item__params']}>
-            {showPopup && userInfo.login === creator && (
-              <button
-                onClick={e => handleDelete(id, 'topic', e)}
-                className={styles['list-item__delete-btn']}>
-                <img src={trashButton} alt="delete" />
-              </button>
+          <span className={styles['list-item__author']}>
+            {creator}
+            {userInfo.login === creator && (
+              <span className={styles['list-item__author_self']}>{` (author)`}</span>
             )}
+          </span>
+          <div className={styles['list-item__params']}>
             {comments !== 0 && (
               <span className={styles['list-item__message-count']}>{comments}</span>
             )}
