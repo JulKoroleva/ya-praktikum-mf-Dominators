@@ -39,7 +39,7 @@
     width: 100vw;
     height: 100vh;
     font-size: 30px;
-    color: $color-black;
+    color: var(--font-color);
   }
 
   &__buttons {

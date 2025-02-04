@@ -10,6 +10,7 @@ import {
   ErrorNotification,
   TModalStatus,
 } from '@/components';
+import OAuthButton from '@/components/OAuthButton/OAuthButton';
 
 import { TypeDispatch } from '@/redux/store/store';
 
@@ -23,8 +24,10 @@ import {
 } from './AuthorizationPageData';
 import { ROUTES } from '@/constants/routes';
 import { HEADERS } from '@/constants/headers';
+import { initPage } from '@/routes';
 
 import { setCustomCookieWithMaxAge } from '@/services/cookiesHandler';
+import { usePage } from '@/services/hooks';
 
 import styles from './Authorization.module.scss';
 
@@ -52,6 +55,19 @@ export const Authorization = () => {
     if (status === 'succeeded') {
       navigate(ROUTES.main());
     }
+  };
+
+  const handleCreateOAuthReques = (code: string) => {
+    const request = {
+      code: JSON.parse(code)['code'],
+      redirect_uri: `${window.location.origin}${ROUTES.oAuthTokenPage()}`,
+    };
+    onSubmit(request);
+  };
+
+  const handleOAuthError = (errorMessage: string) => {
+    dispatch(clearAuthorizationState());
+    setModalConfig({ show: true, header: errorMessage, status: 'failed' });
   };
 
   useEffect(() => {
@@ -100,6 +116,8 @@ export const Authorization = () => {
     };
   }, []);
 
+  usePage({ initPage });
+
   return (
     <div className={styles['authorization-page']}>
       <div className={styles['form-container']}>
@@ -118,6 +136,7 @@ export const Authorization = () => {
             onClick={() => navigate('/registration')}>
             Create account
           </Button>
+          <OAuthButton onSuccess={handleCreateOAuthReques} onError={handleOAuthError} />
         </ErrorNotification>
         <UniversalModal
           show={modalConfig.show}

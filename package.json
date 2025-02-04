@@ -37,7 +37,7 @@
     "@typescript-eslint/parser": "^6.0.0",
     "eslint": "^8.50.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-prettier": "^5.2.3",
     "husky": "^9.1.7",
     "jest-transform-stub": "^2.0.0",
     "lerna": "^5.4.3",
@@ -46,6 +46,8 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@loadable/component": "^5.16.4",
+    "@loadable/server": "^5.16.5",
     "eslint-plugin-react": "^7.37.2"
   }
 }

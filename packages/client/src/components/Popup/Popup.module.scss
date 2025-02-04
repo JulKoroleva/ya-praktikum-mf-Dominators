@@ -1,7 +1,7 @@
 .popup {
     max-width: 436px;
     width: 100%;
-    background-color: $color-white;
+    background-color: var(--bg-color);
     box-shadow: 0 4px 4px rgb(0 0 0 / 25%);
     position: fixed;
     top: 50%;

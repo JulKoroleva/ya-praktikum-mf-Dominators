@@ -7,27 +7,32 @@ import Tip4 from '@/assets/tips/tip_4.svg';
 export const hints: IHint[] = [
   {
     id: 1,
-    text: 'Добро пожаловать в игру! Пройдите небольшое обучение, эти советы помогут вам стать лучшим из лучших',
+    text: 'Welcome to the game! Take a short tutorial, these tips will help you become the best of the best',
     image: '',
   },
   {
     id: 2,
-    text: 'Собирайте небольшие клетки, чтобы увеличивать свою массу. Это помогает быстрее расти в начале игры',
+    text: 'Collect small cells to increase your mass. This helps you grow faster early in the game.',
     image: Tip1,
   },
   {
     id: 3,
-    text: 'Избегайте более крупных игроков, которые могут вас поглотить. Старайтесь держаться подальше от опасных зон',
+    text: 'Avoid larger players that can swallow you up. Try to stay away from dangerous areas.',
     image: Tip2,
   },
   {
     id: 4,
-    text: 'Используйте зелёные вирусы для защиты: маленькие игроки могут прятаться за ними, чтобы избежать нападений',
+    text: 'Use green viruses for protection: small players can hide behind them to avoid attacks',
     image: Tip3,
   },
   {
     id: 5,
-    text: 'Разделяйтесь (клавиша Space), чтобы атаковать более мелких игроков или быстрее перемещаться. Помните, что разделение делает вас уязвимыми: избегайте разделения рядом с большими игроками',
+    text: 'Speed ​​up! Space key to move faster. Speed ​​accumulates every 60 seconds and lasts for 5 seconds',
     image: Tip4,
   },
+  // {
+  //   id: 6,
+  //   text: 'Разделяйтесь (клавиша Space), чтобы атаковать более мелких игроков или быстрее перемещаться. Помните, что разделение делает вас уязвимыми: избегайте разделения рядом с большими игроками',
+  //   image: Tip4,
+  // },
 ];

@@ -18,9 +18,8 @@
   max-width: 436px;
   margin: 0 auto;
   padding: 40px 48px;
-  border: 1px solid #dde6ed;
   border-radius: 12px;
-  background-color: #fdfdfd;
+  background-color: var(--menu-bg-color);
   box-shadow: $box-shadow-main;
 
   h1 {

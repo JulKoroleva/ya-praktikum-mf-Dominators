@@ -1,12 +1,16 @@
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
-
 import { IListItemProps } from './ListItem.interface';
-
 import styles from './ListItem.module.scss';
 
+import { Reactions } from '@/components/EmojiReactions/EmojiReactions';
+import { useEmojiPopupVisibility } from '@/hooks/useEmojiPopupVisibility.hook';
+import { useRef } from 'react';
+
 export function ListItem({ topic }: IListItemProps) {
-  const { id, title, createdAt, description, creator, messages } = topic;
+  const { id, title, createdAt, description, creator, comments, reactions } = topic;
+  const { showPopup, handleMouseEnter } = useEmojiPopupVisibility(100);
+  const emojiRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
 
   const handleReadTopic = () => {
@@ -15,18 +19,34 @@ export function ListItem({ topic }: IListItemProps) {
 
   return (
     <div className={styles['list-item']} onClick={handleReadTopic}>
-      <div className={styles['list-item__header']}>
-        <span className={styles['list-item__author']}>{creator}</span>
-        <span className={styles['list-item__message-count']}>
-          {messages.length !== 0 && messages.length}
-        </span>
+      <div
+        className={styles['list-item__container']}
+        onMouseEnter={handleMouseEnter}
+        ref={emojiRef}>
+        <div className={styles['list-item__header']}>
+          <span className={styles['list-item__author']}>{creator}</span>
+          <div className={styles['list-item__params']}>
+            {comments !== 0 && (
+              <span className={styles['list-item__message-count']}>{comments}</span>
+            )}
+          </div>
+        </div>
+        <div className={styles['list-item__info']}>
+          <span className={styles['list-item__date']}>
+            {createdAt.includes('-') ? new Date(createdAt).toDateString() : createdAt}
+          </span>
+        </div>
+        <span className={styles['list-item__title']}>{title}</span>
+        <span className={styles['list-item__description']}>{description}</span>
+
+        <Reactions id={id} type="topic" reactions={reactions} />
       </div>
-      <div className={styles['list-item__info']}>
-        <span className={styles['list-item__id']}>#{id}</span>
-        <span className={styles['list-item__date']}>{createdAt}</span>
-      </div>
-      <span className={styles['list-item__name']}>{title}</span>
-      <span className={styles['list-item__text']}>{description}</span>
+
+      {showPopup && (
+        <div id="reaction-popup" className={styles['reaction-popup']} ref={emojiRef}>
+          <Reactions id={id} type="topic" showPopup={showPopup} emojiRef={emojiRef} />
+        </div>
+      )}
     </div>
   );
 }

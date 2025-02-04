@@ -9,6 +9,7 @@ describe('Canvas test', () => {
         // eslint-disable-next-line no-empty-pattern
         endGameCallback={([]) => {}}
         isPaused={false}
+        isEndedGame={false}
         onBackButtonClick={() => {}}
       />,
     );

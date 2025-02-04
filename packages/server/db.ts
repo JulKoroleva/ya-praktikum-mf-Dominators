@@ -1,27 +1,26 @@
-import { Client } from 'pg';
+import { Sequelize, SequelizeOptions } from 'sequelize-typescript';
+const { POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB, POSTGRES_PORT, POSTGRES_HOST } = process.env;
 
-const { POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB, POSTGRES_PORT } = process.env;
-
-export const createClientAndConnect = async (): Promise<Client | null> => {
-  try {
-    const client = new Client({
-      user: POSTGRES_USER,
-      host: 'localhost',
-      database: POSTGRES_DB,
-      password: POSTGRES_PASSWORD,
-      port: Number(POSTGRES_PORT),
-    });
-
-    await client.connect();
-
-    const res = await client.query('SELECT NOW()');
-    console.log('  ➜ 🎸 Connected to the database at:', res?.rows?.[0].now);
-    client.end();
-
-    return client;
-  } catch (e) {
-    console.error(e);
-  }
-
-  return null;
+const sequelizeOptions: SequelizeOptions = {
+  username: POSTGRES_USER || 'postgres',
+  host: POSTGRES_HOST || 'localhost',
+  database: POSTGRES_DB || 'postgres',
+  password: POSTGRES_PASSWORD || 'postgres',
+  port: Number(POSTGRES_PORT) || 5432,
+  dialect: 'postgres',
 };
+
+export const sequelize = new Sequelize(sequelizeOptions);
+
+export async function createClientAndConnect(): Promise<void> {
+  try {
+    await sequelize.authenticate();
+    console.log('✅ Подключение к базе данных установлено.');
+
+    await sequelize.sync({ alter: true });
+
+    console.log('✅ База данных синхронизирована.');
+  } catch (e) {
+    console.error('❌ Ошибка подключения к базе данных:', e);
+  }
+}

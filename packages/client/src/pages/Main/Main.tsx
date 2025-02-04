@@ -18,13 +18,22 @@ import { IParticle, IButtonConfig } from './Main.interface';
 import { ROUTES } from '@/constants/routes';
 import { HEADERS } from '@/constants/headers';
 import { COLOR_PALETTE } from './constants/color.constant';
+import { initPage } from '@/routes';
 
 import { deleteCookie, getCookie } from '@/services/cookiesHandler';
-import { useIsAuthorized } from '@/services/hooks';
+import { useIsAuthorized, usePage } from '@/services/hooks';
 
 import styles from './Main.module.scss';
 
 export const Main = () => {
+  // /**
+  //  * ВРЕМЕННО. УБРАТЬ В GAME-30. До полноценной настройки SRR на клиенте возникает ошибка document is undefined.
+  //  * Т.К. мы идём за куки до того, как документ отрендерился. фиксится в уроке 7/12 SSR */
+
+  // Остаётся на 9 спринт в соответствии с задачей, так как в задаче GAME-30 указано, что регистрация по куке будет производиться именно в 9 спринте.
+  if (typeof window === 'undefined') {
+    return <></>;
+  }
   const navigate = useNavigate();
   const dispatch = useDispatch<TypeDispatch>();
 
@@ -36,7 +45,7 @@ export const Main = () => {
   const userInfo = useSelector(selectUser);
 
   const description =
-    'Сражайся, поглощай и становись сильнее! Уничтожай соперников в динамичной битве за выживание.';
+    'Fight, consume and become stronger! Destroy rivals in a dynamic battle for survival.';
 
   const buttons: IButtonConfig[] = [
     { href: ROUTES.game(), text: 'Start Game!', className: styles[`main-button`] },
@@ -44,6 +53,7 @@ export const Main = () => {
     { href: ROUTES.leaderboard(), text: 'Leaderboard' },
     { href: ROUTES.forum(), text: 'Forum' },
   ];
+
   const authCookie = getCookie('auth');
 
   useEffect(() => {
@@ -142,6 +152,8 @@ export const Main = () => {
     }
   }, [authCookie]);
 
+  usePage({ initPage });
+
   return (
     <div className={styles['main-page']}>
       <ErrorNotification>
@@ -150,13 +162,14 @@ export const Main = () => {
         )}
         <h1 className={styles['main-page__title']}>{HEADERS.main}</h1>
         <div className={styles['main-page__menu']}>
-          <h3 className={styles['main-page__menu_greetings']}>
-            Привет, {userInfo?.login || 'Guest'}!
-          </h3>
+          <h3 className={styles['main-page__menu_greetings']}>Hi, {userInfo?.login || 'Guest'}!</h3>
           <p className={styles['main-page__menu_description']}>{description}</p>
           <div className={styles['main-page__menu_buttons']}>
             {buttons
-              .filter(({ href }) => isAuthorized || href !== ROUTES.profile())
+              .filter(
+                ({ href }) =>
+                  isAuthorized || (href !== ROUTES.profile() && href !== ROUTES.leaderboard()),
+              )
               .map(({ href, text, className }, index) => (
                 <Button
                   key={index}

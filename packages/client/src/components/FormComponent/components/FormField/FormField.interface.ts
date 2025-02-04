@@ -19,7 +19,7 @@ export interface IFieldConfig<T extends FieldValues = FieldValues> {
   // общие параметры
   id: string;
   label?: string;
-  type: 'text' | 'select' | 'date' | 'password' | 'textarea' | 'file' | 'avatar';
+  type: 'text' | 'select' | 'date' | 'password' | 'textarea' | 'file' | 'avatar' | 'checkbox';
   isRequired?: boolean;
   placeholder?: string;
   disabled?: boolean;

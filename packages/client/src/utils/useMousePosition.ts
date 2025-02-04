@@ -10,16 +10,22 @@ export function useMousePosition() {
   const mouseCoodrs = useRef<ICoords>(INITIAL_MOUSE_STATE);
 
   const handleCursorMovement = (event: MouseEvent): void => {
-    const rect = (event.target! as HTMLElement).getBoundingClientRect();
-    mouseCoodrs.current = {
-      X: event.clientX - rect.left,
-      Y: event.clientY - rect.top,
-    };
+    mouseCoodrs.current.X += event.movementX;
+    mouseCoodrs.current.Y += event.movementY;
   };
-  useEffect(() => {
-    window.addEventListener('mousemove', handleCursorMovement);
-    return () => {
+
+  const lockStatusChange = () => {
+    if (document.pointerLockElement) {
+      window.addEventListener('mousemove', handleCursorMovement);
+    } else {
       window.removeEventListener('mousemove', handleCursorMovement);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('pointerlockchange', lockStatusChange, false);
+    return () => {
+      document.removeEventListener('pointerlockchange', lockStatusChange);
     };
   }, []);
 

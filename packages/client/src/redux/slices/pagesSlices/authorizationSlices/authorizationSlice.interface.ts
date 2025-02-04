@@ -8,6 +8,8 @@ export interface IAuthorizationSlice {
 }
 
 export interface IAuthorizationFormSubmit {
-  login: string;
-  password: string;
+  login?: string;
+  password?: string;
+  code?: string;
+  redirect_uri?: string;
 }

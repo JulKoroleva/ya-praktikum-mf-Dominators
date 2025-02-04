@@ -76,7 +76,11 @@ export const UniversalModal: React.FC<IUniversalModalProps> = ({
               </Button>
             </div>
             <div className={classNames(styles['modal-body'], modalColorClass)}>
-              {status ? statusBodyMap[status as Exclude<TModalStatus, 'idle'>] : children}
+              {status ? statusBodyMap[status as Exclude<TModalStatus, 'idle'>] : null}
+              {children && !status ? children : null}
+              {status && statusBodyMap[status as Exclude<TModalStatus, 'idle'>] === null
+                ? children
+                : null}
             </div>
           </div>
         </>

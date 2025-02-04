@@ -1,9 +1,9 @@
 import { defineConfig } from 'vite';
-import { resolve } from 'path';
+import { resolve, join } from 'path';
 import react from '@vitejs/plugin-react';
 import svgr from 'vite-plugin-svgr';
 import dotenv from 'dotenv';
-dotenv.config();
+dotenv.config({ path: resolve(__dirname, '../../.env') });
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -13,6 +13,7 @@ export default defineConfig({
   },
   define: {
     __SERVER_PORT__: process.env.SERVER_PORT,
+    __INTERNAL_SERVER_URL__: JSON.stringify(`http://localhost:${process.env.SERVER_PORT}`),
   },
   css: {
     preprocessorOptions: {
@@ -23,12 +24,16 @@ export default defineConfig({
     },
   },
   plugins: [react(), svgr()],
+  ssr: {
+    format: 'cjs',
+  },
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
+      util: 'node:util',
     },
   },
   build: {
-    manifest: true,
+    outDir: join(__dirname, 'dist/client'),
   },
 });

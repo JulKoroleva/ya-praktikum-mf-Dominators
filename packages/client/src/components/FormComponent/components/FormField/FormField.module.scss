@@ -17,12 +17,18 @@
     font-weight: 500;
     font-size: 13px;
     line-height: 16px;
-    color: $text-color-grayish-blue;
+    color: var(--form-label-color);
 
     .required-star {
       margin-left: 1px;
-      color: $color-danger;
+      color: var(--error-color);
     }
+  }
+
+  .checkbox {
+    position: absolute;
+    left: 90px;
+    top: 0;
   }
 
   .input {
@@ -33,6 +39,8 @@
     border: 1px solid $color-medium-grey;
     font-size: 14px;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    background-color: var(--form-input-bg);
+    color: var(--font-color);
 
     &::placeholder {
       color: $color-medium-grey;
@@ -64,6 +72,8 @@
     border: 1px solid $color-medium-grey;
     font-size: 14px;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    background-color: var(--form-input-bg);
+    color: var(--font-color);
 
     &::placeholder {
       color: $color-medium-grey;
@@ -87,56 +97,13 @@
     position: absolute;
     border: none;
     background: none;
-    right: 10px;
-    top: 32px;
+    right: 15px;
+    top: 27px;
     cursor: pointer;
-    color: $color-black;
+    color: $color-medium-grey;
     width: 15px;
     height: 15px;
   }
-
-  .eye-icon {
-    background: url('../../../../assets/icons/eye.svg') no-repeat center center;
-    background-size: contain;
-  }
-
-  .crossed-eye-icon {
-    background: url('../../../../assets/icons/crossedEye.svg') no-repeat center center;
-    background-size: contain;
-  }
-
-  // .form-textarea {
-  //   appearance: none;
-  //   background-clip: padding-box;
-  //   background-color: #fff;
-  //   border: var(--bs-border-width) solid var(--bs-border-color);
-  //   border-radius: 4px;
-
-  //   // color: $color-black;
-  //   display: block;
-  //   padding: 0.375rem 0.75rem;
-  //   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-  //   width: 100%;
-  //   height: 38px;
-  //   font-size: 16px;
-  //   line-height: 24px;
-  //   letter-spacing: 0;
-  //   text-align: left;
-  //   resize: none;
-  //   overflow: hidden;
-
-  //   &:focus {
-  //     border-color: rgb(25 109 60 / 50%);
-  //     outline: none;
-  //     box-shadow: 0 0 0 0.2rem rgb(25 109 60 / 25%);
-  //   }
-
-  //   &:disabled {
-  //     // color: $text-color-disabled;
-  //     background-color: var(--bs-secondary-bg);
-  //     opacity: 1;
-  //   }
-  // }
 
   .file-upload {
     display: inline-block;
@@ -190,7 +157,7 @@
   }
 
   .error-message {
-    color: $color-danger;
+    color: var(--error-color);
   }
 }
 
@@ -202,5 +169,13 @@
     margin: 0 4px 0 0;
     font-size: 14px;
     line-height: 16px;
+  }
+}
+
+.checkbox {
+  input[type='checkbox'] {
+    width: 18px;
+    height: 18px;
+    accent-color: $color-green-main;
   }
 }

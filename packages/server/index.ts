@@ -1,20 +1,29 @@
 import dotenv from 'dotenv';
 import cors from 'cors';
-dotenv.config();
+import { resolve } from 'path';
+import express, { json } from 'express';
+import cookieParser from 'cookie-parser';
 
-import express from 'express';
+dotenv.config({ path: resolve(__dirname, '../../.env') });
+
 import { createClientAndConnect } from './db';
+import { mainRouter } from './routes/main';
 
 const app = express();
-app.use(cors());
+
+const corsOptions = {
+  origin: [`http://localhost:${process.env.CLIENT_PORT}`],
+  credentials: true,
+};
+
+app.use(json(), cookieParser(), cors(corsOptions));
+
 const port = Number(process.env.SERVER_PORT) || 3001;
 
 createClientAndConnect();
 
-app.get('/', (_, res) => {
-  res.json('👋 Howdy from the server :)');
-});
-
 app.listen(port, () => {
   console.log(`  ➜ 🎸 Server is listening on port: ${port}`);
 });
+
+app.use(mainRouter);

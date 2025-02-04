@@ -1,50 +1,151 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'react-bootstrap';
 
-import { FormComponent, Navigation, Popup, ErrorNotification } from '@/components';
+import {
+  FormComponent,
+  Navigation,
+  Popup,
+  ErrorNotification,
+  TModalStatus,
+  IModalConfig,
+  UniversalModal,
+} from '@/components';
 import { TopicList, Pagination, TPaginationOptions, TTopic } from './components';
 
+import { TypeDispatch } from '@/redux/store';
+import { createTopic, fetchForum } from '@/redux/requests';
+import {
+  selectCreateTopicError,
+  selectCreateTopicStatus,
+  selectPaginationOptions,
+  selectTopicList,
+  selectUser,
+} from '@/redux/selectors';
+import { clearForumState, clearForumStatus } from '@/redux/slices/pagesSlices/forumSlices';
+
+import { useIsAuthorized, usePage } from '@/services/hooks';
+import { getCookie } from '@/services/cookiesHandler';
+
 import { ROUTES } from '@/constants/routes';
+import { PageInitArgs, initPage } from '@/routes';
 import { HEADERS } from '@/constants/headers';
 import { createNewTopicFields, createNewTopicFieldsInitialValues } from './FormData';
 
-import { useIsAuthorized } from '@/services/hooks';
-import { getCookie } from '@/services/cookiesHandler';
-
-import { topicsMockData } from './ForumMock';
-
 import add from '@/assets/icons/add.svg';
+
+import { ICreateTopicDto } from './components/TopicList/TopicList.interface';
 
 import styles from './Forum.module.scss';
 
 export const Forum = () => {
+  // /**
+  //  * ВРЕМЕННО. УБРАТЬ В GAME-30. До полноценной настройки SRR на клиенте возникает ошибка document is undefined.
+  //  * Т.К. мы идём за куки до того, как документ отрендерился. фиксится в уроке 7/12 SSR */
+
+  // Остаётся на 9 спринт в соответствии с задачей, так как в задаче GAME-30 указано, что регистрация по куке будет производиться именно в 9 спринте.
+  if (typeof window === 'undefined') {
+    return <></>;
+  }
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [topicList, setTopicList] = useState<TTopic[]>([]);
   const [paginationOptions, setPaginationOptions] = useState<TPaginationOptions>({
     page: 1,
     total: 5,
+    perPage: 5,
+  });
+  const [modalConfig, setModalConfig] = useState<IModalConfig>({
+    show: false,
+    header: '',
+    status: undefined,
   });
   const [isAuthorized, setIsAuthorized] = useIsAuthorized();
 
   const authCookie = getCookie('auth');
 
-  useEffect(() => {
-    fetchTopics();
-  }, []);
+  const topicListFromServer = useSelector(selectTopicList);
+  const paginationOptionsFromServer = useSelector(selectPaginationOptions);
+  const createTopicListStatus = useSelector(selectCreateTopicStatus);
+  const createTopicListError = useSelector(selectCreateTopicError);
+  const dispatch = useDispatch<TypeDispatch>();
+  const userInfo = useSelector(selectUser);
 
-  const fetchTopics = (paginationOptions?: TPaginationOptions) => {
-    const res = topicsMockData;
-    setTopicList(res.topics);
-    setPaginationOptions(paginationOptions || res.pagination);
+  const onSubmit = (data: ICreateTopicDto) => {
+    const topicDataWithUser = {
+      ...data,
+      creatorId: userInfo.id,
+      creator: userInfo.login,
+    };
+
+    dispatch(createTopic(topicDataWithUser));
+    setIsOpen(false);
   };
 
-  const onSubmit = (data: Record<string, string>) => {
-    return data;
+  const handleCloseModal = () => {
+    dispatch(clearForumStatus());
+    setModalConfig({ show: false, header: '', status: undefined });
+  };
+
+  const handleChangePage = (newOptions: TPaginationOptions) => {
+    setPaginationOptions(newOptions);
+    dispatch(fetchForum({ pageNumber: newOptions.page }));
   };
 
   useEffect(() => {
     setIsAuthorized(!!authCookie);
   }, [authCookie]);
+
+  useEffect(() => {
+    setTopicList(topicListFromServer);
+    setPaginationOptions(paginationOptionsFromServer);
+  }, [topicListFromServer, paginationOptionsFromServer]);
+
+  useEffect(() => {
+    let header = '';
+    let statusValue: TModalStatus = 'idle';
+    let error: typeof createTopicListError = '';
+    let succeeded = '';
+
+    if (createTopicListStatus !== 'idle') {
+      statusValue = createTopicListStatus;
+      error = createTopicListError;
+      succeeded = 'Topic successfully created';
+    }
+
+    switch (statusValue) {
+      case 'loading':
+        header = 'Loading...';
+        statusValue = 'loading';
+        break;
+      case 'succeeded':
+        header = succeeded;
+        statusValue = 'succeeded';
+        dispatch(fetchForum({ pageNumber: paginationOptions.page }));
+        break;
+      case 'failed':
+        header = error || 'Something went wrong';
+        statusValue = 'failed';
+        break;
+      default:
+        break;
+    }
+
+    if (statusValue) {
+      setModalConfig({
+        show: statusValue !== 'idle',
+        header,
+        status: statusValue,
+      });
+    }
+  }, [createTopicListStatus, createTopicListError]);
+
+  usePage({ initPage: initForumPage });
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearForumState());
+    };
+  }, []);
 
   return (
     <div className={`${styles['game-forum']} ${styles['fade-in']}`}>
@@ -59,8 +160,14 @@ export const Forum = () => {
             Add topic
           </Button>
         )}
-        <TopicList topicList={topicList} />
-        <Pagination options={paginationOptions} onChange={fetchTopics} />
+        {topicList.length ? (
+          <>
+            <TopicList topicList={topicList} />
+            <Pagination options={paginationOptions} onChange={handleChangePage} />
+          </>
+        ) : (
+          <p>No topics yet</p>
+        )}
         <Popup open={isOpen} withOverlay onClose={() => setIsOpen(false)}>
           {isOpen && (
             <FormComponent
@@ -71,7 +178,21 @@ export const Forum = () => {
             />
           )}
         </Popup>
+        <UniversalModal
+          show={modalConfig.show}
+          title={modalConfig.header}
+          status={modalConfig.status}
+          zIndex={2000}
+          onHide={handleCloseModal}
+        />
       </ErrorNotification>
     </div>
   );
+};
+
+export const initForumPage = async ({ dispatch, state }: PageInitArgs) => {
+  await initPage({ dispatch, state });
+
+  const queue: Array<Promise<unknown>> = [dispatch(fetchForum({}))];
+  return Promise.all(queue);
 };

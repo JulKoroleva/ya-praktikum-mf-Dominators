@@ -1,5 +1,7 @@
+import { SERVER_HOST } from './serverHost';
+
 export const MAIN_URL = 'https://ya-praktikum.tech/api/v2';
-export const RESURSES_URL = `${MAIN_URL}/resources/`;
+export const RESOURCES_URL = `${MAIN_URL}/resources/`;
 
 // REGISTRATION
 export const REGISTER_URL = `${MAIN_URL}/auth/signup`;
@@ -15,3 +17,16 @@ export const GET_USER_INFO_URL = `${MAIN_URL}/auth/user`;
 export const PROFILE_URL = `${MAIN_URL}/user/profile`;
 export const CHANGE_PASSWORD_URL = `${MAIN_URL}/user/password`;
 export const CHANGE_AVATAR_URL = `${MAIN_URL}/user/profile/avatar`;
+
+//LEADERBOARD
+export const GET_LEADERBOARD_URL = `${MAIN_URL}/leaderboard`;
+
+//OAUTH
+export const GET_SERVICE_ID = `${MAIN_URL}/oauth/yandex/service-id`;
+export const OAUTH_SIGN_IN_UP = `${MAIN_URL}/oauth/yandex`;
+
+//FORUM
+export const TOPICS_URL = `${SERVER_HOST}/forum`;
+
+//THEME
+export const THEME_URL = `${SERVER_HOST}/theme`;

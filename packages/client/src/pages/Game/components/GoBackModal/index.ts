@@ -1,0 +1,1 @@
+export { GoBackModalContent } from './GoBackModal';

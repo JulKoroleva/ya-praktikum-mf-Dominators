@@ -1,86 +1,166 @@
 @use 'src/styles/buttons' as *;
 @use 'src/styles/extends' as *;
+@use 'src/styles/variables' as *;
 
 .topic-post {
-    max-width: 768px;
-    margin: 0 auto 20px;
+  max-width: 768px;
+  margin: 0 auto 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-inline: 20px;
+
+  @extend %fade-in;
+
+  &__button {
+    @extend %custom-button;
+
+    align-self: start;
+    width: 50px;
+    height: 50px;
+    margin-bottom: 7px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__info {
+    display: flex;
+    margin-bottom: 10px;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  &__delete-btn {
+    background-color: transparent;
+    border: none;
+    object-fit: cover;
+    margin: 5px 10px 0 0;
+
+    img {
+      width: 20px;
+    }
+
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+
+  &__topic-author {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 22px;
+    margin-bottom: 2px;
+
+    &_self {
+      color: var(--error-color);
+    }
+  }
+
+  &__topic-date {
+    font-size: 10px;
+    line-height: 13px;
+    margin-right: 10px;
+    opacity: 0.5;
+  }
+
+  &__topic-title {
+    display: block;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 18px;
+    margin-bottom: 8px;
+  }
+
+  &__topic-text {
+    display: block;
+    font-size: 14px;
+    line-height: 16px;
+    opacity: 0.6;
+  }
+
+  &__container {
+    position: relative;
+    background-color: var(--menu-bg-color);
+    width: 100%;
+    padding: 20px;
+    box-shadow: 0 4px 4px rgb(0 0 0 / 25%);
+    border-radius: 10px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding-inline: 20px;
+    margin-bottom: 10px;
 
-    @extend %fade-in;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
 
+  &__comment-wrapper {
+    button[type='submit'] {
+      margin-top: 0;
+      width: 100%;
+    }
+  }
 
-    &__button {
-        @extend %custom-button;
+  .delete-button {
+    @extend %custom-button-outline;
 
-        align-self: start;
-        width: 50px;
-        height: 50px;
-        margin-bottom: 7px;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    background-color: $color-white;
+    color: $color-danger;
+    border: 1px solid $color-danger;
+    padding: 7px 16px;
+
+    &:hover {
+      color: $color-danger;
+      background-color: rgba($color-danger, 0.2);
+      border: 1px solid $color-danger;
+      cursor: pointer;
     }
 
-    &__info {
-        display: flex;
-        margin-bottom: 10px;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
+    &:active {
+      color: $color-danger !important;
+      background-color: rgba($color-danger, 0.2) !important;
+      border: 1px solid $color-danger !important;
+      cursor: pointer;
+    }
+  }
+
+  .close-button {
+    @extend %custom-button-outline;
+
+    background-color: $color-white;
+    color: $color-black;
+    border: 1px solid $color-black;
+    padding: 7px 16px;
+
+    &:hover {
+      color: $color-black;
+      background-color: rgba($color-black, 0.2);
+      border: 1px solid $color-black;
+      cursor: pointer;
     }
 
-    &__topic-author {
-        font-size: 18px;
-        font-weight: 500;
-        line-height: 22px;
-        margin-bottom: 2px;
+    &:active {
+      color: $color-black !important;
+      background-color: rgba($color-black, 0.2) !important;
+      border: 1px solid $color-black !important;
+      cursor: pointer;
+    }
+  }
+
+  &__modal__content {
+    padding: 12px 20px;
+
+    &_text {
+      margin-bottom: 10px;
     }
 
-    &__topic-date {
-        font-size: 10px;
-        line-height: 13px;
-        margin-right: 10px;
-        opacity: .5;
+    &_buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
     }
-
-    &__topic-title {    
-        display: block;
-        font-size: 16px;
-        font-weight: 500;
-        line-height: 18px;
-        margin-bottom: 8px;
-    }
-
-    &__topic-text {
-        display: block;
-        font-size: 14px;
-        line-height: 16px;
-        opacity: .6;
-    }
-
-    &__container {
-        background-color: $color-white;
-        width: 100%;
-        padding: 20px;
-        box-shadow: 0 4px 4px rgb(0 0 0 / 25%);
-        border-radius: 10px;
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 10px;
-
-        &:last-child {
-            margin-bottom: 0;
-        }
-    }
-
-    &__commment-wrapper {
-        button[type="submit"] {
-            margin-top: 0;
-            width: 100%;
-        }
-    }
+  }
 }
