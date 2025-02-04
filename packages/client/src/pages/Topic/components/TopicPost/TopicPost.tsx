@@ -228,7 +228,7 @@ export function TopicPost({ id }: ITopicPostProps) {
         </div>
       )}
 
-      {userInfo.login === topicData?.creator && (
+      {userInfo.id === topicData?.creatorId && (
         <Button
           className={styles['delete-button']}
           type="button"

@@ -44,6 +44,8 @@ export const getUserInfoRequest = createAsyncThunk<
   let processedAvatar = '';
   if (userInfo.avatar) {
     processedAvatar = await processUserAvatarSync(userInfo.avatar);
+  } else {
+    userInfo.avatar = '{ r: 0, g: 224, b: 255, a: 2 }';
   }
 
   return { userInfo, processedAvatar };

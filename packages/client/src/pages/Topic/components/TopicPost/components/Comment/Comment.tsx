@@ -17,7 +17,7 @@ import trashButton from '@/assets/icons/trash.svg';
 import styles from './Comment.module.scss';
 
 export function Comment({ comment, topicData }: IComment) {
-  const { id, creator, createdAt, message, reactions } = comment;
+  const { id, creator, creatorId, createdAt, message, reactions } = comment;
   const { showPopup, handleMouseEnter, handleMouseLeave } = useEmojiPopupVisibility(100);
   const emojiRef = useRef<HTMLDivElement | null>(null);
   const userInfo = useSelector(selectUser);
@@ -71,7 +71,7 @@ export function Comment({ comment, topicData }: IComment) {
       <div className={styles.comment__info}>
         <span className={styles.comment__author}>
           {creator}
-          {userInfo.id === topicData.creatorId && (
+          {creatorId === topicData.creatorId && (
             <span className={styles.comment__author_self}>{` author`}</span>
           )}
         </span>

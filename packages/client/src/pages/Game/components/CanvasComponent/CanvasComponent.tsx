@@ -41,12 +41,15 @@ export function CanvasComponent({
 
   const controllerRef = useRef<CanvasController | null>(null);
   const baseAvatar = useSelector(
-    (state: RootState) => state.global.user.processedAvatar || 'rgb(0, 0, 0)',
+    (state: RootState) => state.global.user.processedAvatar || 'rgb(0, 200, 255)',
   );
 
   useAvatarImage(baseAvatar, (baseColor: string | null, img: HTMLImageElement | null) => {
     if (!controllerRef.current) {
-      controllerRef.current = new CanvasController(baseColor || 'rgb(0, 0, 0)', img || undefined);
+      controllerRef.current = new CanvasController(
+        baseColor || 'rgb(0, 200, 255)',
+        img || undefined,
+      );
       animate();
     }
   });

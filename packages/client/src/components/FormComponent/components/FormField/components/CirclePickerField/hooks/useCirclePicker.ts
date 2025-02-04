@@ -6,7 +6,7 @@ import { RGBColor } from 'react-color';
 export const useCirclePicker = () => {
   const [isPickerVisible, setPickerVisible] = useState(false);
   const [localImage, setLocalImage] = useState<string | null>(null);
-  const [color, setLocalColor] = useState<RGBColor | null>({ r: 85, g: 255, b: 0, a: 1 });
+  const [color, setLocalColor] = useState<RGBColor | null>({ r: 0, g: 224, b: 255, a: 2 });
   const pickerRef = useRef<HTMLDivElement | null>(null);
   const processedAvatar = useSelector((state: RootState) => state.global.user.processedAvatar);
 

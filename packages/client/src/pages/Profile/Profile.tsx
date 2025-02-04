@@ -54,7 +54,6 @@ export const Profile = () => {
     header: '',
     status: undefined,
   });
-
   const authCookie = getCookie('auth');
 
   const onSubmit = async (data: IData | IUserPassword) => {
