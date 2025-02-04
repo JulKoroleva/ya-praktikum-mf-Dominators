@@ -10,11 +10,7 @@
   padding: 10px;
   border-radius: 20px;
   background: var(--color-comment-bg);
-
-  &:last-child {
-    border: none;
-    margin-bottom: 0;
-  }
+  border: none;
 
   &__info {
     display: flex;
@@ -35,20 +31,25 @@
       color: var(--error-color);
     }
   }
-
+  
   &__delete-btn {
-    background-color: transparent;
+    position: absolute;
+    top: -10px;
+    right: -25px;
+    width: 40px;
+    height: 40px;
     border: none;
+    border-radius: 50%;
     object-fit: cover;
-    margin: 5px 10px 0 0;
+    box-shadow: $box-shadow;
 
     img {
-      width: 20px;
-    }
+      width: 15px;
 
-    &:hover {
-      opacity: 0.5;
-      cursor: pointer;
+      &:hover {
+        opacity: 0.5;
+        cursor: pointer;
+      }
     }
   }
 

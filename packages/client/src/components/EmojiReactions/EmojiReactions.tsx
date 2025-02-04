@@ -9,9 +9,20 @@ import { selectUser } from '@/redux/selectors';
 import { TypeDispatch } from '@/redux/store';
 import styles from './EmojiReactions.module.scss';
 import { useParams } from 'react-router-dom';
-import EmojiPicker, { Emoji } from 'emoji-picker-react';
+import { Emoji } from 'emoji-picker-react';
 import { useMemo } from 'react';
 import { ReactionProps } from './EmojiReactions.interface';
+
+const availableReactions = [
+  { id: '1f44d', emoji: '👍' },
+  { id: '1f525', emoji: '🔥' },
+  { id: '1f602', emoji: '😂' },
+  { id: '2764-fe0f', emoji: '❤️' },
+  { id: '1f64f', emoji: '🙏' },
+  { id: '1f44e', emoji: '👎' },
+  { id: '1f621', emoji: '😡' },
+  { id: '1f622', emoji: '😢' },
+];
 
 export function Reactions({ id, type, reactions = [], showPopup, emojiRef }: ReactionProps) {
   const dispatch = useDispatch<TypeDispatch>();
@@ -75,15 +86,18 @@ export function Reactions({ id, type, reactions = [], showPopup, emojiRef }: Rea
       )}
 
       {showPopup && (
-        <div className={styles['reaction-popup']}>
-          <EmojiPicker
-            reactionsDefaultOpen={showPopup}
-            allowExpandReactions={false}
-            onEmojiClick={(emoji, event) => {
-              if (!event) return;
-              handleReactionClick(event as unknown as React.MouseEvent, emoji.unified);
-            }}
-          />
+        <div
+          className={`${styles['reaction-popup']} ${
+            type === 'comment' ? styles['comment'] : 'topic'
+          }`}>
+          {availableReactions.map(({ id }) => (
+            <span
+              key={id}
+              className={styles['emoji-option']}
+              onClick={event => handleReactionClick(event, id)}>
+              <Emoji unified={id} size={20} />
+            </span>
+          ))}
         </div>
       )}
     </div>

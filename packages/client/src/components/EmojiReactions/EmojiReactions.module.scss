@@ -5,7 +5,7 @@
 }
 
 .count {
-  margin: 0px 5px 5px 10px;
+  margin: 0 5px 5px 10px;
   font-size: 14px;
 }
 
@@ -17,8 +17,7 @@
   color: $color-black;
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  align-content: center;
+  place-content: center center;
   width: 50px;
   height: 30px;
 
@@ -34,15 +33,34 @@
 
 .reaction-popup {
   position: absolute;
-  right: -320px;
+  right: -330px;
   bottom: 0;
-  background: $color-white;
+  background: #fff;
   border-radius: 30px;
   box-shadow: -7px 5px 20px -1px rgb(0 0 0 / 25%);
-  padding: 2px;
+  padding: 6px;
   display: flex;
   gap: 8px;
   z-index: 1000;
+
+  &.comment {
+    right: -350px;
+  }
+}
+
+.emoji-option {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: rgb(235 235 235);
+
+  :hover {
+    opacity: 0.7;
+    cursor: pointer;
+  }
 }
 
 .reaction-popup::before {

@@ -6,15 +6,12 @@ import styles from './ListItem.module.scss';
 import { Reactions } from '@/components/EmojiReactions/EmojiReactions';
 import { useEmojiPopupVisibility } from '@/hooks/useEmojiPopupVisibility.hook';
 import { useRef } from 'react';
-import { useSelector } from 'react-redux';
-import { selectUser } from '@/redux/selectors';
 
 export function ListItem({ topic }: IListItemProps) {
   const { id, title, createdAt, description, creator, comments, reactions } = topic;
-  const { showPopup, handleMouseEnter, handleMouseLeave } = useEmojiPopupVisibility();
+  const { showPopup, handleMouseEnter } = useEmojiPopupVisibility(100);
   const emojiRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
-  const userInfo = useSelector(selectUser);
 
   const handleReadTopic = () => {
     navigate(ROUTES.topic(id));
@@ -25,15 +22,9 @@ export function ListItem({ topic }: IListItemProps) {
       <div
         className={styles['list-item__container']}
         onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
         ref={emojiRef}>
         <div className={styles['list-item__header']}>
-          <span className={styles['list-item__author']}>
-            {creator}
-            {userInfo.login === creator && (
-              <span className={styles['list-item__author_self']}>{` (author)`}</span>
-            )}
-          </span>
+          <span className={styles['list-item__author']}>{creator}</span>
           <div className={styles['list-item__params']}>
             {comments !== 0 && (
               <span className={styles['list-item__message-count']}>{comments}</span>
@@ -52,11 +43,7 @@ export function ListItem({ topic }: IListItemProps) {
       </div>
 
       {showPopup && (
-        <div
-          id="reaction-popup"
-          className={styles['reaction-popup']}
-          ref={emojiRef}
-          onMouseLeave={handleMouseLeave}>
+        <div id="reaction-popup" className={styles['reaction-popup']} ref={emojiRef}>
           <Reactions id={id} type="topic" showPopup={showPopup} emojiRef={emojiRef} />
         </div>
       )}

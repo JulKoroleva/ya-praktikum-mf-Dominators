@@ -44,7 +44,7 @@ export function TopicPost({ id }: ITopicPostProps) {
   const dispatch = useDispatch<TypeDispatch>();
   const emojiRef = useRef<HTMLDivElement | null>(null);
 
-  const { showPopup, handleMouseEnter, handleMouseLeave } = useEmojiPopupVisibility(0);
+  const { showPopup, handleMouseEnter, handleMouseLeave } = useEmojiPopupVisibility(100);
   const [topicData, setTopicData] = useState<TTopic | null>(null);
   const [modalConfig, setModalConfig] = useState<IModalConfig>({
     show: false,
@@ -179,12 +179,7 @@ export function TopicPost({ id }: ITopicPostProps) {
         onMouseLeave={handleMouseLeave}
         ref={emojiRef}>
         <div className={styles['topic-post__info']}>
-          <span className={styles['topic-post__topic-author']}>
-            {topicData?.creator}
-            {userInfo.login === topicData?.creator && (
-              <span className={styles['topic-post__topic-author_self']}>{` (author)`}</span>
-            )}
-          </span>
+          <span className={styles['topic-post__topic-author']}>{topicData?.creator}</span>
           <div>
             <span className={styles['topic-post__topic-date']}>
               {topicData?.createdAt &&
@@ -215,7 +210,7 @@ export function TopicPost({ id }: ITopicPostProps) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.4 }}>
-                <Comment comment={message} topicId={topicData.id} />
+                <Comment comment={message} topicData={topicData} />
               </motion.div>
             ))}
           </AnimatePresence>

@@ -16,9 +16,9 @@ import trashButton from '@/assets/icons/trash.svg';
 
 import styles from './Comment.module.scss';
 
-export function Comment({ comment, topicId }: IComment) {
+export function Comment({ comment, topicData }: IComment) {
   const { id, creator, createdAt, message, reactions } = comment;
-  const { showPopup, handleMouseEnter, handleMouseLeave } = useEmojiPopupVisibility(0);
+  const { showPopup, handleMouseEnter, handleMouseLeave } = useEmojiPopupVisibility(100);
   const emojiRef = useRef<HTMLDivElement | null>(null);
   const userInfo = useSelector(selectUser);
   const deleteTopicComment = useDeleteForumEntity();
@@ -43,7 +43,7 @@ export function Comment({ comment, topicId }: IComment) {
             </Button>
             <Button
               onClick={e => {
-                deleteTopicComment(id, 'comment', e, topicId);
+                deleteTopicComment(id, 'comment', e, topicData.id);
                 handleCloseModal();
               }}
               className={styles['delete-button']}>
@@ -71,19 +71,19 @@ export function Comment({ comment, topicId }: IComment) {
       <div className={styles.comment__info}>
         <span className={styles.comment__author}>
           {creator}
-          {userInfo.login === creator && (
-            <span className={styles.comment__author_self}>{` (author)`}</span>
+          {userInfo.id === topicData.creatorId && (
+            <span className={styles.comment__author_self}>{` author`}</span>
           )}
         </span>
         <div>
+          <span className={styles.comment__date}>
+            {createdAt.includes('-') ? new Date(createdAt).toDateString() : createdAt}
+          </span>
           {showPopup && userInfo.login === creator && (
             <button onClick={() => handleDelete()} className={styles['comment__delete-btn']}>
               <img src={trashButton} alt="delete" />
             </button>
           )}
-          <span className={styles.comment__date}>
-            {createdAt.includes('-') ? new Date(createdAt).toDateString() : createdAt}
-          </span>
         </div>
       </div>
       <p className={styles.comment__text}>{message}</p>
