@@ -33,11 +33,6 @@ export const forumSlice = createSlice({
   reducers: {
     clearForumState: state => {
       state.topicList = [];
-      state.paginationOptions = {
-        page: 1,
-        total: 5,
-        perPage: 5,
-      };
       state.topicListStatus = 'idle';
       state.topicListError = '';
       state.createTopicStatus = 'idle';

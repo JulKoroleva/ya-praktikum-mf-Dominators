@@ -160,8 +160,14 @@ export const Forum = () => {
             Add topic
           </Button>
         )}
-        <TopicList topicList={topicList} />
-        <Pagination options={paginationOptions} onChange={handleChangePage} />
+        {topicList.length ? (
+          <>
+            <TopicList topicList={topicList} />
+            <Pagination options={paginationOptions} onChange={handleChangePage} />
+          </>
+        ) : (
+          <p>No topics yet</p>
+        )}
         <Popup open={isOpen} withOverlay onClose={() => setIsOpen(false)}>
           {isOpen && (
             <FormComponent

@@ -1,6 +1,6 @@
-import { TTopicComment } from '@/pages/Forum/components';
+import { TTopic, TTopicComment } from '@/pages/Forum/components';
 
 export interface IComment {
   comment: TTopicComment;
-  topicId: number;
+  topicData: TTopic;
 }

@@ -1,5 +1,6 @@
 @use 'src/styles/buttons' as *;
 @use 'src/styles/extends' as *;
+@use 'src/styles/variables' as *;
 
 .topic-post {
   max-width: 768px;
@@ -42,7 +43,7 @@
       width: 20px;
     }
 
-    &:hover{
+    &:hover {
       opacity: 0.5;
     }
   }
@@ -52,6 +53,10 @@
     font-weight: 500;
     line-height: 22px;
     margin-bottom: 2px;
+
+    &_self {
+      color: var(--error-color);
+    }
   }
 
   &__topic-date {
@@ -96,6 +101,66 @@
     button[type='submit'] {
       margin-top: 0;
       width: 100%;
+    }
+  }
+
+  .delete-button {
+    @extend %custom-button-outline;
+
+    background-color: $color-white;
+    color: $color-danger;
+    border: 1px solid $color-danger;
+    padding: 7px 16px;
+
+    &:hover {
+      color: $color-danger;
+      background-color: rgba($color-danger, 0.2);
+      border: 1px solid $color-danger;
+      cursor: pointer;
+    }
+
+    &:active {
+      color: $color-danger !important;
+      background-color: rgba($color-danger, 0.2) !important;
+      border: 1px solid $color-danger !important;
+      cursor: pointer;
+    }
+  }
+
+  .close-button {
+    @extend %custom-button-outline;
+
+    background-color: $color-white;
+    color: $color-black;
+    border: 1px solid $color-black;
+    padding: 7px 16px;
+
+    &:hover {
+      color: $color-black;
+      background-color: rgba($color-black, 0.2);
+      border: 1px solid $color-black;
+      cursor: pointer;
+    }
+
+    &:active {
+      color: $color-black !important;
+      background-color: rgba($color-black, 0.2) !important;
+      border: 1px solid $color-black !important;
+      cursor: pointer;
+    }
+  }
+
+  &__modal__content {
+    padding: 12px 20px;
+
+    &_text {
+      margin-bottom: 10px;
+    }
+
+    &_buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
     }
   }
 }
