@@ -90,25 +90,29 @@ export const addReaction = createAsyncThunk<
   { id: number; type: 'topic' | 'comment'; emoji: string; creatorId: number },
   { rejectValue: string }
 >('forum/addReaction', async ({ id, type, emoji, creatorId }, { rejectWithValue }) => {
-  const request = await fetch(
-    `${TOPICS_URL}/${type === 'comment' ? 'comment/' : 'topic/'}${id}/reactions`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+  try {
+    const response = await fetch(
+      `${TOPICS_URL}/${type === 'comment' ? 'comment/' : 'topic/'}${id}/reactions`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ emoji, type, creatorId }),
+        credentials: 'include',
       },
-      body: JSON.stringify({ emoji, type, creatorId }),
-      credentials: 'include',
-    },
-  );
+    );
 
-  if (!request.ok) {
-    const response = await request.json();
-    const rejectReason = response.reason ? response.reason : 'Unknown error';
-    return rejectWithValue(rejectReason);
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.reason || 'Unknown error');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    return rejectWithValue('Network error');
   }
-
-  return request.json();
 });
 
 export const deleteReaction = createAsyncThunk<

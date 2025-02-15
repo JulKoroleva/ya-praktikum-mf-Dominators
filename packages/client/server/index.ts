@@ -78,7 +78,7 @@ async function createServer() {
   });
 
   app.listen(port, () => {
-    console.log(`Client is listening on port: ${port}`);
+    console.log(`Client is listening on port: 3434 (https)`);
   });
 }
 

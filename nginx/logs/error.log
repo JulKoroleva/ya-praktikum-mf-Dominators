@@ -151,3 +151,6 @@
 2025/02/09 15:37:12 [emerg] 23756#23084: bind() to 0.0.0.0:8080 failed (10013: An attempt was made to access a socket in a way forbidden by its access permissions)
 2025/02/09 15:40:58 [error] 26540#24548: *20 CreateFile() "C:\Users\PC\Desktop\praktikum\project\DOMinators\nginx/..\packages\client\dist\client/main" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /main HTTP/1.1", host: "localhost:3435"
 2025/02/09 15:40:58 [error] 26540#24548: *20 CreateFile() "C:\Users\PC\Desktop\praktikum\project\DOMinators\nginx/..\packages\client\dist\client/favicon.ico" failed (2: The system cannot find the file specified), client: 127.0.0.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "localhost:3435", referrer: "https://localhost:3435/main"
+2025/02/10 10:16:19 [emerg] 1544#10448: CreateFile() "C:\Users\PC\Desktop\praktikum\project\DOMinators\nginx/conf/nginx-yu.conf" failed (2: The system cannot find the file specified)
+2025/02/10 10:16:31 [emerg] 5988#17428: "location" directive is not allowed here in C:\Users\PC\Desktop\praktikum\project\DOMinators\nginx/conf/nginx-yp.conf:57
+2025/02/10 11:45:29 [emerg] 16708#23560: no "ssl_certificate" is defined for the "listen ... ssl" directive in C:\Users\PC\Desktop\praktikum\project\DOMinators\nginx/conf/nginx-yp.conf:44
