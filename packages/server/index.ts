@@ -17,8 +17,8 @@ const app = express();
 const corsOptions = {
   origin: [
     'https://localhost:3434',
-    `http://localhost:${process.env.CLIENT_PORT}`,
-    `http://51.250.28.166:${process.env.CLIENT_PORT}`,
+    `https://localhost:${process.env.CLIENT_PORT}`,
+    `https://51.250.28.166:${process.env.CLIENT_PORT}`,
     `https://51.250.28.166:${process.env.CLIENT_PORT}`,
   ],
   credentials: true,

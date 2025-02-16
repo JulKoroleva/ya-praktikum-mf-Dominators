@@ -154,3 +154,7 @@
 2025/02/10 10:16:19 [emerg] 1544#10448: CreateFile() "C:\Users\PC\Desktop\praktikum\project\DOMinators\nginx/conf/nginx-yu.conf" failed (2: The system cannot find the file specified)
 2025/02/10 10:16:31 [emerg] 5988#17428: "location" directive is not allowed here in C:\Users\PC\Desktop\praktikum\project\DOMinators\nginx/conf/nginx-yp.conf:57
 2025/02/10 11:45:29 [emerg] 16708#23560: no "ssl_certificate" is defined for the "listen ... ssl" directive in C:\Users\PC\Desktop\praktikum\project\DOMinators\nginx/conf/nginx-yp.conf:44
+2025/02/16 17:35:12 [emerg] 19080#15804: CreateDirectory() "C:\Users\PC\Desktop\praktikum\project\DOMinators\nginx/temp/client_body_temp" failed (3: The system cannot find the path specified)
+2025/02/16 17:37:50 [emerg] 2240#15096: CreateDirectory() "C:\Users\PC\Desktop\praktikum\project\DOMinators\nginx/temp/client_body_temp" failed (3: The system cannot find the path specified)
+2025/02/16 17:40:16 [emerg] 3984#16816: CreateDirectory() "C:\Users\PC\Desktop\praktikum\project\DOMinators\nginx/temp/client_body_temp" failed (3: The system cannot find the path specified)
+2025/02/16 17:41:14 [emerg] 17476#13064: CreateDirectory() "C:\Users\PC\Desktop\praktikum\project\DOMinators\nginx/temp/client_body_temp" failed (3: The system cannot find the path specified)
