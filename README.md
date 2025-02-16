@@ -151,8 +151,8 @@ https://disk.yandex.ru/i/iz3ms5x3Fq_OzQ
 
 ## Первый запуск
 
-- Клиен: http://localhost:${CLIENT_PORT}
-- Сервер: http://localhost:${SERVER_PORT}
+- Клиен: https://localhost:${CLIENT_PORT}
+- Сервер: https://localhost:${SERVER_PORT}
 - Postgres: http://localhost:${POSTGRES_PORT}
 
 После того как окружение в докере будет запущено, для инициализации бд необходимо зайти на http://localhost:${POSTGRES_PORT}.
