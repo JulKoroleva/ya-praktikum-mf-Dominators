@@ -6,7 +6,7 @@
     "build": "lerna run build",
     "dev:client": "lerna run dev  --scope=client",
     "dev:server": "lerna run dev --scope=server",
-    "dev": "cd nginx && cmd /c start /B nginx -c conf/nginx-yp.conf && cd .. && lerna run dev",
+    "dev": "lerna run dev",
     "nginx:start": "cd nginx && nginx -c conf/nginx-yp.conf",
     "test": "lerna run test",
     "lint": "lerna run lint",
