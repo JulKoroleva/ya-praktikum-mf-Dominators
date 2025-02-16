@@ -45,6 +45,7 @@ export const Authorization = () => {
   const authorizationError = useSelector(selectAuthorizationError);
 
   const onSubmit = (data: IAuthorizationFormSubmit) => {
+    console.log('authorizationRequest(data)', authorizationRequest(data))
     dispatch(authorizationRequest(data));
   };
 

@@ -1,4 +1,4 @@
-ARG NODE_VERSION=20
+ARG NODE_VERSION=18
 ARG SERVER_PORT=8000
 
 FROM node:$NODE_VERSION-buster as base
@@ -19,6 +19,8 @@ FROM node:$NODE_VERSION-buster-slim as production
 WORKDIR /app
 
 COPY --from=builder /app/packages/server/dist/ /app/
+COPY packages/server/cert.key /app/cert.key
+COPY packages/server/cert.pem /app/cert.pem
 COPY --from=builder /app/packages/server/package.json /app/package.json
 RUN yarn install --production=true
 

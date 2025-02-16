@@ -1,4 +1,4 @@
-const axios = require('axios');
+// const axios = require('axios');
 import { Unauthorized } from '../errors';
 import { Request, Response, NextFunction } from 'express';
 
@@ -12,12 +12,12 @@ const defaulUserData = {
   phone: '',
 };
 
-const isDev = process.env.NODE_ENV === 'development';
+// const isDev = process.env.NODE_ENV === 'development';
 
 export const checkAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-  const isYaProd = req.get('Referer')?.includes('.ya-praktikum.tech');
+  // const isYaProd = req.get('Referer')?.includes('.ya-praktikum.tech');
   try {
-    if (isDev && !isYaProd) {
+    // if (isDev && !isYaProd) {
       // Если на локальном сервере работаем, проверку авторизации делаем по куке auth: true
       // которая установливается на фронте в момент успешной авторизации
       // устанавливаем моковые данные о пользователе
@@ -29,29 +29,29 @@ export const checkAuthMiddleware = async (req: Request, res: Response, next: Nex
 
       res.locals.user = defaulUserData;
       return next();
-    } else {
-      // Если на проде работаем то проверяем куки authCookie и uuid
-      // полученные при успешной авторизации с ya-praktikum.tech/api/v2
-      // дергаем ручку /auth/user для проверки что токен не протух и  установливаем полученные данные о пользователе
-      const { authCookie, uuid } = req.cookies;
+    // } else {
+    //   // Если на проде работаем то проверяем куки authCookie и uuid
+    //   // полученные при успешной авторизации с ya-praktikum.tech/api/v2
+    //   // дергаем ручку /auth/user для проверки что токен не протух и  установливаем полученные данные о пользователе
+    //   const { authCookie, uuid } = req.cookies;
 
-      if (!authCookie || !uuid) {
-        return next(new Unauthorized('Unauthorized'));
-      }
+    //   if (!authCookie || !uuid) {
+    //     return next(new Unauthorized('Unauthorized'));
+    //   }
 
-      const apiResponse = await axios.get('https://ya-praktikum.tech/api/v2/auth/user', {
-        headers: {
-          Cookie: `authCookie=${authCookie}; uuid=${uuid}`,
-        },
-      });
+    //   const apiResponse = await axios.get('https://ya-praktikum.tech/api/v2/auth/user', {
+    //     headers: {
+    //       Cookie: `authCookie=${authCookie}; uuid=${uuid}`,
+    //     },
+    //   });
 
-      if (apiResponse.status === 200) {
-        res.locals.user = apiResponse.data;
-        return next();
-      }
+    //   if (apiResponse.status === 200) {
+    //     res.locals.user = apiResponse.data;
+    //     return next();
+    //   }
 
-      return next(new Unauthorized('Unauthorized'));
-    }
+    //   return next(new Unauthorized('Unauthorized'));
+    // }
   } catch (e) {
     next(e);
   }
