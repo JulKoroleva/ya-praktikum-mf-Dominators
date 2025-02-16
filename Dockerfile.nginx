@@ -1,0 +1,33 @@
+ARG NODE_VERSION=18
+ARG CLIENT_PORT=3434
+ARG SERVER_PORT=8000
+
+FROM node:$NODE_VERSION-buster as base
+
+WORKDIR /app
+
+FROM base as builder
+
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
+
+COPY . .
+
+RUN yarn lerna bootstrap
+RUN rm -rf /app/packages/client/dist/ && yarn build --scope=client
+
+# production environment
+FROM nginx:stable-alpine
+
+RUN rm /usr/share/nginx/html/index.html
+COPY --from=builder /app/packages/client/dist/client /usr/share/nginx/html
+
+RUN rm -rf /etc/nginx/conf.d/default.conf
+COPY ./nginx/conf/nginx-yp-docker.conf /etc/nginx/nginx.conf
+
+RUN mkdir -p /home/https
+COPY ./nginx/conf/cert.key /home/https/cert.key
+COPY ./nginx/conf/cert.pem /home/https/cert.pem
+
+EXPOSE $CLIENT_PORT
+CMD ["nginx", "-g", "daemon off;"]
