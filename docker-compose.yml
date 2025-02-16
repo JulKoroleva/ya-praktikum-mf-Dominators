@@ -13,6 +13,7 @@ services:
         environment:
             - INTERNAL_SERVER_URL=https://localhost:${SERVER_PORT}
             - EXTERNAL_SERVER_URL=https://localhost:${SERVER_PORT}
+            - NODE_ENV=production
         env_file:
             - .env 
         networks:
