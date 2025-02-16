@@ -18,17 +18,17 @@ export const checkAuthMiddleware = async (req: Request, res: Response, next: Nex
   // const isYaProd = req.get('Referer')?.includes('.ya-praktikum.tech');
   try {
     // if (isDev && !isYaProd) {
-      // Если на локальном сервере работаем, проверку авторизации делаем по куке auth: true
-      // которая установливается на фронте в момент успешной авторизации
-      // устанавливаем моковые данные о пользователе
-      const { auth } = req.cookies;
+    // Если на локальном сервере работаем, проверку авторизации делаем по куке auth: true
+    // которая установливается на фронте в момент успешной авторизации
+    // устанавливаем моковые данные о пользователе
+    const { auth } = req.cookies;
 
-      if (!auth) {
-        return next(new Unauthorized('Unauthorized'));
-      }
+    if (!auth) {
+      return next(new Unauthorized('Unauthorized'));
+    }
 
-      res.locals.user = defaulUserData;
-      return next();
+    res.locals.user = defaulUserData;
+    return next();
     // } else {
     //   // Если на проде работаем то проверяем куки authCookie и uuid
     //   // полученные при успешной авторизации с ya-praktikum.tech/api/v2
