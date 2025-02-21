@@ -16,7 +16,7 @@ const app = express();
 
 const corsOptions = {
   origin: [
-    `https://localhost:${process.env.CLIENT_PORT}`,
+    `http://localhost:${process.env.CLIENT_PORT}`,
     `https://localhost:${process.env.CLIENT_PORT}`,
     `http://agario-dominators-44.ya-praktikum.tech:${process.env.CLIENT_PORT}`,
     `https://agario-dominators-44.ya-praktikum.tech:${process.env.CLIENT_PORT}`,
