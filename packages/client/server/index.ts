@@ -23,7 +23,7 @@ async function createServer() {
       appType: 'custom',
       define: {
         __SERVER_PORT__: process.env.SERVER_PORT,
-        __INTERNAL_SERVER_URL__: JSON.stringify(`http://localhost:${process.env.SERVER_PORT}`),
+        __INTERNAL_SERVER_URL__: JSON.stringify(`https://localhost:${process.env.SERVER_PORT}`),
       },
     });
 
@@ -78,7 +78,7 @@ async function createServer() {
   });
 
   app.listen(port, () => {
-    console.log(`Client is listening on port: ${port}`);
+    console.log(`Client is listening on port: 3434 (https)`);
   });
 }
 

@@ -1,42 +1,23 @@
 services:
     client:
         container_name: dominators-client
-        image: dominators-client
         build:
-            context: .
-            dockerfile: Dockerfile.client
+            context: ./
+            dockerfile: Dockerfile.nginx
             args:
                 CLIENT_PORT: ${CLIENT_PORT}
                 SERVER_PORT: ${SERVER_PORT}
-        restart: always
         ports:
             - "${CLIENT_PORT}:${CLIENT_PORT}"
+        restart: always
         environment:
-            - INTERNAL_SERVER_URL=${INTERNAL_SERVER_URL}
-            - EXTERNAL_SERVER_URL=${EXTERNAL_SERVER_URL}
+            - INTERNAL_SERVER_URL=https://localhost:${SERVER_PORT}
+            - EXTERNAL_SERVER_URL=https://localhost:${SERVER_PORT}
             - NODE_ENV=production
         env_file:
             - .env 
         networks:
             - awesome
-
-    server:
-        container_name: dominators-server
-        image: dominators-server
-        build:
-            context: .
-            dockerfile: Dockerfile.server
-            args:
-                SERVER_PORT: ${SERVER_PORT}
-        depends_on:
-            - postgres
-        ports:
-            - "${SERVER_PORT}:${SERVER_PORT}"
-        env_file:
-            - .env 
-        networks:
-            - awesome
-
     postgres:
         image: postgres:14
         ports:
@@ -55,11 +36,29 @@ services:
         env_file:
             - .env
         ports:
-            - "8080:80"
+            - "8089:80"
         volumes:
             - pgadmin-data:/var/lib/pgadmin
         depends_on:
             - postgres
+        networks:
+            - awesome
+
+    server:
+        container_name: dominators-server
+        image: dominators-server
+        build:
+            context: .
+            dockerfile: Dockerfile.server
+            args:
+                SERVER_PORT: ${SERVER_PORT}
+        depends_on:
+            - postgres
+            - pgadmin
+        ports:
+            - "${SERVER_PORT}:${SERVER_PORT}"
+        env_file:
+            - .env 
         networks:
             - awesome
 

@@ -5,3 +5,8 @@ node_modules/
 dist
 tmp
 .stylelintcache
+nginx/conf/cert.key
+nginx/conf/cert.pem
+nginx/logs/nginx.pid
+packages/server/cert.key
+packages/server/cert.pem

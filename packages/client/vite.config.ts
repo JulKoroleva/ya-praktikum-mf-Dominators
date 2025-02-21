@@ -13,7 +13,7 @@ export default defineConfig({
   },
   define: {
     __SERVER_PORT__: process.env.SERVER_PORT,
-    __INTERNAL_SERVER_URL__: JSON.stringify(`http://localhost:${process.env.SERVER_PORT}`),
+    __INTERNAL_SERVER_URL__: JSON.stringify(`https://localhost:${process.env.SERVER_PORT}`),
   },
   css: {
     preprocessorOptions: {

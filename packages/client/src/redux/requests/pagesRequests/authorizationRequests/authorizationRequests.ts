@@ -9,7 +9,7 @@ export const authorizationRequest = createAsyncThunk<
   IAuthorizationFormSubmit,
   { rejectValue: string }
 >('authorization/authorizationRequest', async (data, { rejectWithValue }) => {
-  const request = await fetch(data.code ? OAUTH_SIGN_IN_UP : LOGIN_URL, {
+  const response = await fetch(data.code ? OAUTH_SIGN_IN_UP : LOGIN_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -18,9 +18,9 @@ export const authorizationRequest = createAsyncThunk<
     credentials: 'include',
   });
 
-  if (!request.ok) {
-    const response = await request.json();
-    const rejectReason = response.reason ? response.reason : 'Unknown error';
+  if (!response.ok) {
+    const res = await response.json();
+    const rejectReason = res.reason ? res.reason : 'Unknown error';
     return rejectWithValue(rejectReason);
   }
 

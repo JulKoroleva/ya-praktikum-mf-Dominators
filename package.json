@@ -7,6 +7,7 @@
     "dev:client": "lerna run dev  --scope=client",
     "dev:server": "lerna run dev --scope=server",
     "dev": "lerna run dev",
+    "nginx:start": "cd nginx && nginx -c conf/nginx-yp.conf",
     "test": "lerna run test",
     "lint": "lerna run lint",
     "lint:styles": "stylelint \"packages/client/**/*.scss\" --cache",

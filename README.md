@@ -6,7 +6,6 @@ DOMinators  — это аркада, в которой игрок управля
 
 Этот проект — клон оригинальной Agar.IO, созданный для обучения и расширения навыков веб-разработки.
 
-
 ### Видео-презентация задач 5 и 6 спринтов
 https://disk.yandex.ru/i/Ab5oxhYAhM4bZw
 
@@ -149,8 +148,8 @@ https://disk.yandex.ru/i/iz3ms5x3Fq_OzQ
 
 ## Первый запуск
 
-- Клиен: http://localhost:${CLIENT_PORT}
-- Сервер: http://localhost:${SERVER_PORT}
+- Клиен: https://localhost:${CLIENT_PORT}
+- Сервер: https://localhost:${SERVER_PORT}
 - Postgres: http://localhost:${POSTGRES_PORT}
 
 После того как окружение в докере будет запущено, для инициализации бд необходимо зайти на http://localhost:${POSTGRES_PORT}.
