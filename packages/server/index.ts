@@ -18,8 +18,10 @@ const corsOptions = {
   origin: [
     `https://localhost:3434`,
     `https://localhost:${process.env.CLIENT_PORT}`,
+    `http://51.250.28.166:${process.env.CLIENT_PORT}`,
     `https://51.250.28.166:${process.env.CLIENT_PORT}`,
-    `https://51.250.28.166:${process.env.CLIENT_PORT}`,
+    `http://agario-dominators-44.ya-praktikum.tech:${process.env.CLIENT_PORT}`,
+    `https://agario-dominators-44.ya-praktikum.tech:${process.env.CLIENT_PORT}`,
   ],
   credentials: true,
   methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],
